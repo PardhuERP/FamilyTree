@@ -161,8 +161,11 @@ function addPerson(){
     }
 
 // Toggle children
-
- function toggle(event, d){
+   function toggle(event, d){
+  localStorage.setItem("selectedParent", d.data.personId);
+  localStorage.setItem("selectedParentName", d.data.name);
+  ...
+}
 
   // Show selected parent name + id
   document.getElementById("parentInfo").innerText =
