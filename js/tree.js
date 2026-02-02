@@ -90,6 +90,27 @@ function toggle(e,d){
   update(d);
 }
 
+function addPerson(){
+  const name = document.getElementById("pname").value;
+  const gender = document.getElementById("pgender").value;
+  const dob = document.getElementById("pdob").value;
+  const place = document.getElementById("pplace").value;
+  const fatherId = document.getElementById("pfather").value;
+
+  const gen = fatherId && map[fatherId] ? map[fatherId].generation+1 : 1;
+
+  fetch(API_URL+"?action=addPerson"+
+    "&familyId="+FAMILY_ID+
+    "&name="+encodeURIComponent(name)+
+    "&gender="+gender+
+    "&dob="+dob+
+    "&place="+encodeURIComponent(place)+
+    "&fatherId="+fatherId+
+    "&generation="+gen)
+    .then(r=>r.json())
+    .then(()=>location.reload());
+          }
+
 document.getElementById("collapseBtn").onclick=()=>{
   root.children?.forEach(collapse);
   update(root);
