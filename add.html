@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Add Member | MyFamilyTree</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="history.back()">⬅ Back</button>
+  <span class="appTitle">Add Person</span>
+</div>
+
+<div class="addPage">
+  <h2>Add New Family Member</h2>
+
+  <input id="pname" placeholder="Name">
+  <select id="pgender">
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+  </select>
+  <input id="pdob" type="date">
+  <input id="pplace" placeholder="Place">
+
+  <small id="parentInfo" style="color:#2563eb;"></small>
+  <input id="pfather" placeholder="Father ID">
+
+  <button id="addBtn">Save Person</button>
+</div>
+
+<script src="js/tree.js"></script>
+</body>
+</html>
