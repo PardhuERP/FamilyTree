@@ -1,70 +1,69 @@
 body{
   margin:0;
-  font-family:Arial, sans-serif;
-  background:#f4f6f8;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background:#f1f3f6;
 }
 
-#tree{
-  width:100vw;
-  height:100vh;
-}
-
-.node rect{
-  fill:#fff;
-  stroke:#4a90e2;
-  stroke-width:2px;
-  rx:8;
-  ry:8;
-}
-
-.node text{
-  font-size:12px;
-  fill:#333;
-  pointer-events:none;
-}
-
-.link{
-  fill:none;
-  stroke:#999;
-  stroke-width:2px;
-}
-
+/* Toolbar */
 .toolbar{
   position:fixed;
-  top:10px;
-  left:10px;
-  background:#fff;
-  padding:8px;
-  border-radius:8px;
-  box-shadow:0 2px 10px rgba(0,0,0,.2);
+  top:0; left:0; right:0;
+  background:#ffffff;
+  padding:10px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+  z-index:10;
 }
 
 .toolbar button{
   border:none;
-  background:#4a90e2;
+  background:#2563eb;
   color:#fff;
-  padding:6px 10px;
-  margin:2px;
-  border-radius:5px;
-  cursor:pointer;
+  padding:8px 14px;
+  border-radius:20px;
+  font-size:14px;
 }
 
-.toolbar button:hover{
-  background:#357ABD;
+/* Tree */
+#tree{
+  width:100vw;
+  height:calc(100vh - 160px);
+  margin-top:60px;
 }
 
+/* Add Person Sheet */
 .formBox{
   position:fixed;
-  bottom:10px;
-  left:10px;
+  bottom:0; left:0; right:0;
   background:#fff;
-  padding:10px;
-  border-radius:8px;
-  width:200px;
-  box-shadow:0 2px 10px rgba(0,0,0,.2);
+  padding:15px;
+  border-top-left-radius:20px;
+  border-top-right-radius:20px;
+  box-shadow:0 -4px 12px rgba(0,0,0,.2);
 }
+
+.formBox h3{
+  margin:0 0 10px;
+  text-align:center;
+}
+
 .formBox input, .formBox select{
   width:100%;
-  margin-bottom:5px;
-  padding:5px;
+  margin-bottom:8px;
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:14px;
+}
+
+.formBox button{
+  width:100%;
+  background:#16a34a;
+  color:#fff;
+  border:none;
+  padding:10px;
+  border-radius:10px;
+  font-size:16px;
 }
