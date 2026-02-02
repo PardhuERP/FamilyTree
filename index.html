@@ -10,26 +10,20 @@
 <body>
 
 <div class="toolbar">
-  <button id="collapseBtn">Collapse All</button>
-  <button id="expandBtn">Expand All</button>
+  <span class="appTitle">MyFamilyTree 🌳</span>
+  <button id="addPageBtn">➕ Add Person</button>
+  <button id="collapseBtn">Collapse</button>
+  <button id="expandBtn">Expand</button>
 </div>
 
 <svg id="tree"></svg>
 
-<div class="formBox">
-  <h3>Add Person</h3>
-  <input id="pname" placeholder="Name">
-  <select id="pgender">
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
-  </select>
-  <input id="pdob" type="date">
-  <input id="pplace" placeholder="Place">
-  <small id="parentInfo" style="color:#2563eb; display:block; margin-bottom:5px;"></small>
-  <input id="pfather" placeholder="Father ID (optional)">
-  <button type="button" id="addBtn">Add</button>
-</div>
-
 <script src="js/tree.js"></script>
+<script>
+  document.getElementById("addPageBtn").onclick = () => {
+    window.location.href = "add.html";
+  };
+</script>
+
 </body>
 </html>
