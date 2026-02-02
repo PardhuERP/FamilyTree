@@ -114,3 +114,32 @@ body{
   border-radius:10px;
   font-size:16px;
 }
+
+/* Add page header */
+.addBar{
+  justify-content:space-between;
+  padding:10px 15px;
+}
+
+.backBtn{
+  border:none;
+  background:#2563eb;
+  color:#fff;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:14px;
+}
+
+.appTitle{
+  font-weight:600;
+  font-size:16px;
+}
+
+/* Card look */
+.addPage{
+  margin:80px 15px 15px;
+  background:#fff;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 5px 15px rgba(0,0,0,.15);
+}
