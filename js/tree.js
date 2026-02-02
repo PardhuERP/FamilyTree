@@ -161,8 +161,13 @@ function addPerson(){
     }
 
 // Toggle children
-function toggle(event, d) {
-  if (d.children) {
+function toggle(event, d){
+  // auto fill father
+  document.getElementById("pfather").value = d.data.personId;
+  document.getElementById("pname").placeholder =
+    "Child of " + d.data.name + " (" + d.data.personId + ")";
+
+  if(d.children){
     d._children = d.children;
     d.children = null;
   } else {
