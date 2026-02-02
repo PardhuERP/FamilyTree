@@ -1,10 +1,18 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
 const FAMILY_ID = "F001";
 
+const width = window.innerWidth;
+const height = window.innerHeight;
+
 const svg = d3.select("#tree")
+  .attr("width", width)
+  .attr("height", height)
   .call(d3.zoom().scaleExtent([0.3,3]).on("zoom", e=>{
     g.attr("transform", e.transform);
   }));
+
+const g = svg.append("g")
+  .attr("transform", `translate(${width/4},${height/2})`);
 
 const g = svg.append("g").attr("transform","translate(50,50)");
 const treeLayout = d3.tree().nodeSize([80,180]);
@@ -19,6 +27,7 @@ fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}`)
   });
 
 function buildTree(rows){
+  let map = {};
   if(rows.length===0){
     alert("No members found. Add founder.");
     return;
@@ -30,8 +39,10 @@ function buildTree(rows){
       map[p.fatherId].children.push(map[p.personId]);
     }
   });
-  root = d3.hierarchy(map[rows[0].personId]);
-  root.x0=300; root.y0=0;
+  const founder = rows.find(r => !r.fatherId);
+root = d3.hierarchy(map[founder.personId]);
+root.x0 = height/2;
+root.y0 = 0;
   root.children?.forEach(collapse);
   update(root);
 }
