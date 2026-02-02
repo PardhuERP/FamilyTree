@@ -161,9 +161,17 @@ function addPerson(){
     }
 
 // Toggle children
-function toggle(event, d){
-  // auto fill father
+
+ function toggle(event, d){
+
+  // Show selected parent name + id
+  document.getElementById("parentInfo").innerText =
+    "Selected parent: " + d.data.name + " (" + d.data.personId + ")";
+
+  // Auto fill father
   document.getElementById("pfather").value = d.data.personId;
+
+  // Change name placeholder
   document.getElementById("pname").placeholder =
     "Child of " + d.data.name + " (" + d.data.personId + ")";
 
@@ -175,7 +183,7 @@ function toggle(event, d){
     d._children = null;
   }
   update(d);
-}
+} 
 
 // Buttons
 document.getElementById("collapseBtn").onclick = () => {
