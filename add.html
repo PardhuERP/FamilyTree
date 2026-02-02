@@ -6,20 +6,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <link rel="stylesheet" href="css/style.css">
 </head>
-  <script>
-const pid = localStorage.getItem("selectedParent");
-const pname = localStorage.getItem("selectedParentName");
 
-if(pid){
-  document.getElementById("pfather").value = pid;
-  document.getElementById("parentInfo").innerText =
-    "Child of: " + pname + " (" + pid + ")";
-}
-  </script>
 <body>
 
-<div class="toolbar">
-  <button onclick="history.back()">⬅ Back</button>
+<div class="toolbar addBar">
+  <button class="backBtn" onclick="history.back()">←</button>
   <span class="appTitle">Add Person</span>
 </div>
 
@@ -34,12 +25,26 @@ if(pid){
   <input id="pdob" type="date">
   <input id="pplace" placeholder="Place">
 
-  <small id="parentInfo" style="color:#2563eb;"></small>
+  <small id="parentInfo" style="color:#2563eb; display:block; margin-bottom:6px;"></small>
   <input id="pfather" placeholder="Father ID">
 
   <button id="addBtn">Save Person</button>
 </div>
 
 <script src="js/tree.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const pid = localStorage.getItem("selectedParent");
+  const pname = localStorage.getItem("selectedParentName");
+
+  if (pid) {
+    document.getElementById("pfather").value = pid;
+    document.getElementById("parentInfo").innerText =
+      "Child of: " + pname + " (" + pid + ")";
+  }
+});
+</script>
+
 </body>
 </html>
