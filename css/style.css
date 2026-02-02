@@ -67,3 +67,23 @@ body{
   border-radius:10px;
   font-size:16px;
 }
+
+.node rect{
+  fill:#ffffff;
+  stroke:#2563eb;
+  stroke-width:2px;
+  rx:8;
+  ry:8;
+}
+
+.node text{
+  fill:#111;
+  font-size:12px;
+  pointer-events:none;
+}
+
+.link{
+  fill:none;
+  stroke:#999;
+  stroke-width:2px;
+}
