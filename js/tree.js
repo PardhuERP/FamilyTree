@@ -1,41 +1,58 @@
-const data = {
-  name: "Founder",
-  children: [
-    { name: "Son 1", children:[{name:"Child 1"},{name:"Child 2"}]},
-    { name: "Daughter", children:[{name:"Child 3"}]}
-  ]
-};
+const API_URL = "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
+const FAMILY_ID = "F001";
 
-const width = window.innerWidth;
-const height = window.innerHeight;
-const svg = d3.select("svg")
+const svg = d3.select("#tree")
   .call(d3.zoom().scaleExtent([0.3,3]).on("zoom", e=>{
     g.attr("transform", e.transform);
   }));
 
 const g = svg.append("g").attr("transform","translate(50,50)");
 const treeLayout = d3.tree().nodeSize([80,180]);
-let root = d3.hierarchy(data);
-root.x0 = height/2; root.y0 = 0;
+let root,i=0;
+
+fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}`)
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.status==="OK"){
+      buildTree(res.data);
+    }
+  });
+
+function buildTree(rows){
+  if(rows.length===0){
+    alert("No members found. Add founder.");
+    return;
+  }
+  const map={};
+  rows.forEach(p=>map[p.personId]={...p,children:[]});
+  rows.forEach(p=>{
+    if(p.fatherId && map[p.fatherId]){
+      map[p.fatherId].children.push(map[p.personId]);
+    }
+  });
+  root = d3.hierarchy(map[rows[0].personId]);
+  root.x0=300; root.y0=0;
+  root.children?.forEach(collapse);
+  update(root);
+}
 
 function collapse(d){
   if(d.children){
-    d._children = d.children;
+    d._children=d.children;
     d._children.forEach(collapse);
-    d.children = null;
+    d.children=null;
   }
 }
-root.children.forEach(collapse);
-update(root);
 
 function update(source){
   const treeData = treeLayout(root);
   const nodes = treeData.descendants();
   const links = treeData.links();
-  nodes.forEach(d=>d.y = d.depth*180);
+  nodes.forEach(d=>d.y=d.depth*180);
 
   const node = g.selectAll(".node").data(nodes,d=>d.id||(d.id=++i));
-  const nodeEnter = node.enter().append("g")
+
+  const nodeEnter=node.enter().append("g")
     .attr("class","node")
     .attr("transform",d=>`translate(${source.y0},${source.x0})`)
     .on("click",toggle);
@@ -72,6 +89,15 @@ function toggle(e,d){
   else{d.children=d._children; d._children=null;}
   update(d);
 }
-function collapseAll(){root.children.forEach(collapse); update(root);}
-function expandAll(){root.each(d=>{if(d._children){d.children=d._children; d._children=null;}}); update(root);}
-let i=0;
+
+document.getElementById("collapseBtn").onclick=()=>{
+  root.children?.forEach(collapse);
+  update(root);
+};
+
+document.getElementById("expandBtn").onclick=()=>{
+  root.each(d=>{
+    if(d._children){d.children=d._children; d._children=null;}
+  });
+  update(root);
+};
