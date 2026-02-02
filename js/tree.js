@@ -201,4 +201,6 @@ document.getElementById("expandBtn").onclick = () => {
   update(root);
 };
 
-document.getElementById("addBtn").addEventListener("click", addPerson);
+if(document.getElementById("addBtn")){
+  document.getElementById("addBtn").addEventListener("click", addPerson);
+}
