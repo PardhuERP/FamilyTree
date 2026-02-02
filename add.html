@@ -6,6 +6,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <link rel="stylesheet" href="css/style.css">
 </head>
+  <script>
+const pid = localStorage.getItem("selectedParent");
+const pname = localStorage.getItem("selectedParentName");
+
+if(pid){
+  document.getElementById("pfather").value = pid;
+  document.getElementById("parentInfo").innerText =
+    "Child of: " + pname + " (" + pid + ")";
+}
+  </script>
 <body>
 
 <div class="toolbar">
