@@ -161,23 +161,26 @@ function addPerson(){
     }
 
 // Toggle children
-   function toggle(event, d){
+   
+// Toggle children
+function toggle(event, d){
+
+  // Save selected parent for add page
   localStorage.setItem("selectedParent", d.data.personId);
   localStorage.setItem("selectedParentName", d.data.name);
-  ...
-}
 
-  // Show selected parent name + id
-  document.getElementById("parentInfo").innerText =
-    "Selected parent: " + d.data.name + " (" + d.data.personId + ")";
+  // If form exists (add page), update it
+  if(document.getElementById("parentInfo")){
+    document.getElementById("parentInfo").innerText =
+      "Selected parent: " + d.data.name + " (" + d.data.personId + ")";
 
-  // Auto fill father
-  document.getElementById("pfather").value = d.data.personId;
+    document.getElementById("pfather").value = d.data.personId;
 
-  // Change name placeholder
-  document.getElementById("pname").placeholder =
-    "Child of " + d.data.name + " (" + d.data.personId + ")";
+    document.getElementById("pname").placeholder =
+      "Child of " + d.data.name;
+  }
 
+  // Expand / collapse
   if(d.children){
     d._children = d.children;
     d.children = null;
@@ -186,8 +189,7 @@ function addPerson(){
     d._children = null;
   }
   update(d);
-} 
-
+}
 // Buttons
 document.getElementById("collapseBtn").onclick = () => {
   root.children && root.children.forEach(collapse);
