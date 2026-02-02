@@ -188,3 +188,5 @@ document.getElementById("expandBtn").onclick = () => {
   });
   update(root);
 };
+
+document.getElementById("addBtn").addEventListener("click", addPerson);
