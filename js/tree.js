@@ -161,8 +161,6 @@ function addPerson(){
     }
 
 // Toggle children
-   
-// Toggle children
 function toggle(event, d){
 
   // Save selected parent for add page
@@ -190,21 +188,6 @@ function toggle(event, d){
   }
   update(d);
 }
-// Buttons
-document.getElementById("collapseBtn").onclick = () => {
-  root.children && root.children.forEach(collapse);
-  update(root);
-};
-
-document.getElementById("expandBtn").onclick = () => {
-  root.each((d) => {
-    if (d._children) {
-      d.children = d._children;
-      d._children = null;
-    }
-  });
-  update(root);
-};
 
 if(document.getElementById("addBtn")){
   document.getElementById("addBtn").addEventListener("click", addPerson);
