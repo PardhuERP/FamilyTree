@@ -1,0 +1,10 @@
+body{margin:0; font-family:Arial; background:#f4f6f8;}
+svg{width:100vw; height:100vh;}
+.node rect{fill:#fff; stroke:#4a90e2; stroke-width:2px; rx:6; ry:6;}
+.node text{font-size:12px;}
+.link{fill:none; stroke:#999; stroke-width:2px;}
+.toolbar{
+  position:fixed; top:10px; left:10px;
+  background:#fff; padding:10px; border-radius:8px;
+  box-shadow:0 0 10px rgba(0,0,0,.1);
+}
