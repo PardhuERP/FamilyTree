@@ -122,7 +122,7 @@ function diagonal(s, d) {
             ${(s.y + d.y) / 2} ${d.x},
             ${d.y} ${d.x}`;
 }
-
+alert("Button clicked");
 function addPerson(){
   const name = document.getElementById("pname").value;
   const gender = document.getElementById("pgender").value;
