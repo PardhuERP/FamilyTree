@@ -123,6 +123,44 @@ function diagonal(s, d) {
             ${d.y} ${d.x}`;
 }
 
+function addPerson(){
+  const name = document.getElementById("pname").value;
+  const gender = document.getElementById("pgender").value;
+  const dob = document.getElementById("pdob").value;
+  const place = document.getElementById("pplace").value;
+  const fatherId = document.getElementById("pfather").value;
+
+  if(!name){
+    alert("Enter name");
+    return;
+  }
+
+  const gen = fatherId && map[fatherId]
+    ? Number(map[fatherId].generation) + 1
+    : 1;
+
+  fetch(
+    API_URL +
+      "?action=addPerson" +
+      "&familyId=" + FAMILY_ID +
+      "&name=" + encodeURIComponent(name) +
+      "&gender=" + gender +
+      "&dob=" + dob +
+      "&place=" + encodeURIComponent(place) +
+      "&fatherId=" + fatherId +
+      "&generation=" + gen
+  )
+  .then(r => r.json())
+  .then(res => {
+    if(res.status === "OK"){
+      alert("Added!");
+      location.reload();
+    } else {
+      alert("Error adding");
+    }
+  });
+    }
+
 // Toggle children
 function toggle(event, d) {
   if (d.children) {
