@@ -206,6 +206,11 @@ function addPerson(){
     return;
   }
 
+  // 🔥 AUTO GENERATION
+  const gen = fatherId && map[fatherId]
+    ? Number(map[fatherId].generation) + 1
+    : 1;
+
   fetch(
     API_URL +
       "?action=addPerson" +
@@ -216,7 +221,7 @@ function addPerson(){
       "&place=" + encodeURIComponent(place) +
       "&fatherId=" + fatherId +
       "&spouseId=" + spouseId +
-      "&generation=2"
+      "&generation=" + gen
   )
   .then(r => r.json())
   .then(res => {
