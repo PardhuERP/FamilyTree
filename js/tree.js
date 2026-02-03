@@ -4,9 +4,10 @@ const FAMILY_ID = "F001";
 const width = window.innerWidth;
 const height = window.innerHeight;
 
-/* ---------- TREE SETUP (only if tree exists) ---------- */
+/* ---------- TREE SETUP ---------- */
 let svg, g, treeLayout, root, i = 0;
 let map = {};
+let searchBox = document.getElementById("searchBox");
 
 if(document.getElementById("tree")){
   svg = d3.select("#tree")
@@ -100,6 +101,8 @@ function update(source){
     .attr("d", d => diagonal(d.source,d.target));
 
   nodes.forEach(d => { d.x0=d.x; d.y0=d.y; });
+
+  if(searchBox) searchBox.dispatchEvent(new Event("input"));
 }
 
 function diagonal(s,d){
@@ -124,7 +127,7 @@ function toggle(event,d){
   update(d);
 }
 
-/* ---------- BUTTONS (safe) ---------- */
+/* ---------- BUTTONS ---------- */
 if(document.getElementById("collapseBtn")){
   document.getElementById("collapseBtn").onclick = () => {
     if(!root) return;
@@ -174,8 +177,7 @@ function addPerson(){
   .then(res => {
     if(res.status === "OK"){
       alert("Added successfully!");
-      localStorage.removeItem("selectedParent");
-      localStorage.removeItem("selectedParentName");
+      localStorage.clear();
       window.location.href = "index.html";
     } else {
       alert("Error adding person");
@@ -183,11 +185,11 @@ function addPerson(){
   });
 }
 
-// 🔍 SEARCH
-const searchBox = document.getElementById("searchBox");
+/* ---------- SEARCH ---------- */
 if(searchBox){
   searchBox.addEventListener("input", function(){
     const q = this.value.toLowerCase();
+    if(!root) return;
 
     g.selectAll(".node").each(function(d){
       const match = d.data.name.toLowerCase().includes(q);
@@ -196,26 +198,21 @@ if(searchBox){
         .attr("stroke-width", match ? 4 : 2);
 
       if(match){
-        centerNode(d);
+        const t = d3.zoomTransform(svg.node());
+        const x = -d.y * t.k + width / 2;
+        const y = -d.x * t.k + height / 2;
+
+        svg.transition().duration(400)
+          .call(
+            d3.zoom().transform,
+            d3.zoomIdentity.translate(x, y).scale(t.k)
+          );
       }
     });
   });
-}
-
-function centerNode(d){
-  const t = d3.zoomTransform(svg.node());
-  const x = -d.y * t.k + width / 2;
-  const y = -d.x * t.k + height / 2;
-
-  svg.transition().duration(500)
-    .call(
-      d3.zoom().transform,
-      d3.zoomIdentity.translate(x, y).scale(t.k)
-    );
 }
 
 /* ---------- ADD BUTTON ---------- */
 if(document.getElementById("addBtn")){
   document.getElementById("addBtn").addEventListener("click", addPerson);
 }
-
