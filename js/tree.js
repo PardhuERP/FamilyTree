@@ -103,17 +103,41 @@ function update(source){
     .attr("width",100).attr("height",30)
     .attr("x",-50).attr("y",-15);
 
-  nodeEnter.append("text")
-    .attr("dy",".35em")
-    .attr("text-anchor","middle")
-    .text(d => {
-      const name = d.data.name || "";
-      const spouse = d.data.spouse && d.data.spouse.name ? d.data.spouse.name : "";
-      return spouse ? `${name} ❤ ${spouse}` : name;
-    });
+ nodeEnter.append("text")
+  .attr("text-anchor","middle")
+  .attr("dy","-0.2em")
+  .text(d => {
+    const name = d.data.name || "";
+    const spouse = d.data.spouse && d.data.spouse.name ? d.data.spouse.name : "";
+    return spouse ? `${name} ❤ ${spouse}` : name;
+  });
+
+nodeEnter.append("text")
+  .attr("text-anchor","middle")
+  .attr("dy","1.1em")
+  .style("font-size","10px")
+  .style("fill","#555")
+  .text(d => d.data.personId);
 
   nodeEnter.merge(node).transition().duration(400)
     .attr("transform", d => `translate(${d.y},${d.x})`);
+  node.selectAll("text").remove();
+
+node.append("text")
+  .attr("text-anchor","middle")
+  .attr("dy","-0.2em")
+  .text(d => {
+    const name = d.data.name || "";
+    const spouse = d.data.spouse && d.data.spouse.name ? d.data.spouse.name : "";
+    return spouse ? `${name} ❤ ${spouse}` : name;
+  });
+
+node.append("text")
+  .attr("text-anchor","middle")
+  .attr("dy","1.1em")
+  .style("font-size","10px")
+  .style("fill","#555")
+  .text(d => d.data.personId);
 
   // 🔁 refresh text when tree updates
   node.select("text").text(d => {
