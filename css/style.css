@@ -184,3 +184,24 @@ body{
     height:calc(100vh - 120px);
   }
 }
+.addBtnUI{
+  border:none;
+  background:#16a34a;
+  color:#fff;
+  padding:8px 14px;
+  border-radius:20px;
+  font-size:14px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  box-shadow:0 2px 6px rgba(0,0,0,.25);
+}
+
+/* mobile version */
+@media (max-width:600px){
+  .addBtnUI{
+    font-size:12px;
+    padding:6px 10px;
+  }
+}
