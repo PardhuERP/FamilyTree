@@ -19,7 +19,7 @@ const treeLayout = d3.tree().nodeSize([80,180]);
 let root, i = 0;
 let map = {};
 
-// Load data
+// Load tree data
 fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}`)
   .then(r => r.json())
   .then(res => {
@@ -71,20 +71,18 @@ function update(source){
     .data(nodes, d => d.id || (d.id = ++i));
 
   const nodeEnter = node.enter().append("g")
-  .attr("class","node")
-  .attr("transform", `translate(${source.y0},${source.x0})`)
-  .style("cursor","pointer")
-  .on("click", (event, d) => {
-    console.log("Clicked:", d.data.name);
-    toggle(event, d);
-  });
+    .attr("class","node")
+    .attr("transform", `translate(${source.y0},${source.x0})`)
+    .style("cursor","pointer")
+    .on("click", toggle);
 
   nodeEnter.append("rect")
     .attr("width",100).attr("height",30)
     .attr("x",-50).attr("y",-15);
 
   nodeEnter.append("text")
-    .attr("dy",".35em").attr("text-anchor","middle")
+    .attr("dy",".35em")
+    .attr("text-anchor","middle")
     .text(d => d.data.name);
 
   nodeEnter.merge(node).transition().duration(400)
@@ -109,13 +107,11 @@ function diagonal(s,d){
             ${d.y} ${d.x}`;
 }
 
+// Node click
 function toggle(event,d){
-
-  // Save selected parent
   localStorage.setItem("selectedParent", d.data.personId);
   localStorage.setItem("selectedParentName", d.data.name);
 
-  // Expand / collapse
   if(d.children){
     d._children = d.children;
     d.children = null;
@@ -126,9 +122,28 @@ function toggle(event,d){
   update(d);
 }
 
-function addPerson(){
-  alert("Save clicked"); // debug
+// Buttons
+document.getElementById("collapseBtn").onclick = () => {
+  root.children && root.children.forEach(collapse);
+  update(root);
+};
 
+document.getElementById("expandBtn").onclick = () => {
+  root.each(d=>{
+    if(d._children){
+      d.children = d._children;
+      d._children = null;
+    }
+  });
+  update(root);
+};
+
+// Add Person
+if(document.getElementById("addBtn")){
+  document.getElementById("addBtn").addEventListener("click", addPerson);
+}
+
+function addPerson(){
   const name = document.getElementById("pname").value;
   const gender = document.getElementById("pgender").value;
   const dob = document.getElementById("pdob").value;
@@ -166,23 +181,4 @@ function addPerson(){
       alert("Error adding person");
     }
   });
-}
-
-// Buttons
-document.getElementById("collapseBtn").onclick = () => {
-  root.children && root.children.forEach(collapse);
-  update(root);
-};
-
-document.getElementById("expandBtn").onclick = () => {
-  root.each(d=>{
-    if(d._children){
-      d.children = d._children;
-      d._children = null;
-    }
-  });
-  update(root);
-};
-if(document.getElementById("addBtn")){
-  document.getElementById("addBtn").addEventListener("click", addPerson);
 }
