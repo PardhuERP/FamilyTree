@@ -160,6 +160,13 @@ color:#1f2933;
   appearance:none;         /* remove browser styles */
 }
 
+.addPage select{
+  background:
+    url("data:image/svg+xml;utf8,<svg fill='gray' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>")
+    no-repeat right 12px center;
+  background-size:18px;
+}
+
 .addPage button{
 width:100%;
 background:#16a34a;
