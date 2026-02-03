@@ -114,7 +114,6 @@ function update(source){
 
   nodeEnter.merge(node).transition().duration(400)
     .attr("transform", d => `translate(${d.y},${d.x})`);
-  node.selectAll("text").remove();
 
 node.append("text")
   .attr("text-anchor","middle")
