@@ -135,3 +135,10 @@ body{
   cursor:pointer;
   box-shadow:0 4px 10px rgba(0,0,0,.2);
 }
+
+/* Search highlight */
+.node.search-match rect{
+  stroke: #16a34a !important;
+  stroke-width: 4px !important;
+  fill: #ecfdf5;
+}
