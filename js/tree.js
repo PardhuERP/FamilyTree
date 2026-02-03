@@ -74,6 +74,16 @@ function collapse(d){
     d.children = null;
   }
 }
+function expandPath(d){
+  let p = d;
+  while(p){
+    if(p._children){
+      p.children = p._children;
+      p._children = null;
+    }
+    p = p.parent;
+  }
+}
 
 function update(source){
   const treeData = treeLayout(root);
@@ -193,6 +203,7 @@ function addPerson(){
     }
   });
 }
+
 /* ---------- SEARCH ---------- */
 if(searchBox){
   searchBox.addEventListener("input", function(){
@@ -208,8 +219,8 @@ if(searchBox){
     });
 
     if(found){
-      expandParents(found);     // open path
-      update(found);            // redraw
+      expandPath(found);     // 🔥 open full path
+      update(found);        // redraw tree
 
       setTimeout(()=>{
         g.selectAll(".node")
@@ -218,7 +229,7 @@ if(searchBox){
         g.selectAll(".node").each(function(d){
           if(d === found){
             d3.select(this).classed("search-match", true);
-            centerNode(d);
+            centerNode(d);  // zoom to result
           }
         });
       },300);
