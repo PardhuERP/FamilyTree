@@ -111,11 +111,11 @@ function diagonal(s,d){
 
 function toggle(event,d){
 
-  alert("Node clicked: " + d.data.name); // debug
-
+  // Save selected parent
   localStorage.setItem("selectedParent", d.data.personId);
   localStorage.setItem("selectedParentName", d.data.name);
 
+  // Expand / collapse
   if(d.children){
     d._children = d.children;
     d.children = null;
@@ -125,6 +125,7 @@ function toggle(event,d){
   }
   update(d);
 }
+
 // Buttons
 document.getElementById("collapseBtn").onclick = () => {
   root.children && root.children.forEach(collapse);
