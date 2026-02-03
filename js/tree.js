@@ -2,7 +2,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQ
 const FAMILY_ID = "F001";
 
 const width = window.innerWidth;
-const height = window.innerHeight;
+const height = window.innerHeight- 120;
 
 /* ---------- TREE SETUP ---------- */
 let svg, g, treeLayout, root, i = 0;
@@ -18,7 +18,7 @@ if(document.getElementById("tree")){
     }));
 
   g = svg.append("g")
-    .attr("transform", `translate(${width/4},${height/2})`);
+  .attr("transform", `translate(${width/2}, 80)`);
 
   treeLayout = d3.tree().nodeSize([80,180]);
 
@@ -54,6 +54,7 @@ function buildTree(rows){
 
   root.children && root.children.forEach(collapse);
   update(root);
+  centerNode(root);
 }
 
 function collapse(d){
@@ -235,6 +236,20 @@ if(searchBox){
     });
   });
 }
+
+  function centerNode(d){
+  if(!svg || !g) return;
+
+  const scale = 1;
+  const x = width / 2 - d.y * scale;
+  const y = 120 - d.x * scale;
+
+  svg.transition().duration(400)
+    .call(
+      d3.zoom().transform,
+      d3.zoomIdentity.translate(x, y).scale(scale)
+    );
+      }
 
 /* ---------- ADD BUTTON ---------- */
 if(document.getElementById("addBtn")){
