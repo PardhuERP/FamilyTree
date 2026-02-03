@@ -4,31 +4,33 @@ const FAMILY_ID = "F001";
 const width = window.innerWidth;
 const height = window.innerHeight;
 
-const svg = d3.select("#tree")
-  .attr("width", width)
-  .attr("height", height)
-  .call(d3.zoom().scaleExtent([0.3,3]).on("zoom", e=>{
-    g.attr("transform", e.transform);
-  }));
-
-const g = svg.append("g")
-  .attr("transform", `translate(${width/4},${height/2})`);
-
-const treeLayout = d3.tree().nodeSize([80,180]);
-
-let root, i = 0;
+/* ---------- TREE SETUP (only if tree exists) ---------- */
+let svg, g, treeLayout, root, i = 0;
 let map = {};
 
-// Load tree data
-fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}`)
-  .then(r => r.json())
-  .then(res => {
-    if(res.status === "OK"){
-      buildTree(res.data);
-    }
-  });
+if(document.getElementById("tree")){
+  svg = d3.select("#tree")
+    .attr("width", width)
+    .attr("height", height)
+    .call(d3.zoom().scaleExtent([0.3,3]).on("zoom", e=>{
+      g.attr("transform", e.transform);
+    }));
 
-// Build tree
+  g = svg.append("g")
+    .attr("transform", `translate(${width/4},${height/2})`);
+
+  treeLayout = d3.tree().nodeSize([80,180]);
+
+  fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}`)
+    .then(r => r.json())
+    .then(res => {
+      if(res.status === "OK"){
+        buildTree(res.data);
+      }
+    });
+}
+
+/* ---------- BUILD TREE ---------- */
 function buildTree(rows){
   if(!rows || rows.length === 0){
     alert("No members found. Add founder.");
@@ -107,7 +109,7 @@ function diagonal(s,d){
             ${d.y} ${d.x}`;
 }
 
-// Node click
+/* ---------- NODE CLICK ---------- */
 function toggle(event,d){
   localStorage.setItem("selectedParent", d.data.personId);
   localStorage.setItem("selectedParentName", d.data.name);
@@ -122,42 +124,38 @@ function toggle(event,d){
   update(d);
 }
 
-// Buttons
-document.getElementById("collapseBtn").onclick = () => {
-  root.children && root.children.forEach(collapse);
-  update(root);
-};
-
-document.getElementById("expandBtn").onclick = () => {
-  root.each(d=>{
-    if(d._children){
-      d.children = d._children;
-      d._children = null;
-    }
-  });
-  update(root);
-};
-
-// Add Person
-if(document.getElementById("addBtn")){
-  document.getElementById("addBtn").addEventListener("click", addPerson);
+/* ---------- BUTTONS (safe) ---------- */
+if(document.getElementById("collapseBtn")){
+  document.getElementById("collapseBtn").onclick = () => {
+    root.children && root.children.forEach(collapse);
+    update(root);
+  };
 }
 
+if(document.getElementById("expandBtn")){
+  document.getElementById("expandBtn").onclick = () => {
+    root.each(d=>{
+      if(d._children){
+        d.children = d._children;
+        d._children = null;
+      }
+    });
+    update(root);
+  };
+}
+
+/* ---------- ADD PERSON ---------- */
 function addPerson(){
-  const name = document.getElementById("pname").value;
-  const gender = document.getElementById("pgender").value;
-  const dob = document.getElementById("pdob").value;
-  const place = document.getElementById("pplace").value;
-  const fatherId = document.getElementById("pfather").value;
+  const name = document.getElementById("pname")?.value;
+  const gender = document.getElementById("pgender")?.value;
+  const dob = document.getElementById("pdob")?.value;
+  const place = document.getElementById("pplace")?.value;
+  const fatherId = document.getElementById("pfather")?.value;
 
   if(!name){
     alert("Enter name");
     return;
   }
-
-  const gen = fatherId && map[fatherId]
-    ? Number(map[fatherId].generation) + 1
-    : 1;
 
   fetch(
     API_URL +
@@ -168,7 +166,7 @@ function addPerson(){
       "&dob=" + dob +
       "&place=" + encodeURIComponent(place) +
       "&fatherId=" + fatherId +
-      "&generation=" + gen
+      "&generation=2"
   )
   .then(r => r.json())
   .then(res => {
@@ -181,4 +179,9 @@ function addPerson(){
       alert("Error adding person");
     }
   });
+}
+
+/* ---------- ADD BUTTON ---------- */
+if(document.getElementById("addBtn")){
+  document.getElementById("addBtn").addEventListener("click", addPerson);
 }
