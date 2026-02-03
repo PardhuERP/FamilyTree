@@ -76,6 +76,14 @@ body{
   stroke:#9ca3af;
   stroke-width:2px;
 }
+/*-------SEARCH BAR----------*/
+.searchInput{
+  border:1px solid #d1d5db;
+  border-radius:20px;
+  padding:6px 12px;
+  font-size:13px;
+  width:120px;
+}
 
 /* ---------- ADD PAGE ---------- */
 .addBar{
