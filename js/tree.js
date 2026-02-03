@@ -110,18 +110,11 @@ function diagonal(s,d){
 }
 
 function toggle(event,d){
-  // save parent
+
+  alert("Node clicked: " + d.data.name); // debug
+
   localStorage.setItem("selectedParent", d.data.personId);
   localStorage.setItem("selectedParentName", d.data.name);
-
-  // if add page fields exist
-  if(document.getElementById("parentInfo")){
-    document.getElementById("parentInfo").innerText =
-      "Selected parent: " + d.data.name + " (" + d.data.personId + ")";
-    document.getElementById("pfather").value = d.data.personId;
-    document.getElementById("pname").placeholder =
-      "Child of " + d.data.name;
-  }
 
   if(d.children){
     d._children = d.children;
@@ -132,7 +125,6 @@ function toggle(event,d){
   }
   update(d);
 }
-
 // Buttons
 document.getElementById("collapseBtn").onclick = () => {
   root.children && root.children.forEach(collapse);
