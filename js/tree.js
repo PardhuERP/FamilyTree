@@ -141,3 +141,6 @@ document.getElementById("expandBtn").onclick = () => {
   });
   update(root);
 };
+if(document.getElementById("addBtn")){
+  document.getElementById("addBtn").addEventListener("click", addPerson);
+}
