@@ -183,25 +183,49 @@ function addPerson(){
     }
   });
 }
-
 /* ---------- SEARCH ---------- */
 if(searchBox){
   searchBox.addEventListener("input", function(){
     const q = this.value.toLowerCase();
-    if(!root) return;
+    if(!root || !q) return;
 
-    g.selectAll(".node")
-      .classed("search-match", false); // reset
+    let found = null;
 
-    if(!q) return;
-
-    g.selectAll(".node").each(function(d){
+    root.each(d=>{
       if(d.data.name.toLowerCase().includes(q)){
-        d3.select(this).classed("search-match", true);
-        centerNode(d); // focus first match
+        found = d;
       }
     });
+
+    if(found){
+      expandParents(found);
+      update(found);
+
+      g.selectAll(".node")
+        .classed("search-match", false);
+
+      setTimeout(()=>{
+        g.selectAll(".node").each(function(d){
+          if(d === found){
+            d3.select(this).classed("search-match", true);
+            centerNode(d);
+          }
+        });
+      },300);
+    }
   });
+}
+
+
+function expandParents(d){
+  let p = d.parent;
+  while(p){
+    if(p._children){
+      p.children = p._children;
+      p._children = null;
+    }
+    p = p.parent;
+  }
 }
 
 function centerNode(d){
