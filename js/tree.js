@@ -219,11 +219,3 @@ if(document.getElementById("addBtn")){
   document.getElementById("addBtn").addEventListener("click", addPerson);
 }
 
-const searchBox = document.getElementById("searchBox");
-console.log("Search box:", searchBox);
-
-if(searchBox){
-  searchBox.addEventListener("input", function(){
-    console.log("Typing:", this.value);
-  });
-}
