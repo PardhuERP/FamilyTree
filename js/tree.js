@@ -186,22 +186,22 @@ function addPerson(){
 
 /* ---------- SEARCH ---------- */
 if(searchBox){
-  searchBox.oninput = function(){
+  searchBox.addEventListener("input", function(){
     const q = this.value.toLowerCase();
     if(!root) return;
 
+    g.selectAll(".node")
+      .classed("search-match", false); // reset
+
+    if(!q) return;
+
     g.selectAll(".node").each(function(d){
-      const match = d.data.name.toLowerCase().includes(q);
-
-      d3.select(this).select("rect")
-        .attr("stroke", match ? "#16a34a" : "#2563eb")
-        .attr("stroke-width", match ? 4 : 2);
-
-      if(match){
-        centerNode(d);
+      if(d.data.name.toLowerCase().includes(q)){
+        d3.select(this).classed("search-match", true);
+        centerNode(d); // focus first match
       }
     });
-  };
+  });
 }
 
 function centerNode(d){
