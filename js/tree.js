@@ -71,9 +71,13 @@ function update(source){
     .data(nodes, d => d.id || (d.id = ++i));
 
   const nodeEnter = node.enter().append("g")
-    .attr("class","node")
-    .attr("transform", `translate(${source.y0},${source.x0})`)
-    .on("click", toggle);
+  .attr("class","node")
+  .attr("transform", `translate(${source.y0},${source.x0})`)
+  .style("cursor","pointer")
+  .on("click", (event, d) => {
+    console.log("Clicked:", d.data.name);
+    toggle(event, d);
+  });
 
   nodeEnter.append("rect")
     .attr("width",100).attr("height",30)
