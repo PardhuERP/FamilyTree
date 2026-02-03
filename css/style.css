@@ -118,60 +118,90 @@ body{
   stroke-width:2px;
 }
 
-/* ---------- ADD PAGE ---------- */
-.addBar{
-  justify-content:space-between;
-}
+/* ===========================
+   ADD PAGE UI IMPROVEMENTS
+=========================== */
 
-.backBtn{
-  border:none;
+/* top bar for add page */
+.addBar{
   background:#2563eb;
   color:#fff;
-  padding:6px 14px;
-  border-radius:20px;
-  font-size:14px;
+  padding:12px 15px;
+  border-radius:0 0 20px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:20;
 }
 
+/* back arrow pill */
+.backBtn{
+  position:absolute;
+  left:12px;
+  background:#1e40af;
+  color:#fff;
+  border:none;
+  border-radius:50%;
+  width:36px;
+  height:36px;
+  font-size:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 3px 8px rgba(0,0,0,.3);
+}
+
+/* page container */
 .addPage{
-  margin:90px 15px 15px;
+  margin:120px 15px 20px;
   background:#fff;
-  border-radius:20px;
-  padding:20px;
-  box-shadow:0 8px 20px rgba(0,0,0,.15);
+  border-radius:22px;
+  padding:22px 18px;
+  box-shadow:0 10px 25px rgba(0,0,0,.18);
 }
 
+/* title */
 .addPage h2{
-  text-align:center;
-  margin-bottom:15px;
+  font-size:20px;
+  margin-bottom:18px;
   color:#1f2933;
 }
 
-.addPage input, 
+/* inputs uniform */
+.addPage input,
 .addPage select{
-  width:100%;
-  margin-bottom:10px;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #d1d5db;
-  font-size:14px;
-}
-
-.addPage button{
-  width:100%;
-  background:#16a34a;
-  color:#fff;
-  border:none;
-  padding:12px;
+  height:48px;
   border-radius:12px;
-  font-size:16px;
-  font-weight:600;
-  cursor:pointer;
-  box-shadow:0 4px 10px rgba(0,0,0,.2);
+  font-size:15px;
+  padding:0 14px;
+  margin-bottom:12px;
 }
 
-/* Search highlight */
-.node.search-match rect{
-  stroke:#16a34a !important;
-  stroke-width:4px !important;
-  fill:#ecfdf5;
+/* parent info */
+#parentInfo{
+  font-size:13px;
+  font-weight:600;
+  margin-bottom:6px;
+}
+
+/* save button */
+.addPage button{
+  height:52px;
+  font-size:18px;
+  border-radius:14px;
+  margin-top:8px;
+}
+
+/* small phones */
+@media (max-width:480px){
+  .addPage{
+    margin:110px 10px 15px;
+    padding:18px 14px;
+  }
+
+  .addPage h2{
+    font-size:18px;
+  }
 }
