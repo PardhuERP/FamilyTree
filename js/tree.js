@@ -127,6 +127,7 @@ function toggle(event,d){
 /* ---------- BUTTONS (safe) ---------- */
 if(document.getElementById("collapseBtn")){
   document.getElementById("collapseBtn").onclick = () => {
+    if(!root) return;
     root.children && root.children.forEach(collapse);
     update(root);
   };
@@ -134,6 +135,7 @@ if(document.getElementById("collapseBtn")){
 
 if(document.getElementById("expandBtn")){
   document.getElementById("expandBtn").onclick = () => {
+    if(!root) return;
     root.each(d=>{
       if(d._children){
         d.children = d._children;
