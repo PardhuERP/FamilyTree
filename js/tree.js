@@ -57,6 +57,16 @@ function buildTree(rows){
   centerNode(root);
 }
 
+function findNodeByName(name){
+  let found = null;
+  root.each(d=>{
+    if(d.data.name.toLowerCase() === name){
+      found = d;
+    }
+  });
+  return found;
+}
+
 function collapse(d){
   if(d.children){
     d._children = d.children;
@@ -186,7 +196,7 @@ function addPerson(){
 /* ---------- SEARCH ---------- */
 if(searchBox){
   searchBox.addEventListener("input", function(){
-    const q = this.value.toLowerCase();
+    const q = this.value.toLowerCase().trim();
     if(!root || !q) return;
 
     let found = null;
@@ -198,13 +208,13 @@ if(searchBox){
     });
 
     if(found){
-      expandParents(found);
-      update(found);
-
-      g.selectAll(".node")
-        .classed("search-match", false);
+      expandParents(found);     // open path
+      update(found);            // redraw
 
       setTimeout(()=>{
+        g.selectAll(".node")
+          .classed("search-match", false);
+
         g.selectAll(".node").each(function(d){
           if(d === found){
             d3.select(this).classed("search-match", true);
