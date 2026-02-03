@@ -84,6 +84,7 @@ function expandPath(d){
   }
 }
 
+
 function update(source){
   const treeData = treeLayout(root);
   const nodes = treeData.descendants();
@@ -93,51 +94,48 @@ function update(source){
   const node = g.selectAll(".node")
     .data(nodes, d => d.id || (d.id = ++i));
 
+  // ENTER
   const nodeEnter = node.enter().append("g")
     .attr("class","node")
     .attr("transform", `translate(${source.y0},${source.x0})`)
     .style("cursor","pointer")
     .on("click", toggle);
 
-  
-const nodeEnter = node.enter().append("g")
-  .attr("class","node")
-  .attr("transform", `translate(${source.y0},${source.x0})`)
-  .style("cursor","pointer")
-  .on("click", toggle);
+  // RECT
+  nodeEnter.append("rect")
+    .attr("height", 34)
+    .attr("rx", 12)
+    .attr("ry", 12)
+    .attr("y", -17);
 
-const rect = nodeEnter.append("rect")
-  .attr("height", 34)
-  .attr("rx", 12)
-  .attr("ry", 12)
-  .attr("y", -17);
+  // TEXT
+  nodeEnter.append("text")
+    .attr("text-anchor","middle")
+    .attr("dy",".35em")
+    .style("font-weight","600")
+    .text(d => {
+      const name = d.data.name || "";
+      const spouse = d.data.spouse && d.data.spouse.name ? d.data.spouse.name : "";
+      return spouse ? `${name} ❤ ${spouse}` : name;
+    });
 
-const label = nodeEnter.append("text")
-  .attr("text-anchor","middle")
-  .attr("dy",".35em")
-  .style("font-weight","600")
-  .text(d => {
-    const name = d.data.name || "";
-    const spouse = d.data.spouse && d.data.spouse.name ? d.data.spouse.name : "";
-    return spouse ? `${name} ❤ ${spouse}` : name;
+  // AUTO SIZE BOX
+  nodeEnter.each(function(){
+    const text = d3.select(this).select("text");
+    const bbox = text.node().getBBox();
+    const padding = 20;
+
+    d3.select(this).select("rect")
+      .attr("width", bbox.width + padding)
+      .attr("x", -(bbox.width + padding) / 2);
   });
 
-/* Auto resize box */
-nodeEnter.each(function(){
-  const text = d3.select(this).select("text");
-  const bbox = text.node().getBBox();
-  const padding = 20;
-
-  d3.select(this).select("rect")
-    .attr("width", bbox.width + padding)
-    .attr("x", -(bbox.width + padding) / 2);
-});
-
-  nodeEnter.merge(node).transition().duration(400)
+  // UPDATE + ENTER
+  nodeEnter.merge(node)
+    .transition().duration(400)
     .attr("transform", d => `translate(${d.y},${d.x})`);
 
-
-
+  // LINKS
   const link = g.selectAll(".link")
     .data(links, d => d.target.id);
 
