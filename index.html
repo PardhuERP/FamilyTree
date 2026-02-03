@@ -9,18 +9,30 @@
 </head>
 <body>
 
-<div class="toolbar homeBar">
-  <span class="appTitle">🌳 MyFamilyTree</span>
-  <input id="searchBox" placeholder="Search name..." class="searchInput">
-  <div class="actions">
-    <button id="addPageBtn" class="addBtnUI">
-  <span class="icon">➕</span>
-  <span class="text">Add Name</span>
-</button>
-    <button id="collapseBtn">−</button>
-    <button id="expandBtn">+</button>
+ <div class="toolbar toolbarCol">
+
+  <!-- ROW 1 -->
+  <div class="row rowTop">
+    <span class="appTitle">🌳 MyFamilyTree</span>
   </div>
-</div>
+
+  <!-- ROW 2 -->
+  <div class="row rowSearch">
+    <input id="searchBox" class="searchInput" placeholder="Search name...">
+  </div>
+
+  <!-- ROW 3 -->
+  <div class="row rowActions">
+    <button id="addPageBtn" class="addBtnUI">
+      <span class="icon">➕</span>
+      <span class="text">Add Name</span>
+    </button>
+
+    <button id="collapseBtn" class="circleBtn">−</button>
+    <button id="expandBtn" class="circleBtn">+</button>
+  </div>
+
+</div> 
 
 <svg id="tree"></svg>
 
