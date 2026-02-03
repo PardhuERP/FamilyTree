@@ -2,12 +2,12 @@ const API_URL = "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQ
 const FAMILY_ID = "F001";
 
 const width = window.innerWidth;
-const height = window.innerHeight- 120;
+const height = window.innerHeight - 120;
 
 /* ---------- TREE SETUP ---------- */
 let svg, g, treeLayout, root, i = 0;
 let map = {};
-let searchBox = document.getElementById("searchBox");
+const searchBox = document.getElementById("searchBox");
 
 if(document.getElementById("tree")){
   svg = d3.select("#tree")
@@ -18,7 +18,7 @@ if(document.getElementById("tree")){
     }));
 
   g = svg.append("g")
-  .attr("transform", `translate(${width/2}, 80)`);
+    .attr("transform", `translate(${width/2}, 80)`);
 
   treeLayout = d3.tree().nodeSize([80,180]);
 
@@ -102,32 +102,6 @@ function update(source){
     .attr("d", d => diagonal(d.source,d.target));
 
   nodes.forEach(d => { d.x0=d.x; d.y0=d.y; });
-
-  // attach search AFTER tree loads
-if(searchBox){
-  searchBox.oninput = function(){
-    const q = this.value.toLowerCase();
-    if(!root) return;
-
-    g.selectAll(".node").each(function(d){
-      const match = d.data.name.toLowerCase().includes(q);
-      d3.select(this).select("rect")
-        .attr("stroke", match ? "#16a34a" : "#2563eb")
-        .attr("stroke-width", match ? 4 : 2);
-
-      if(match){
-        const t = d3.zoomTransform(svg.node());
-        const x = -d.y * t.k + width / 2;
-        const y = -d.x * t.k + height / 2;
-
-        svg.transition().duration(400)
-          .call(
-            d3.zoom().transform,
-            d3.zoomIdentity.translate(x, y).scale(t.k)
-          );
-      }
-    });
-  };
 }
 
 function diagonal(s,d){
@@ -212,32 +186,25 @@ function addPerson(){
 
 /* ---------- SEARCH ---------- */
 if(searchBox){
-  searchBox.addEventListener("input", function(){
+  searchBox.oninput = function(){
     const q = this.value.toLowerCase();
     if(!root) return;
 
     g.selectAll(".node").each(function(d){
       const match = d.data.name.toLowerCase().includes(q);
+
       d3.select(this).select("rect")
         .attr("stroke", match ? "#16a34a" : "#2563eb")
         .attr("stroke-width", match ? 4 : 2);
 
       if(match){
-        const t = d3.zoomTransform(svg.node());
-        const x = -d.y * t.k + width / 2;
-        const y = -d.x * t.k + height / 2;
-
-        svg.transition().duration(400)
-          .call(
-            d3.zoom().transform,
-            d3.zoomIdentity.translate(x, y).scale(t.k)
-          );
+        centerNode(d);
       }
     });
-  });
+  };
 }
 
-  function centerNode(d){
+function centerNode(d){
   if(!svg || !g) return;
 
   const scale = 1;
@@ -249,7 +216,7 @@ if(searchBox){
       d3.zoom().transform,
       d3.zoomIdentity.translate(x, y).scale(scale)
     );
-      }
+}
 
 /* ---------- ADD BUTTON ---------- */
 if(document.getElementById("addBtn")){
