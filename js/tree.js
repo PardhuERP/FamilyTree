@@ -175,7 +175,7 @@ function addPerson(){
   const dob = document.getElementById("pdob")?.value;
   const place = document.getElementById("pplace")?.value;
   const fatherId = document.getElementById("pfather")?.value;
-
+  const spouseId = document.getElementById("pspouse")?.value || "";
   if(!name){
     alert("Enter name");
     return;
@@ -190,6 +190,7 @@ function addPerson(){
       "&dob=" + dob +
       "&place=" + encodeURIComponent(place) +
       "&fatherId=" + fatherId +
+      "&spouseId=" + spouseId
       "&generation=2"
   )
   .then(r => r.json())
