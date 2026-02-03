@@ -42,6 +42,9 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("pfather").value = pid;
     document.getElementById("parentInfo").innerText =
       "Child of: " + pname + " (" + pid + ")";
+  } else {
+    document.getElementById("parentInfo").innerText =
+      "No parent selected. Go back and tap a person.";
   }
 });
 </script>
