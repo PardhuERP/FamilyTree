@@ -47,12 +47,12 @@ function buildTree(rows){
   });
 
   // connect spouses
-rows.forEach(p=>{
-  if(p.spouseId && map[p.spouseId]){
-    map[p.personId].spouse = map[p.spouseId];
-    map[p.spouseId].spouse = map[p.personId];
-  }
-});
+  rows.forEach(p=>{
+    if(p.spouseId && map[p.spouseId]){
+      map[p.personId].spouse = map[p.spouseId];
+      map[p.spouseId].spouse = map[p.personId];
+    }
+  });
 
   const founder = rows.find(r => !r.fatherId);
   root = d3.hierarchy(map[founder.personId]);
@@ -65,16 +65,6 @@ rows.forEach(p=>{
   centerNode(root);
 }
 
-function findNodeByName(name){
-  let found = null;
-  root.each(d=>{
-    if(d.data.name.toLowerCase() === name){
-      found = d;
-    }
-  });
-  return found;
-}
-
 function collapse(d){
   if(d.children){
     d._children = d.children;
@@ -82,6 +72,7 @@ function collapse(d){
     d.children = null;
   }
 }
+
 function expandPath(d){
   let p = d;
   while(p){
@@ -115,10 +106,21 @@ function update(source){
   nodeEnter.append("text")
     .attr("dy",".35em")
     .attr("text-anchor","middle")
-    .text(d => d.data.name);
+    .text(d => {
+      const name = d.data.name || "";
+      const spouse = d.data.spouse && d.data.spouse.name ? d.data.spouse.name : "";
+      return spouse ? `${name} ❤ ${spouse}` : name;
+    });
 
   nodeEnter.merge(node).transition().duration(400)
     .attr("transform", d => `translate(${d.y},${d.x})`);
+
+  // 🔁 refresh text when tree updates
+  node.select("text").text(d => {
+    const name = d.data.name || "";
+    const spouse = d.data.spouse && d.data.spouse.name ? d.data.spouse.name : "";
+    return spouse ? `${name} ❤ ${spouse}` : name;
+  });
 
   const link = g.selectAll(".link")
     .data(links, d => d.target.id);
@@ -184,6 +186,7 @@ function addPerson(){
   const place = document.getElementById("pplace")?.value;
   const fatherId = document.getElementById("pfather")?.value;
   const spouseId = document.getElementById("pspouse")?.value || "";
+
   if(!name){
     alert("Enter name");
     return;
@@ -198,7 +201,7 @@ function addPerson(){
       "&dob=" + dob +
       "&place=" + encodeURIComponent(place) +
       "&fatherId=" + fatherId +
-      "&spouseId=" + spouseId
+      "&spouseId=" + spouseId +
       "&generation=2"
   )
   .then(r => r.json())
@@ -220,7 +223,6 @@ if(searchBox){
     if(!root || !q) return;
 
     let found = null;
-
     root.each(d=>{
       if(d.data.name.toLowerCase().includes(q)){
         found = d;
@@ -228,17 +230,15 @@ if(searchBox){
     });
 
     if(found){
-      expandPath(found);     // 🔥 open full path
-      update(found);        // redraw tree
+      expandPath(found);
+      update(found);
 
       setTimeout(()=>{
-        g.selectAll(".node")
-          .classed("search-match", false);
-
+        g.selectAll(".node").classed("search-match", false);
         g.selectAll(".node").each(function(d){
           if(d === found){
             d3.select(this).classed("search-match", true);
-            centerNode(d);  // zoom to result
+            centerNode(d);
           }
         });
       },300);
@@ -246,21 +246,8 @@ if(searchBox){
   });
 }
 
-
-function expandParents(d){
-  let p = d.parent;
-  while(p){
-    if(p._children){
-      p.children = p._children;
-      p._children = null;
-    }
-    p = p.parent;
-  }
-}
-
 function centerNode(d){
   if(!svg || !g) return;
-
   const scale = 1;
   const x = width / 2 - d.y * scale;
   const y = 120 - d.x * scale;
