@@ -112,13 +112,6 @@ function update(source){
     return spouse ? `${name} ❤ ${spouse}` : name;
   });
 
-nodeEnter.append("text")
-  .attr("text-anchor","middle")
-  .attr("dy","1.1em")
-  .style("font-size","10px")
-  .style("fill","#555")
-  .text(d => d.data.personId);
-
   nodeEnter.merge(node).transition().duration(400)
     .attr("transform", d => `translate(${d.y},${d.x})`);
   node.selectAll("text").remove();
@@ -131,13 +124,6 @@ node.append("text")
     const spouse = d.data.spouse && d.data.spouse.name ? d.data.spouse.name : "";
     return spouse ? `${name} ❤ ${spouse}` : name;
   });
-
-node.append("text")
-  .attr("text-anchor","middle")
-  .attr("dy","1.1em")
-  .style("font-size","10px")
-  .style("fill","#555")
-  .text(d => d.data.personId);
 
   
 
