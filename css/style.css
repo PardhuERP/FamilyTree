@@ -147,3 +147,40 @@ body{
   stroke-width:4px !important;
   fill:#ecfdf5;
   }
+
+/* ---------- Mobile 3-line toolbar ---------- */
+@media (max-width: 600px){
+
+  .toolbar{
+    flex-direction: column;
+    align-items: stretch;
+    gap:6px;
+    padding:8px 10px;
+  }
+
+  .appTitle{
+    text-align:center;
+    font-size:16px;
+  }
+
+  .searchInput{
+    width:100%;
+    font-size:14px;
+  }
+
+  .actions{
+    justify-content:center;
+    gap:12px;
+  }
+
+  .actions button{
+    width:40px;
+    height:40px;
+    font-size:18px;
+  }
+
+  #tree{
+    margin-top:120px; /* extra space for 3 lines */
+    height:calc(100vh - 120px);
+  }
+}
