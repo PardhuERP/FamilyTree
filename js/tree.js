@@ -192,48 +192,58 @@ if(document.getElementById("expandBtn")){
   };
 }
 
-/* ---------- ADD PERSON ---------- */
-function addPerson(){
-  const name = document.getElementById("pname")?.value;
-  const gender = document.getElementById("pgender")?.value;
-  const dob = document.getElementById("pdob")?.value;
-  const place = document.getElementById("pplace")?.value;
-  const fatherId = document.getElementById("pfather")?.value;
-  const spouseId = document.getElementById("pspouse")?.value || "";
-
-  if(!name){
-    alert("Enter name");
-    return;
-  }
-
-  // 🔥 AUTO GENERATION
-  const gen = fatherId && map[fatherId]
-    ? Number(map[fatherId].generation) + 1
-    : 1;
-
-  fetch(
-    API_URL +
-      "?action=addPerson" +
-      "&familyId=" + FAMILY_ID +
-      "&name=" + encodeURIComponent(name) +
-      "&gender=" + gender +
-      "&dob=" + dob +
-      "&place=" + encodeURIComponent(place) +
-      "&fatherId=" + fatherId +
-      "&spouseId=" + spouseId +
-      "&generation=" + gen
-  )
-  .then(r => r.json())
-  .then(res => {
-    if(res.status === "OK"){
-      alert("Added successfully!");
-      localStorage.clear();
-      window.location.href = "index.html";
-    } else {
-      alert("Error adding person");
-    }
-  });
+function getPersonGen(personId){
+return fetch(API_URL + "?action=getTree&familyId=" + FAMILY_ID)
+.then(r => r.json())
+.then(res => {
+if(res.status !== "OK") return 1;
+const p = res.data.find(x => x.personId === personId);
+return p ? Number(p.generation) : 1;
+});
 }
+
+async function addPerson(){
+const name = document.getElementById("pname")?.value;
+const gender = document.getElementById("pgender")?.value;
+const dob = document.getElementById("pdob")?.value;
+const place = document.getElementById("pplace")?.value;
+const fatherId = document.getElementById("pfather")?.value;
+const spouseId = document.getElementById("pspouse")?.value || "";
+
+if(!name){
+alert("Enter name");
+return;
+}
+
+let gen = 1;
+if(fatherId){
+gen = await getPersonGen(fatherId) + 1;
+}
+
+fetch(
+API_URL +
+"?action=addPerson" +
+"&familyId=" + FAMILY_ID +
+"&name=" + encodeURIComponent(name) +
+"&gender=" + gender +
+"&dob=" + dob +
+"&place=" + encodeURIComponent(place) +
+"&fatherId=" + fatherId +
+"&spouseId=" + spouseId +
+"&generation=" + gen
+)
+.then(r => r.json())
+.then(res => {
+if(res.status === "OK"){
+alert("Added successfully!");
+localStorage.clear();
+window.location.href = "index.html";
+} else {
+alert("Error adding person");
+}
+});
+}
+
 
 /* ---------- SEARCH ---------- */
 if(searchBox){
