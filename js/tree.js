@@ -46,6 +46,14 @@ function buildTree(rows){
     }
   });
 
+  // connect spouses
+rows.forEach(p=>{
+  if(p.spouseId && map[p.spouseId]){
+    map[p.personId].spouse = map[p.spouseId];
+    map[p.spouseId].spouse = map[p.personId];
+  }
+});
+
   const founder = rows.find(r => !r.fatherId);
   root = d3.hierarchy(map[founder.personId]);
 
