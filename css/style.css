@@ -142,3 +142,8 @@ body{
   stroke-width: 4px !important;
   fill: #ecfdf5;
 }
+.node.search-match rect{
+  stroke:#16a34a !important;
+  stroke-width:4px !important;
+  fill:#ecfdf5;
+  }
