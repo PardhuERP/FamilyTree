@@ -186,14 +186,30 @@ const searchBox = document.getElementById("searchBox");
 if(searchBox){
   searchBox.addEventListener("input", function(){
     const q = this.value.toLowerCase();
-    g.selectAll(".node").select("rect")
-      .attr("stroke", d =>
-        d.data.name.toLowerCase().includes(q) ? "#16a34a" : "#2563eb"
-      )
-      .attr("stroke-width", d =>
-        d.data.name.toLowerCase().includes(q) ? 4 : 2
-      );
+
+    g.selectAll(".node").each(function(d){
+      const match = d.data.name.toLowerCase().includes(q);
+      d3.select(this).select("rect")
+        .attr("stroke", match ? "#16a34a" : "#2563eb")
+        .attr("stroke-width", match ? 4 : 2);
+
+      if(match){
+        centerNode(d);
+      }
+    });
   });
+}
+
+function centerNode(d){
+  const t = d3.zoomTransform(svg.node());
+  const x = -d.y * t.k + width / 2;
+  const y = -d.x * t.k + height / 2;
+
+  svg.transition().duration(500)
+    .call(
+      d3.zoom().transform,
+      d3.zoomIdentity.translate(x, y).scale(t.k)
+    );
 }
 
 /* ---------- ADD BUTTON ---------- */
