@@ -9,43 +9,84 @@ body{
   position:fixed;
   top:0; left:0; right:0;
   background:#ffffff;
-  padding:10px 15px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  padding:8px 12px;
   box-shadow:0 2px 8px rgba(0,0,0,.1);
   z-index:10;
 }
 
-.appTitle{
-  font-weight:700;
-  font-size:17px;
-  color:#1f2933;
-}
-
-/* Home toolbar actions */
-.actions{
+/* 3-line layout */
+.toolbarCol{
   display:flex;
+  flex-direction:column;
   gap:8px;
 }
 
-.actions button{
+/* rows */
+.row{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* title */
+.rowTop .appTitle{
+  font-weight:700;
+  font-size:18px;
+  color:#1f2933;
+}
+
+/* search */
+.searchInput{
+  border:1px solid #d1d5db;
+  border-radius:20px;
+  padding:8px 14px;
+  font-size:14px;
+  width:95%;
+  max-width:380px;
+}
+
+/* ---------- ACTION BUTTONS ---------- */
+.rowActions{
+  gap:12px;
+}
+
+.addBtnUI{
+  border:none;
+  background:#16a34a;
+  color:#fff;
+  padding:8px 16px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  white-space:nowrap;
+  min-width:120px;
+  justify-content:center;
+  box-shadow:0 2px 6px rgba(0,0,0,.25);
+}
+
+.addBtnUI .icon{
+  font-size:18px;
+}
+
+.circleBtn{
+  width:42px;
+  height:42px;
+  border-radius:50%;
   border:none;
   background:#2563eb;
   color:#fff;
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  font-size:18px;
-  cursor:pointer;
-  box-shadow:0 2px 6px rgba(0,0,0,.2);
+  font-size:22px;
+  box-shadow:0 2px 6px rgba(0,0,0,.25);
 }
 
 /* ---------- TREE ---------- */
 #tree{
   width:100vw;
-  height:calc(100vh - 60px);
-  margin-top:60px;
+  margin-top:130px;
+  height:calc(100vh - 130px);
 }
 
 /* ---------- NODE ---------- */
@@ -75,14 +116,6 @@ body{
   fill:none;
   stroke:#9ca3af;
   stroke-width:2px;
-}
-/*-------SEARCH BAR----------*/
-.searchInput{
-  border:1px solid #d1d5db;
-  border-radius:20px;
-  padding:6px 12px;
-  font-size:13px;
-  width:120px;
 }
 
 /* ---------- ADD PAGE ---------- */
@@ -138,119 +171,7 @@ body{
 
 /* Search highlight */
 .node.search-match rect{
-  stroke: #16a34a !important;
-  stroke-width: 4px !important;
-  fill: #ecfdf5;
-}
-.node.search-match rect{
   stroke:#16a34a !important;
   stroke-width:4px !important;
   fill:#ecfdf5;
-  }
-
-/* ---------- Mobile 3-line toolbar ---------- */
-@media (max-width: 600px){
-
-  .toolbar{
-    flex-direction: column;
-    align-items: stretch;
-    gap:6px;
-    padding:8px 10px;
-  }
-
-  .appTitle{
-    text-align:center;
-    font-size:16px;
-  }
-
-  .searchInput{
-    width:100%;
-    font-size:14px;
-  }
-
-  .actions{
-    justify-content:center;
-    gap:12px;
-  }
-
-  .actions button{
-    width:40px;
-    height:40px;
-    font-size:18px;
-  }
-
-  #tree{
-    margin-top:120px; /* extra space for 3 lines */
-    height:calc(100vh - 120px);
-  }
 }
-
-.addBtnUI{
-  border:none;
-  background:#16a34a;
-  color:#fff;
-  padding:8px 14px;
-  border-radius:999px;
-  font-size:14px;
-  font-weight:600;
-  display:flex;
-  align-items:center;
-  gap:6px;
-  white-space:nowrap;
-  min-width:110px;
-  justify-content:center;
-  box-shadow:0 2px 6px rgba(0,0,0,.25);
-}
-
-/* icon inside */
-.addBtnUI .icon{
-  font-size:16px;
-  line-height:1;
-}
-
-/* mobile */
-@media (max-width:600px){
-  .addBtnUI{
-    font-size:12px;
-    padding:6px 12px;
-    min-width:95px;
-  }
-}
-
-.toolbarCol{
-  flex-direction:column;
-  align-items:stretch;
-  gap:8px;
-}
-
-.row{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.rowTop{
-  font-size:18px;
-  font-weight:700;
-}
-
-.rowSearch input{
-  width:95%;
-  max-width:400px;
-}
-
-.rowActions{
-  gap:10px;
-}
-
-/* round buttons */
-.circleBtn{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  border:none;
-  background:#2563eb;
-  color:#fff;
-  font-size:20px;
-  box-shadow:0 2px 6px rgba(0,0,0,.25);
-  }
