@@ -139,12 +139,7 @@ node.append("text")
   .style("fill","#555")
   .text(d => d.data.personId);
 
-  // 🔁 refresh text when tree updates
-  node.select("text").text(d => {
-    const name = d.data.name || "";
-    const spouse = d.data.spouse && d.data.spouse.name ? d.data.spouse.name : "";
-    return spouse ? `${name} ❤ ${spouse}` : name;
-  });
+  
 
   const link = g.selectAll(".link")
     .data(links, d => d.target.id);
