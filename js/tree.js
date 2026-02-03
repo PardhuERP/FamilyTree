@@ -39,12 +39,19 @@ function buildTree(rows){
   }
 
   map = {};
-  rows.forEach(p => map[p.personId] = {...p, children:[]});
   rows.forEach(p => {
-    if(p.fatherId && map[p.fatherId]){
-      map[p.fatherId].children.push(map[p.personId]);
+
+  if(p.fatherId && map[p.fatherId]){
+    map[p.fatherId].children.push(map[p.personId]);
+  }
+
+  if(p.motherId && map[p.motherId]){
+    if(!map[p.motherId].children.includes(map[p.personId])){
+      map[p.motherId].children.push(map[p.personId]);
     }
-  });
+  }
+
+});
 
   // connect spouses
   rows.forEach(p=>{
