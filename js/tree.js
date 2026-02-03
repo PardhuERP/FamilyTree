@@ -102,7 +102,31 @@ function update(source){
 
   nodes.forEach(d => { d.x0=d.x; d.y0=d.y; });
 
-  if(searchBox) searchBox.dispatchEvent(new Event("input"));
+  // attach search AFTER tree loads
+if(searchBox){
+  searchBox.oninput = function(){
+    const q = this.value.toLowerCase();
+    if(!root) return;
+
+    g.selectAll(".node").each(function(d){
+      const match = d.data.name.toLowerCase().includes(q);
+      d3.select(this).select("rect")
+        .attr("stroke", match ? "#16a34a" : "#2563eb")
+        .attr("stroke-width", match ? 4 : 2);
+
+      if(match){
+        const t = d3.zoomTransform(svg.node());
+        const x = -d.y * t.k + width / 2;
+        const y = -d.x * t.k + height / 2;
+
+        svg.transition().duration(400)
+          .call(
+            d3.zoom().transform,
+            d3.zoomIdentity.translate(x, y).scale(t.k)
+          );
+      }
+    });
+  };
 }
 
 function diagonal(s,d){
