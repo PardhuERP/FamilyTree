@@ -181,6 +181,21 @@ function addPerson(){
   });
 }
 
+// 🔍 SEARCH
+const searchBox = document.getElementById("searchBox");
+if(searchBox){
+  searchBox.addEventListener("input", function(){
+    const q = this.value.toLowerCase();
+    g.selectAll(".node").select("rect")
+      .attr("stroke", d =>
+        d.data.name.toLowerCase().includes(q) ? "#16a34a" : "#2563eb"
+      )
+      .attr("stroke-width", d =>
+        d.data.name.toLowerCase().includes(q) ? 4 : 2
+      );
+  });
+}
+
 /* ---------- ADD BUTTON ---------- */
 if(document.getElementById("addBtn")){
   document.getElementById("addBtn").addEventListener("click", addPerson);
