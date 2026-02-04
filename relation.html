@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Relation Finder</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="toolbar addBar">
+  <button class="backBtn" onclick="location.href='index.html'">← Back</button>
+  <span class="appTitle">Relation Finder</span>
+</div>
+
+<div class="addPage">
+  <h2>Find Relationship</h2>
+
+  <select id="personA"></select>
+  <select id="personB"></select>
+
+  <button onclick="findRelation()">Find Relation</button>
+
+  <div id="result" style="margin-top:15px;font-weight:600;"></div>
+</div>
+
+<script src="js/relation.js"></script>
+</body>
+</html>
