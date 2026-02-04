@@ -24,20 +24,49 @@ function fillDropdowns(){
   });
 }
 
-function findRelation(){
-  const idA = personA.value;
-  const idB = personB.value;
+function findRelation(a, b, people){
 
-  const A = people.find(p=>p.personId===idA);
-  const B = people.find(p=>p.personId===idB);
+  const A = people.find(p => p.personId === a);
+  const B = people.find(p => p.personId === b);
 
-  let relation = "No direct relation found";
+  if(!A || !B) return "Relation not found";
 
-  if(B.fatherId === A.personId) relation = A.name+" is father of "+B.name;
-  else if(B.motherId === A.personId) relation = A.name+" is mother of "+B.name;
-  else if(A.fatherId === B.personId) relation = A.name+" is son of "+B.name;
-  else if(A.motherId === B.personId) relation = A.name+" is daughter of "+B.name;
-  else if(A.spouseId === B.personId) relation = A.name+" is spouse of "+B.name;
+  // Spouse
+  if(A.spouseId === B.personId || B.spouseId === A.personId){
+    return `${A.name} is spouse of ${B.name}`;
+  }
 
-  document.getElementById("result").innerText = relation;
+  // Father / Mother
+  if(B.fatherId === A.personId){
+    return `${A.name} is father of ${B.name}`;
+  }
+  if(B.motherId === A.personId){
+    return `${A.name} is mother of ${B.name}`;
+  }
+
+  // Son / Daughter
+  if(A.fatherId === B.personId){
+    return `${A.name} is son of ${B.name}`;
+  }
+  if(A.motherId === B.personId){
+    return `${A.name} is daughter of ${B.name}`;
+  }
+
+  // Grandfather / Grandmother
+  const A_father = people.find(p => p.personId === A.fatherId);
+  const A_mother = people.find(p => p.personId === A.motherId);
+
+  if(A_father && A_father.fatherId === B.personId){
+    return `${A.name} is grandson of ${B.name}`;
+  }
+  if(A_mother && A_mother.motherId === B.personId){
+    return `${A.name} is granddaughter of ${B.name}`;
+  }
+
+  // Brother / Sister
+  if(A.fatherId && A.fatherId === B.fatherId && A.personId !== B.personId){
+    return `${A.name} and ${B.name} are siblings`;
+  }
+
+  return "Relation not mapped yet";
 }
