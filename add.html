@@ -15,22 +15,29 @@
 </div>
 
 <div class="addPage">
+
   <h2>Add New Family Member</h2>
 
-  <input id="pname" placeholder="Name">
-  <select id="pgender">
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
-  </select>
-  <div class="field">
-  <label>Date of Birth</label>
-  <input id="pdob" type="date">
-</div>
-  <input id="pplace" placeholder="Place">
+  <label class="fieldLabel">Full Name</label>
+  <input id="pname" placeholder="Enter name">
 
-  <small id="parentInfo" style="color:#2563eb; display:block; margin-bottom:6px;"></small>
-  <input id="pfather" placeholder="Father ID">
-  <input id="pspouse" placeholder="Spouse ID (optional)">
+  <label class="fieldLabel">Gender</label>
+  <select id="pgender">
+    <option>Male</option>
+    <option>Female</option>
+  </select>
+
+  <label class="fieldLabel">Date of Birth</label>
+  <input type="date" id="pdob">
+
+  <label class="fieldLabel">Place</label>
+  <input id="pplace" placeholder="Village / City">
+
+  <label class="fieldLabel">Father ID</label>
+  <input id="pfather">
+
+  <label class="fieldLabel">Spouse ID (optional)</label>
+  <input id="pspouse">
 
   <button id="addBtn">Save Person</button>
 </div>
