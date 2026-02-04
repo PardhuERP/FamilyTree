@@ -184,6 +184,12 @@ function toggle(event, d){
     name: d.data.name
   };
 
+  // ✅ SAVE FOR ADD PAGE
+  localStorage.setItem("selectedParent", d.data.personId);
+  localStorage.setItem("selectedParentName", d.data.name);
+
+  console.log("Saved parent:", d.data.personId, d.data.name);
+
   // highlight
   g.selectAll(".node").classed("search-match", false);
   d3.select(event.currentTarget).classed("search-match", true);
