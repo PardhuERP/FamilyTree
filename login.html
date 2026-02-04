@@ -1,6 +1,56 @@
-<h2>Login</h2>
-<input id="email" placeholder="Enter Gmail">
-<button onclick="sendOtp()">Send OTP</button>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Login | MyFamilyTree</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
 
-<input id="otp" placeholder="Enter OTP">
-<button onclick="verifyOtp()">Verify</button>
+<div class="addPage">
+  <h2>Login with Gmail</h2>
+
+  <input id="email" placeholder="Enter your Gmail">
+
+  <button onclick="sendOtp()">Send OTP</button>
+
+  <input id="otp" placeholder="Enter OTP">
+
+  <button onclick="verifyOtp()">Verify & Login</button>
+
+  <p id="msg"></p>
+</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
+
+function sendOtp(){
+  const email = document.getElementById("email").value;
+  fetch(API_URL+"?action=sendOtp&email="+encodeURIComponent(email))
+    .then(r=>r.json())
+    .then(res=>{
+      if(res.status==="OK"){
+        document.getElementById("msg").innerText="OTP sent to your Gmail";
+      }
+    });
+}
+
+function verifyOtp(){
+  const email = document.getElementById("email").value;
+  const otp = document.getElementById("otp").value;
+
+  fetch(API_URL+"?action=verifyOtp&email="+encodeURIComponent(email)+"&otp="+otp)
+    .then(r=>r.json())
+    .then(res=>{
+      if(res.status==="OK"){
+        localStorage.setItem("userId",res.userId);
+        location.href="index.html";
+      }else{
+        document.getElementById("msg").innerText="Invalid OTP";
+      }
+    });
+}
+</script>
+</body>
+</html>
