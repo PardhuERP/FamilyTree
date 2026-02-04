@@ -271,7 +271,6 @@ API_URL +
   }
 });
 window.location.href = "index.html";
-} else {
 alert("Error adding person");
 }
 });
