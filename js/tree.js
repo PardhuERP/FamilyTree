@@ -329,6 +329,40 @@ function centerNode(d){
       d3.zoomIdentity.translate(x, y).scale(scale)
     );
 }
+/*********ADD/DELETE*******/
+function editPerson(p){
+  const newName = prompt("Edit name:", p.name);
+  if(!newName) return;
+
+  fetch(API_URL + "?action=updatePerson" +
+    "&personId=" + p.personId +
+    "&name=" + encodeURIComponent(newName))
+    .then(r=>r.json())
+    .then(res=>{
+      if(res.status==="OK"){
+        alert("Updated successfully");
+        location.reload();
+      } else {
+        alert("Update failed");
+      }
+    });
+}
+
+function deletePerson(id, name){
+  if(!confirm("Delete " + name + "?")) return;
+
+  fetch(API_URL + "?action=deletePerson&personId=" + id)
+    .then(r=>r.json())
+    .then(res=>{
+      if(res.status==="OK"){
+        alert("Deleted successfully");
+        location.reload();
+      } else {
+        alert("Delete failed");
+      }
+    });
+}
+
 
 /* ---------- ADD BUTTON ---------- */
 if(document.getElementById("addBtn")){
