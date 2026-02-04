@@ -178,31 +178,34 @@ function diagonal(s,d){
 
 /* ---------- NODE CLICK ---------- */
 function toggle(event, d){
-  // 🔥 ALWAYS keep latest selected
+  event.stopPropagation(); // 🔥 prevent double firing
+
+  // 1️⃣ Always select immediately
   window.selectedNode = {
     personId: d.data.personId,
     name: d.data.name
   };
 
-  // ✅ SAVE FOR ADD PAGE
   localStorage.setItem("selectedParent", d.data.personId);
   localStorage.setItem("selectedParentName", d.data.name);
 
-  console.log("Saved parent:", d.data.personId, d.data.name);
-
-  // highlight
+  // 2️⃣ Highlight instantly
   g.selectAll(".node").classed("search-match", false);
   d3.select(event.currentTarget).classed("search-match", true);
 
-  // expand / collapse
-  if(d.children){
-    d._children = d.children;
-    d.children = null;
-  } else {
-    d.children = d._children;
-    d._children = null;
-  }
-  update(d);
+  console.log("Selected:", d.data.personId, d.data.name);
+
+  // 3️⃣ Expand / collapse AFTER short delay
+  setTimeout(() => {
+    if(d.children){
+      d._children = d.children;
+      d.children = null;
+    } else {
+      d.children = d._children;
+      d._children = null;
+    }
+    update(d);
+  }, 50);
 }
 
 /* ---------- BUTTONS ---------- */
