@@ -50,14 +50,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const pid = localStorage.getItem("selectedParent");
   const pname = localStorage.getItem("selectedParentName");
 
-  const fatherInput = document.getElementById("pfather");
+  const pfather = document.getElementById("pfather");
   const info = document.getElementById("parentInfo");
 
-  if (pid && pname) {
-    fatherInput.value = pid;
+  if (pid && pfather && info) {
+    pfather.value = pid;
     info.innerText = "Child of: " + pname + " (" + pid + ")";
-  } else {
-    fatherInput.value = "";
+  } else if(info) {
     info.innerText = "No parent selected. Go back and tap a person.";
   }
 });
