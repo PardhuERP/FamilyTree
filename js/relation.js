@@ -36,6 +36,16 @@ function findRelation(a, b, people){
     return `${A.name} is spouse of ${B.name}`;
   }
 
+  // Siblings
+  if (
+    (A.fatherId && A.fatherId === B.fatherId) ||
+    (A.motherId && A.motherId === B.motherId)
+  ) {
+    if (A.personId !== B.personId) {
+      return `${A.name} and ${B.name} are siblings`;
+    }
+  }
+
   // Father / Mother
   if(B.fatherId === A.personId){
     return `${A.name} is father of ${B.name}`;
@@ -52,7 +62,7 @@ function findRelation(a, b, people){
     return `${A.name} is daughter of ${B.name}`;
   }
 
-  // Grandfather / Grandmother
+  // Grandparent
   const A_father = people.find(p => p.personId === A.fatherId);
   const A_mother = people.find(p => p.personId === A.motherId);
 
@@ -62,16 +72,6 @@ function findRelation(a, b, people){
   if(A_mother && A_mother.motherId === B.personId){
     return `${A.name} is granddaughter of ${B.name}`;
   }
-
-  // Brother / Sister (same father OR same mother)
-if (
-  (A.fatherId && A.fatherId === B.fatherId) ||
-  (A.motherId && A.motherId === B.motherId)
-) {
-  if (A.personId !== B.personId) {
-    return `${A.name} and ${B.name} are siblings`;
-  }
-}
 
   return "Relation not mapped yet";
 }
