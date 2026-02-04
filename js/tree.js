@@ -274,7 +274,6 @@ window.location.href = "index.html";
 alert("Error adding person");
 }
 });
-}
 
 
 /* ---------- SEARCH ---------- */
