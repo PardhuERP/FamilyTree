@@ -72,8 +72,27 @@
     }
   };
 
-  function openEdit() {
-    alert("Select a member in the tree first");
+  function openEdit(){
+  if(!window.selectedNode){
+    alert("Tap a member first");
+    return;
+  }
+
+  const newName = prompt("Edit name:", window.selectedNode.name);
+  if(!newName) return;
+
+  fetch(API_URL +
+    "?action=updatePerson" +
+    "&personId=" + window.selectedNode.personId +
+    "&name=" + encodeURIComponent(newName)
+  )
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.status==="OK"){
+      alert("Updated");
+      location.reload();
+    }
+  });
   }
 
   function openDelete() {
