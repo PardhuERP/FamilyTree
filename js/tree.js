@@ -5,7 +5,7 @@ const width = window.innerWidth;
 const height = window.innerHeight - 120;
 
 /* ---------- TREE SETUP ---------- */
-let selectedNode = null;
+window.selectedNode = null;
 let svg, g, treeLayout, root, i = 0;
 let map = {};
 const searchBox = document.getElementById("searchBox");
@@ -177,7 +177,7 @@ function diagonal(s,d){
 
 /* ---------- NODE CLICK ---------- */
 function toggle(event, d){
-  selectedNode = d.data; // 🔥 store selected node
+  window.selectedNode = d.data; // 🔥 store selected node
   localStorage.setItem("selectedParent", d.data.personId);
   localStorage.setItem("selectedParentName", d.data.name);
 
