@@ -5,6 +5,7 @@ const width = window.innerWidth;
 const height = window.innerHeight - 120;
 
 /* ---------- TREE SETUP ---------- */
+// GLOBAL selected node (shared with menu)
 window.selectedNode = null;
 let svg, g, treeLayout, root, i = 0;
 let map = {};
@@ -177,9 +178,11 @@ function diagonal(s,d){
 
 /* ---------- NODE CLICK ---------- */
 function toggle(event, d){
-  window.selectedNode = d.data; // 🔥 store selected node
-  localStorage.setItem("selectedParent", d.data.personId);
-  localStorage.setItem("selectedParentName", d.data.name);
+  // 🔥 ALWAYS keep latest selected
+  window.selectedNode = {
+    personId: d.data.personId,
+    name: d.data.name
+  };
 
   // highlight
   g.selectAll(".node").classed("search-match", false);
