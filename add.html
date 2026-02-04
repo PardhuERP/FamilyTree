@@ -50,13 +50,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const pid = localStorage.getItem("selectedParent");
   const pname = localStorage.getItem("selectedParentName");
 
-  if (pid) {
-    document.getElementById("pfather").value = pid;
-    document.getElementById("parentInfo").innerText =
-      "Child of: " + pname + " (" + pid + ")";
+  const fatherInput = document.getElementById("pfather");
+  const info = document.getElementById("parentInfo");
+
+  if (pid && pname) {
+    fatherInput.value = pid;
+    info.innerText = "Child of: " + pname + " (" + pid + ")";
   } else {
-    document.getElementById("parentInfo").innerText =
-      "No parent selected. Go back and tap a person.";
+    fatherInput.value = "";
+    info.innerText = "No parent selected. Go back and tap a person.";
   }
 });
 </script>
