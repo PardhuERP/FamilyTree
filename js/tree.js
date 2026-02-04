@@ -311,18 +311,4 @@ function centerNode(d){
 if(document.getElementById("addBtn")){
   document.getElementById("addBtn").addEventListener("click", addPerson);
 }
-/* ---------- 3 DOT MENU TOGGLE ---------- */
-const menuBtn = document.getElementById("menuBtn");
-const menuBox = document.getElementById("menuBox");
 
-if(menuBtn && menuBox){
-  menuBtn.addEventListener("click", (e)=>{
-    e.stopPropagation();
-    menuBox.style.display =
-      menuBox.style.display === "block" ? "none" : "block";
-  });
-
-  document.body.addEventListener("click", ()=>{
-    menuBox.style.display = "none";
-  });
-}
