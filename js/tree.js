@@ -40,29 +40,21 @@ function buildTree(rows){
 
   map = {};
   rows.forEach(p => {
-
   const child = map[p.personId];
 
-  if(p.fatherId){
+  if(p.fatherId && map[p.fatherId] && p.fatherId !== p.personId){
     const f = map[p.fatherId];
-    if(f){
+    if(!f.children.includes(child)){
       f.children.push(child);
-    } else {
-      console.warn("Father not found:", p.fatherId, p.name);
     }
   }
 
-  if(p.motherId){
+  if(p.motherId && map[p.motherId] && p.motherId !== p.personId){
     const m = map[p.motherId];
-    if(m){
-      if(!m.children.includes(child)){
-        m.children.push(child);
-      }
-    } else {
-      console.warn("Mother not found:", p.motherId, p.name);
+    if(!m.children.includes(child)){
+      m.children.push(child);
     }
   }
-
 });
 
   // connect spouses
