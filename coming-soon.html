@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Coming Soon | MyFamilyTree</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style>
+  body{
+    margin:0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(135deg, #2563eb, #16a34a);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    text-align:center;
+  }
+
+  .card{
+    background:rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    border-radius:20px;
+    padding:30px 20px;
+    max-width:360px;
+    width:90%;
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float{
+    0%{transform:translateY(0);}
+    50%{transform:translateY(-8px);}
+    100%{transform:translateY(0);}
+  }
+
+  .icon{
+    font-size:60px;
+    margin-bottom:10px;
+  }
+
+  h1{
+    margin:10px 0;
+    font-size:28px;
+    letter-spacing:1px;
+  }
+
+  p{
+    font-size:15px;
+    line-height:1.6;
+    opacity:0.95;
+  }
+
+  .tag{
+    display:inline-block;
+    margin-top:15px;
+    background:rgba(0,0,0,.3);
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:13px;
+  }
+
+  .btn{
+    margin-top:20px;
+    display:inline-block;
+    text-decoration:none;
+    background:#fff;
+    color:#2563eb;
+    padding:10px 20px;
+    border-radius:999px;
+    font-weight:600;
+    box-shadow:0 4px 10px rgba(0,0,0,.25);
+  }
+
+  .btn:hover{
+    background:#f1f5f9;
+  }
+
+  .footer{
+    margin-top:15px;
+    font-size:12px;
+    opacity:0.85;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <div class="icon">🌳</div>
+  <h1>Coming Soon</h1>
+  <p>
+    We are building something special for your family ❤️  
+    <br>
+    A place to connect generations, memories, and love.
+  </p>
+
+  <div class="tag">Family Tree | Relations | History</div>
+
+  <br>
+  <a href="index.html" class="btn">← Back to Tree</a>
+
+  <div class="footer">
+    MyFamilyTree • Made with love
+  </div>
+</div>
+
+</body>
+</html>
