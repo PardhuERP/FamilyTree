@@ -318,4 +318,5 @@ function centerNode(d){
 if(document.getElementById("addBtn")){
   document.getElementById("addBtn").addEventListener("click", addPerson);
 }
+window.selectedNode = selectedNode;
 
