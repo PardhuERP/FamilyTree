@@ -27,6 +27,14 @@ function fillDropdowns(){
   });
 }
 
+function checkRelation(){
+  const a = document.getElementById("personA").value;
+  const b = document.getElementById("personB").value;
+
+  const res = findRelation(a, b);
+  document.getElementById("result").innerText = res;
+}
+
 function findRelation(a, b){
 
   if(!dataReady || !people.length){
@@ -78,14 +86,6 @@ function findRelation(a, b){
   }
   if(A_mother && A_mother.motherId === B.personId){
     return `${A.name} is granddaughter of ${B.name}`;
-  }
-
-  function checkRelation(){
-  const a = document.getElementById("personA").value;
-  const b = document.getElementById("personB").value;
-
-  const res = findRelation(a,b);
-  document.getElementById("result").innerText = res;
   }
 
   return "Relation not mapped yet";
