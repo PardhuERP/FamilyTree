@@ -94,9 +94,23 @@
     }
   });
   }
-  function openDelete() {
-    alert("Select a member in the tree first");
+  function openDelete(){
+  if(!window.selectedNode){
+    alert("Tap a member first");
+    return;
   }
+
+  if(!confirm("Delete " + window.selectedNode.name + "?")) return;
+
+  fetch(API_URL + "?action=deletePerson&personId=" + window.selectedNode.personId)
+    .then(r=>r.json())
+    .then(res=>{
+      if(res.status==="OK"){
+        alert("Deleted");
+        location.reload();
+      }
+    });
+}
 </script>
 </body>
  
