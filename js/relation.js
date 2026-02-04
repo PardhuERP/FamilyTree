@@ -2,13 +2,16 @@ const API_URL = "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQ
 const FAMILY_ID = "F001";
 
 let people = [];
+let dataReady = false;
 
 fetch(API_URL + "?action=getTree&familyId=" + FAMILY_ID)
   .then(r => r.json())
   .then(res => {
     if(res.status === "OK"){
       people = res.data;
+      dataReady = true;
       fillDropdowns();
+      console.log("Loaded", people.length, "members");
     }
   });
 
@@ -24,7 +27,11 @@ function fillDropdowns(){
   });
 }
 
-function findRelation(a, b, people){
+function findRelation(a, b){
+
+  if(!dataReady || !people.length){
+    return "Data still loading. Try again.";
+  }
 
   const A = people.find(p => p.personId === a);
   const B = people.find(p => p.personId === b);
@@ -71,6 +78,14 @@ function findRelation(a, b, people){
   }
   if(A_mother && A_mother.motherId === B.personId){
     return `${A.name} is granddaughter of ${B.name}`;
+  }
+
+  function checkRelation(){
+  const a = document.getElementById("personA").value;
+  const b = document.getElementById("personB").value;
+
+  const res = findRelation(a,b);
+  document.getElementById("result").innerText = res;
   }
 
   return "Relation not mapped yet";
