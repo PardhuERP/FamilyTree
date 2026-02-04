@@ -38,8 +38,15 @@ function buildTree(rows){
     return;
   }
 
-  map = {};
-  rows.forEach(p => {
+map = {};
+
+// 1️⃣ First create all nodes
+rows.forEach(p => {
+  map[p.personId] = { ...p, children: [] };
+});
+
+// 2️⃣ Then link parents
+rows.forEach(p => {
   const child = map[p.personId];
 
   if(p.fatherId && map[p.fatherId] && p.fatherId !== p.personId){
