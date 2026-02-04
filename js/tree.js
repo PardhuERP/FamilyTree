@@ -125,6 +125,30 @@ function update(source){
     .attr("rx", 12)
     .attr("ry", 12)
     .attr("y", -17);
+  
+  // EDIT button
+nodeEnter.append("text")
+  .attr("class","editBtn")
+  .attr("x", 45)
+  .attr("y", -12)
+  .text("✏")
+  .style("cursor","pointer")
+  .on("click", (event,d)=>{
+    event.stopPropagation();
+    editPerson(d.data);
+  });
+
+// DELETE button
+nodeEnter.append("text")
+  .attr("class","deleteBtn")
+  .attr("x", 45)
+  .attr("y", 12)
+  .text("🗑")
+  .style("cursor","pointer")
+  .on("click", (event,d)=>{
+    event.stopPropagation();
+    deletePerson(d.data.personId, d.data.name);
+  });
 
   // TEXT
   nodeEnter.append("text")
@@ -136,7 +160,7 @@ function update(source){
       const spouse = d.data.spouse && d.data.spouse.name ? d.data.spouse.name : "";
       return spouse ? `${name} 👩‍❤️‍👨 ${spouse}` : name;
     });
-
+  
   // AUTO SIZE BOX
   nodeEnter.each(function(){
     const text = d3.select(this).select("text");
