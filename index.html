@@ -73,7 +73,7 @@
   };
 
   function openEdit(){
-  if(!window.selectedNode){
+  if(!window.selectedNode || !window.selectedNode.personId){
     alert("Tap a member first");
     return;
   }
@@ -94,7 +94,6 @@
     }
   });
   }
-
   function openDelete() {
     alert("Select a member in the tree first");
   }
