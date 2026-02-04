@@ -263,9 +263,13 @@ API_URL +
 )
 .then(r => r.json())
 .then(res => {
-if(res.status === "OK"){
-alert("Added successfully!");
-localStorage.clear();
+  if(res.status === "OK"){
+    alert("Added successfully!");
+    localStorage.removeItem("selectedParent");
+    localStorage.removeItem("selectedParentName");
+    window.location.href = "index.html";
+  }
+});
 window.location.href = "index.html";
 } else {
 alert("Error adding person");
