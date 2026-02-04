@@ -232,48 +232,51 @@ return p ? Number(p.generation) : 1;
 }
 
 async function addPerson(){
-const name = document.getElementById("pname")?.value;
-const gender = document.getElementById("pgender")?.value;
-const dob = document.getElementById("pdob")?.value;
-const place = document.getElementById("pplace")?.value;
-const fatherId = document.getElementById("pfather")?.value;
-const spouseId = document.getElementById("pspouse")?.value || "";
+  const name = document.getElementById("pname")?.value;
+  const gender = document.getElementById("pgender")?.value;
+  const dob = document.getElementById("pdob")?.value;
+  const place = document.getElementById("pplace")?.value;
+  const fatherId = document.getElementById("pfather")?.value;
+  const spouseId = document.getElementById("pspouse")?.value || "";
 
-if(!name){
-alert("Enter name");
-return;
-}
-
-let gen = 1;
-if(fatherId){
-gen = await getPersonGen(fatherId) + 1;
-}
-
-fetch(
-API_URL +
-"?action=addPerson" +
-"&familyId=" + FAMILY_ID +
-"&name=" + encodeURIComponent(name) +
-"&gender=" + gender +
-"&dob=" + dob +
-"&place=" + encodeURIComponent(place) +
-"&fatherId=" + fatherId +
-"&spouseId=" + spouseId +
-"&generation=" + gen
-)
-.then(r => r.json())
-.then(res => {
-  if(res.status === "OK"){
-    alert("Added successfully!");
-    localStorage.removeItem("selectedParent");
-    localStorage.removeItem("selectedParentName");
-    window.location.href = "index.html";
+  if(!name){
+    alert("Enter name");
+    return;
   }
-});
-window.location.href = "index.html";
-alert("Error adding person");
+
+  let gen = 1;
+  if(fatherId){
+    gen = await getPersonGen(fatherId) + 1;
+  }
+
+  fetch(
+    API_URL +
+      "?action=addPerson" +
+      "&familyId=" + FAMILY_ID +
+      "&name=" + encodeURIComponent(name) +
+      "&gender=" + gender +
+      "&dob=" + dob +
+      "&place=" + encodeURIComponent(place) +
+      "&fatherId=" + fatherId +
+      "&spouseId=" + spouseId +
+      "&generation=" + gen
+  )
+  .then(r => r.json())
+  .then(res => {
+    if(res.status === "OK"){
+      alert("Added successfully!");
+      localStorage.removeItem("selectedParent");
+      localStorage.removeItem("selectedParentName");
+      window.location.href = "index.html";
+    } else {
+      alert("Error adding person");
+    }
+  })
+  .catch(err=>{
+    console.error(err);
+    alert("Network error");
+  });
 }
-});
 
 
 /* ---------- SEARCH ---------- */
