@@ -289,3 +289,13 @@ body::after{
   border:none;
   border-top:1px solid #e5e7eb;
 }
+
+.editBtn{
+  fill:#2563eb;
+  font-size:12px;
+}
+
+.deleteBtn{
+  fill:#dc2626;
+  font-size:12px;
+}
