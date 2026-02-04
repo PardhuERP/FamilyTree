@@ -53,7 +53,8 @@
 <script src="js/tree.js"></script>
 
 <script>
-  document.getElementById("addPageBtn").onclick = () => {
+  // Add page
+  document.getElementById("addPageBtn").onclick = function () {
     window.location.href = "add.html";
   };
 
@@ -61,33 +62,26 @@
   var menuBtn = document.getElementById("menuBtn");
   var menuBox = document.getElementById("menuBox");
 
-  menuBtn.onclick = () => {
+  menuBtn.addEventListener("click", function (e) {
+    e.stopPropagation(); // prevent document click
     menuBox.classList.toggle("show");
-  };
+  });
 
-  document.addEventListener("click", e=>{
-    if(!menuBox.contains(e.target) && e.target !== menuBtn){
+  document.addEventListener("click", function (e) {
+    if (!menuBox.contains(e.target)) {
       menuBox.classList.remove("show");
     }
   });
 
-  // PLACEHOLDER FUNCTIONS (tree.js will handle selectedNode later)
-  function openEdit(){
-    alert("Tap a member first to edit");
-  }
-
-  function openDelete(){
-    alert("Tap a member first to delete");
-  }
-  function openEdit(){
+  // TEMP PLACEHOLDER
+  function openEdit() {
     alert("Select a member in the tree first");
   }
 
-  function openDelete(){
+  function openDelete() {
     alert("Select a member in the tree first");
   }
 </script>
-
 </body>
  
 </html>
