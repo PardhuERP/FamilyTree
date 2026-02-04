@@ -53,27 +53,25 @@
 <script src="js/tree.js"></script>
 
 <script>
-  // Add page
   document.getElementById("addPageBtn").onclick = function () {
     window.location.href = "add.html";
   };
 
-  // MENU TOGGLE
-  var menuBtn = document.getElementById("menuBtn");
-  var menuBox = document.getElementById("menuBox");
+  // MENU
+  var btn = document.getElementById("menuBtn");
+  var box = document.getElementById("menuBox");
 
-  menuBtn.addEventListener("click", function (e) {
-    e.stopPropagation(); // prevent document click
-    menuBox.classList.toggle("show");
-  });
+  btn.onclick = function (e) {
+    e.stopPropagation();
+    box.classList.toggle("show");
+  };
 
-  document.addEventListener("click", function (e) {
-    if (!menuBox.contains(e.target)) {
-      menuBox.classList.remove("show");
+  document.onclick = function (e) {
+    if (!box.contains(e.target)) {
+      box.classList.remove("show");
     }
-  });
+  };
 
-  // TEMP PLACEHOLDER
   function openEdit() {
     alert("Select a member in the tree first");
   }
