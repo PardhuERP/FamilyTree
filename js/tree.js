@@ -90,13 +90,6 @@ function collapse(d){
     d.children = null;
   }
 }
-function restoreCollapse(d){
-  if(d.children){
-    d._children = d.children;
-    d._children.forEach(restoreCollapse);
-    d.children = null;
-  }
-}
 
 function expandPath(d){
   let p = d;
@@ -186,14 +179,11 @@ function toggle(event,d){
   localStorage.setItem("selectedParentName", d.data.name);
 
   if(d.children){
-    // collapse
-    restoreCollapse(d);
+    d._children = d.children;
+    d.children = null;
   } else {
-    // expand
-    if(d._children){
-      d.children = d._children;
-      d._children = null;
-    }
+    d.children = d._children;
+    d._children = null;
   }
   update(d);
 }
@@ -288,7 +278,6 @@ if(searchBox){
 
     if(found){
       expandPath(found);
-found._children = null;   // keep toggle working
       update(found);
 
       setTimeout(()=>{
