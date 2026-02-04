@@ -63,10 +63,15 @@ function findRelation(a, b, people){
     return `${A.name} is granddaughter of ${B.name}`;
   }
 
-  // Brother / Sister
-  if(A.fatherId && A.fatherId === B.fatherId && A.personId !== B.personId){
+  // Brother / Sister (same father OR same mother)
+if (
+  (A.fatherId && A.fatherId === B.fatherId) ||
+  (A.motherId && A.motherId === B.motherId)
+) {
+  if (A.personId !== B.personId) {
     return `${A.name} and ${B.name} are siblings`;
   }
+}
 
   return "Relation not mapped yet";
 }
