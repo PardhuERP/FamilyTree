@@ -134,7 +134,7 @@ function update(source){
     .text(d => {
       const name = d.data.name || "";
       const spouse = d.data.spouse && d.data.spouse.name ? d.data.spouse.name : "";
-      return spouse ? `${name} ❤ ${spouse}` : name;
+      return spouse ? `${name} 👩‍❤️‍👨 ${spouse}` : name;
     });
 
   // AUTO SIZE BOX
