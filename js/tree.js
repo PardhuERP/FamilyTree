@@ -126,29 +126,6 @@ function update(source){
     .attr("ry", 12)
     .attr("y", -17);
   
-  // EDIT button
-nodeEnter.append("text")
-  .attr("class","editBtn")
-  .attr("x", 45)
-  .attr("y", -12)
-  .text("✏")
-  .style("cursor","pointer")
-  .on("click", (event,d)=>{
-    event.stopPropagation();
-    editPerson(d.data);
-  });
-
-// DELETE button
-nodeEnter.append("text")
-  .attr("class","deleteBtn")
-  .attr("x", 45)
-  .attr("y", 12)
-  .text("🗑")
-  .style("cursor","pointer")
-  .on("click", (event,d)=>{
-    event.stopPropagation();
-    deletePerson(d.data.personId, d.data.name);
-  });
 
   // TEXT
   nodeEnter.append("text")
