@@ -149,15 +149,15 @@ color:#1f2933;
 .addPage input,
 .addPage select{
   width:100%;
-  height:48px;              /* force same height */
-  padding:0 14px;          /* same inner spacing */
+  height:48px;
+  padding:0 14px;
   border-radius:12px;
   border:1px solid #d1d5db;
   font-size:15px;
   font-family:inherit;
   box-sizing:border-box;
   background:#fff;
-  appearance:none;         /* remove browser styles */
+  appearance:none;
 }
 
 .addPage select{
@@ -185,4 +185,58 @@ box-shadow:0 4px 10px rgba(0,0,0,.2);
 stroke:#16a34a !important;
 stroke-width:4px !important;
 fill:#ecfdf5;
+}
+
+/* ===================================================== */
+/* =============== NEW UI ENHANCEMENTS ================= */
+/* ===================================================== */
+
+/* Watermark inside Add Card */
+.addPage{
+  position:relative;
+  overflow:hidden;
+}
+
+.addPage::before{
+  content:"👨‍👩‍👧‍👦";
+  position:absolute;
+  font-size:180px;
+  opacity:0.05;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+
+/* Floating family background */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    url("https://cdn-icons-png.flaticon.com/512/194/194938.png")
+    repeat;
+  opacity:0.02;
+  z-index:-1;
+}
+
+/* Input labels */
+.fieldLabel{
+  display:block;
+  font-size:13px;
+  margin:6px 0 4px;
+  color:#6b7280;
+  font-weight:600;
+}
+
+/* Soft glass card */
+.addPage{
+  backdrop-filter: blur(6px);
+  background:rgba(255,255,255,0.95);
+}
+
+/* Button hover effect */
+.addPage button:hover{
+  transform:translateY(-1px);
+  box-shadow:0 6px 14px rgba(0,0,0,.25);
 }
