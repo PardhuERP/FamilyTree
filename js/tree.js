@@ -41,13 +41,25 @@ function buildTree(rows){
   map = {};
   rows.forEach(p => {
 
-  if(p.fatherId && map[p.fatherId]){
-    map[p.fatherId].children.push(map[p.personId]);
+  const child = map[p.personId];
+
+  if(p.fatherId){
+    const f = map[p.fatherId];
+    if(f){
+      f.children.push(child);
+    } else {
+      console.warn("Father not found:", p.fatherId, p.name);
+    }
   }
 
-  if(p.motherId && map[p.motherId]){
-    if(!map[p.motherId].children.includes(map[p.personId])){
-      map[p.motherId].children.push(map[p.personId]);
+  if(p.motherId){
+    const m = map[p.motherId];
+    if(m){
+      if(!m.children.includes(child)){
+        m.children.push(child);
+      }
+    } else {
+      console.warn("Mother not found:", p.motherId, p.name);
     }
   }
 
