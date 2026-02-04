@@ -12,15 +12,21 @@
  <div class="toolbar toolbarCol">
   <div class="menuWrap">
   <button id="menuBtn" class="menuBtn">⋮</button>
+   <button id="menuBtn" class="circleBtn">⋮</button>
+
+
+  <div class="menuWrap">
+  <button id="menuBtn" class="circleBtn">⋮</button>
 
   <div id="menuBox" class="menuBox">
-    <a href="coming-soon.html">🔗 Relation Finder</a>
+    <div onclick="openEdit()">✏ Edit Member</div>
+    <div onclick="openDelete()">🗑 Delete Member</div>
+    <hr>
+    <a href="relation.html">🔗 Relation Finder</a>
     <a href="coming-soon.html">🕒 More</a>
     <a href="#">⚙️ Settings</a>
-    <hr>
-    <a href="index.html">🌳 Family Tree</a>
   </div>
-  </div>
+</div>
 
   <!-- ROW 1 -->
   <div class="row rowTop">
@@ -52,6 +58,45 @@
   document.getElementById("addPageBtn").onclick = () => {
     window.location.href = "add.html";
   };
+
+ function openEdit(){
+  if(!selectedNode){
+    alert("Tap a member first");
+    return;
+  }
+
+  const newName = prompt("Edit name:", selectedNode.name);
+  if(!newName) return;
+
+  fetch(API_URL + "?action=updatePerson" +
+    "&personId=" + selectedNode.personId +
+    "&name=" + encodeURIComponent(newName))
+    .then(r=>r.json())
+    .then(res=>{
+      if(res.status==="OK"){
+        alert("Updated");
+        location.reload();
+      }
+    });
+}
+
+function openDelete(){
+  if(!selectedNode){
+    alert("Tap a member first");
+    return;
+  }
+
+  if(!confirm("Delete " + selectedNode.name + "?")) return;
+
+  fetch(API_URL + "?action=deletePerson&personId=" + selectedNode.personId)
+    .then(r=>r.json())
+    .then(res=>{
+      if(res.status==="OK"){
+        alert("Deleted");
+        location.reload();
+      }
+    });
+ }
 </script>
 
 </body>
