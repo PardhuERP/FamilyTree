@@ -29,7 +29,9 @@ if(document.getElementById("tree")){
 
   treeLayout = d3.tree().nodeSize([80,180]);
 
-  fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}`)
+  const USER_ID = localStorage.getItem("userId");
+
+fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
     .then(r => r.json())
     .then(res => {
       if(res.status === "OK"){
