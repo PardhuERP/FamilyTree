@@ -50,6 +50,16 @@
 
 <svg id="tree"></svg>
 
+  <script>
+if(!localStorage.getItem("userId")){
+  location.href = "login.html";
+}
+
+if(!localStorage.getItem("familyId")){
+  location.href = "family-select.html";
+}
+  </script>
+
 <script src="js/tree.js"></script>
 
 <script>
