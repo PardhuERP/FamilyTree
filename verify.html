@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Verify OTP</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="addPage">
+  <h2>Verify OTP</h2>
+
+  <input id="otp" placeholder="Enter 6 digit OTP" />
+  <button onclick="verifyOtp()">Verify</button>
+
+  <p id="msg"></p>
+</div>
+
+<script>
+const API_URL = "YOUR_GAS_WEBAPP_URL";
+const email = localStorage.getItem("loginEmail");
+
+function verifyOtp(){
+  const otp = document.getElementById("otp").value;
+
+  fetch(API_URL + "?action=verifyOtp&email=" + email + "&otp=" + otp)
+    .then(r=>r.json())
+    .then(res=>{
+      if(res.status==="OK"){
+        localStorage.setItem("userId", res.userId);
+        window.location.href = "family-select.html";
+      } else {
+        document.getElementById("msg").innerText = res.message;
+      }
+    });
+}
+</script>
+
+</body>
+</html>
