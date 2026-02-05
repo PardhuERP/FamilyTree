@@ -50,22 +50,20 @@
 
 <svg id="tree"></svg>
 
-  <script>
+<script>
 const urlParams = new URLSearchParams(window.location.search);
 const shareToken = urlParams.get("share");
 
-// ✅ SHARE MODE FIRST
 if(shareToken){
 
+  // ✅ SHARE VIEW MODE (NO LOGIN REQUIRED)
   fetch(API_URL + "?action=getFamilyByShare&shareToken=" + shareToken)
     .then(r=>r.json())
     .then(res=>{
       if(res.status === "OK"){
 
-        // set family for tree
         localStorage.setItem("familyId", res.familyId);
 
-        // change title
         document.getElementById("familyTitle").innerText =
           "🌳 " + res.familyName;
 
@@ -73,12 +71,16 @@ if(shareToken){
         document.getElementById("addPageBtn").style.display = "none";
         document.getElementById("collapseBtn").style.display = "none";
         document.getElementById("expandBtn").style.display = "none";
+
+      } else {
+        alert("Invalid share link");
+        location.href = "login.html";
       }
     });
 
-}else{
+} else {
 
-  // ✅ NORMAL LOGIN FLOW
+  // ✅ NORMAL APP FLOW
   if(!localStorage.getItem("userId")){
     location.href = "login.html";
   }
@@ -86,7 +88,6 @@ if(shareToken){
   if(!localStorage.getItem("familyId")){
     location.href = "family-select.html";
   }
-
 }
 </script>
 
