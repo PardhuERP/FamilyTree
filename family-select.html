@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Select Family | MyFamilyTree</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="addPage">
+  <h2>Your Families</h2>
+
+  <div id="familyList"></div>
+
+  <hr>
+
+  <h3>Create New Family</h3>
+  <input id="familyName" placeholder="Father Side / Mother Side">
+  <button onclick="createFamily()">Create Family</button>
+
+  <p id="msg"></p>
+</div>
+
+<script>
+const API_URL = "YOUR_GAS_WEBAPP_URL";
+const userId = localStorage.getItem("userId");
+
+if(!userId){
+  location.href = "login.html";
+}
+
+// Load families
+fetch(API_URL + "?action=getFamilies&userId=" + userId)
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.status==="OK"){
+      showFamilies(res.families);
+    }
+  });
+
+function showFamilies(list){
+  const box = document.getElementById("familyList");
+  box.innerHTML = "";
+
+  if(list.length === 0){
+    box.innerHTML = "<p>No families created yet</p>";
+    return;
+  }
+
+  list.forEach(f=>{
+    const div = document.createElement("div");
+    div.style.marginBottom = "10px";
+    div.innerHTML = `
+      <button style="width:100%" onclick="selectFamily('${f.familyId}')">
+        🌳 ${f.name}
+      </button>
+    `;
+    box.appendChild(div);
+  });
+}
+
+function selectFamily(fid){
+  localStorage.setItem("familyId", fid);
+  location.href = "index.html"; // tree later
+}
+
+function createFamily(){
+  const name = document.getElementById("familyName").value;
+  if(!name){
+    alert("Enter family name");
+    return;
+  }
+
+  fetch(API_URL + "?action=createFamily&userId=" + userId + "&familyName=" + encodeURIComponent(name))
+    .then(r=>r.json())
+    .then(res=>{
+      if(res.status==="OK"){
+        alert("Family created");
+        location.reload();
+      } else {
+        document.getElementById("msg").innerText = res.message;
+      }
+    });
+}
+</script>
+
+</body>
+</html>
