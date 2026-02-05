@@ -50,16 +50,20 @@
 
 <svg id="tree"></svg>
 
-<script>
+  <script>
+const API_URL =
+"https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
+
 const urlParams = new URLSearchParams(window.location.search);
 const shareToken = urlParams.get("share");
 
 if(shareToken){
 
-  // ✅ SHARE VIEW MODE (NO LOGIN REQUIRED)
+  // ✅ SHARE MODE (NO LOGIN REQUIRED)
   fetch(API_URL + "?action=getFamilyByShare&shareToken=" + shareToken)
-    .then(r=>r.json())
-    .then(res=>{
+    .then(r => r.json())
+    .then(res => {
+
       if(res.status === "OK"){
 
         localStorage.setItem("familyId", res.familyId);
@@ -78,7 +82,7 @@ if(shareToken){
       }
     });
 
-} else {
+}else{
 
   // ✅ NORMAL APP FLOW
   if(!localStorage.getItem("userId")){
@@ -92,6 +96,7 @@ if(shareToken){
 </script>
 
 <script src="js/tree.js"></script>
+
 
 <script>
   document.getElementById("addPageBtn").onclick = function () {
