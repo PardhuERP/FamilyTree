@@ -51,14 +51,44 @@
 <svg id="tree"></svg>
 
   <script>
-if(!localStorage.getItem("userId")){
-  location.href = "login.html";
-}
+const urlParams = new URLSearchParams(window.location.search);
+const shareToken = urlParams.get("share");
 
-if(!localStorage.getItem("familyId")){
-  location.href = "family-select.html";
+// ✅ SHARE MODE FIRST
+if(shareToken){
+
+  fetch(API_URL + "?action=getFamilyByShare&shareToken=" + shareToken)
+    .then(r=>r.json())
+    .then(res=>{
+      if(res.status === "OK"){
+
+        // set family for tree
+        localStorage.setItem("familyId", res.familyId);
+
+        // change title
+        document.getElementById("familyTitle").innerText =
+          "🌳 " + res.familyName;
+
+        // hide edit buttons
+        document.getElementById("addPageBtn").style.display = "none";
+        document.getElementById("collapseBtn").style.display = "none";
+        document.getElementById("expandBtn").style.display = "none";
+      }
+    });
+
+}else{
+
+  // ✅ NORMAL LOGIN FLOW
+  if(!localStorage.getItem("userId")){
+    location.href = "login.html";
+  }
+
+  if(!localStorage.getItem("familyId")){
+    location.href = "family-select.html";
+  }
+
 }
-  </script>
+</script>
 
 <script src="js/tree.js"></script>
 
