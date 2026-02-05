@@ -22,6 +22,7 @@
       <a href="relation.html">🔗 Relation Finder</a>
       <a href="coming-soon.html">🕒 More</a>
       <a href="#">⚙️ Settings</a>
+      <div onclick="logout()">🚪 Logout</div>
     </div>
   </div>
 
@@ -157,6 +158,11 @@ if(shareToken){
       }
     });
 }
+  
+  function logout(){
+  localStorage.clear();
+  location.href = "login.html";
+  }
 </script>
 </body>
  
