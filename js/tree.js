@@ -360,6 +360,65 @@ function centerNode(d){
       d3.zoomIdentity.translate(x, y).scale(scale)
     );
 }
+
+  function openEdit(){
+
+  // ✅ ROLE CHECK
+  if(USER_ROLE === "viewer"){
+    alert("You don't have edit permission");
+    return;
+  }
+
+  if(!window.selectedNode){
+    alert("Tap a member first");
+    return;
+  }
+
+  const newName = prompt("Edit name:", window.selectedNode.name);
+  if(!newName) return;
+
+  fetch(API_URL +
+    "?action=updatePerson" +
+    "&personId=" + window.selectedNode.personId +
+    "&name=" + encodeURIComponent(newName)
+  )
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.status==="OK"){
+      alert("Updated");
+      location.reload();
+    }
+  });
+  }
+
+function openDelete(){
+
+  // ✅ ONLY OWNER
+  if(USER_ROLE !== "owner"){
+    alert("Only owner can delete members");
+    return;
+  }
+
+  if(!window.selectedNode){
+    alert("Tap a member first");
+    return;
+  }
+
+  if(!confirm("Delete " + window.selectedNode.name + "?")) return;
+
+  fetch(API_URL +
+    "?action=deletePerson" +
+    "&personId=" + window.selectedNode.personId
+  )
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.status==="OK"){
+      alert("Deleted");
+      location.reload();
+    }
+  });
+  }
+  
 function applyRoleUI(){
 
   if(USER_ROLE === "viewer"){
