@@ -51,8 +51,11 @@
 
 <svg id="tree"></svg>
 
- <!-- MEMBER PROFILE POPUP -->
+<!-- MEMBER PROFILE POPUP -->
 <div id="profileCard" class="profileCard">
+
+  <!-- CLOSE BUTTON -->
+  <div class="profileClose" onclick="closeProfile()">✕</div>
 
   <div class="profileHeader">
     <img id="pPhoto" src="https://via.placeholder.com/80">
@@ -70,8 +73,7 @@
     <div><b>Qualification:</b> <span id="pEdu">-</span></div>
   </div>
 
-</div> 
-
+</div>
   <script>
 const API_URL =
 "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
