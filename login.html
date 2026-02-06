@@ -23,6 +23,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQ
 
 function sendOtp(){
   const email = document.getElementById("email").value;
+  email = email.trim().toLowerCase();
   if(!email){
     alert("Enter Gmail");
     return;
