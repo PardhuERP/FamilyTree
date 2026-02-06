@@ -10,13 +10,16 @@ const width = window.innerWidth;
 const height = window.innerHeight - 120;
 
 /* ---------- TREE SETUP ---------- */
-// GLOBAL selected node (shared with menu)
+
+// GLOBAL selected node
 window.selectedNode = null;
+
 let svg, g, treeLayout, root, i = 0;
 let map = {};
 const searchBox = document.getElementById("searchBox");
 
 if(document.getElementById("tree")){
+
   svg = d3.select("#tree")
     .attr("width", width)
     .attr("height", height)
@@ -31,7 +34,7 @@ if(document.getElementById("tree")){
 
   const USER_ID = localStorage.getItem("userId");
 
-fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
+  fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
     .then(r => r.json())
     .then(res => {
       if(res.status === "OK"){
@@ -42,36 +45,37 @@ fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
 
 /* ---------- BUILD TREE ---------- */
 function buildTree(rows){
+
   if(!rows || rows.length === 0){
     alert("No members found. Add founder.");
     return;
   }
 
-map = {};
+  map = {};
 
-// 1️⃣ First create all nodes
-rows.forEach(p => {
-  map[p.personId] = { ...p, children: [] };
-});
+  // create nodes
+  rows.forEach(p=>{
+    map[p.personId] = {...p, children:[]};
+  });
 
-// 2️⃣ Then link parents
-rows.forEach(p => {
-  const child = map[p.personId];
+  // link parents
+  rows.forEach(p=>{
+    const child = map[p.personId];
 
-  if(p.fatherId && map[p.fatherId] && p.fatherId !== p.personId){
-    const f = map[p.fatherId];
-    if(!f.children.includes(child)){
-      f.children.push(child);
+    if(p.fatherId && map[p.fatherId] && p.fatherId !== p.personId){
+      const f = map[p.fatherId];
+      if(!f.children.includes(child)){
+        f.children.push(child);
+      }
     }
-  }
 
-  if(p.motherId && map[p.motherId] && p.motherId !== p.personId){
-    const m = map[p.motherId];
-    if(!m.children.includes(child)){
-      m.children.push(child);
+    if(p.motherId && map[p.motherId] && p.motherId !== p.personId){
+      const m = map[p.motherId];
+      if(!m.children.includes(child)){
+        m.children.push(child);
+      }
     }
-  }
-});
+  });
 
   // connect spouses
   rows.forEach(p=>{
@@ -81,7 +85,9 @@ rows.forEach(p => {
     }
   });
 
-  const founder = rows.find(r => !r.fatherId);
+  // safer founder detection
+  const founder = rows.find(r => !r.fatherId && !r.motherId);
+
   root = d3.hierarchy(map[founder.personId]);
 
   root.x0 = height/2;
@@ -111,43 +117,40 @@ function expandPath(d){
   }
 }
 
-
+/* ---------- UPDATE TREE ---------- */
 function update(source){
+
   const treeData = treeLayout(root);
   const nodes = treeData.descendants();
   const links = treeData.links();
+
   nodes.forEach(d => d.y = d.depth * 180);
 
   const node = g.selectAll(".node")
     .data(nodes, d => d.id || (d.id = ++i));
 
-  // ENTER
   const nodeEnter = node.enter().append("g")
     .attr("class","node")
     .attr("transform", `translate(${source.y0},${source.x0})`)
     .style("cursor","pointer")
     .on("click", toggle);
 
-  // RECT
   nodeEnter.append("rect")
     .attr("height", 34)
     .attr("rx", 12)
     .attr("ry", 12)
     .attr("y", -17);
-  
 
-  // TEXT
   nodeEnter.append("text")
     .attr("text-anchor","middle")
     .attr("dy",".35em")
     .style("font-weight","600")
-    .text(d => {
+    .text(d=>{
       const name = d.data.name || "";
-      const spouse = d.data.spouse && d.data.spouse.name ? d.data.spouse.name : "";
+      const spouse = d.data.spouse?.name || "";
       return spouse ? `${name} 👩‍❤️‍👨 ${spouse}` : name;
     });
-  
-  // AUTO SIZE BOX
+
   nodeEnter.each(function(){
     const text = d3.select(this).select("text");
     const bbox = text.node().getBBox();
@@ -155,25 +158,26 @@ function update(source){
 
     d3.select(this).select("rect")
       .attr("width", bbox.width + padding)
-      .attr("x", -(bbox.width + padding) / 2);
+      .attr("x", -(bbox.width + padding)/2);
   });
 
-  // UPDATE + ENTER
   nodeEnter.merge(node)
     .transition().duration(400)
-    .attr("transform", d => `translate(${d.y},${d.x})`);
+    .attr("transform", d=>`translate(${d.y},${d.x})`);
 
-  // LINKS
   const link = g.selectAll(".link")
-    .data(links, d => d.target.id);
+    .data(links, d=>d.target.id);
 
   link.enter().insert("path","g")
     .attr("class","link")
     .merge(link)
     .transition().duration(400)
-    .attr("d", d => diagonal(d.source,d.target));
+    .attr("d", d=>diagonal(d.source,d.target));
 
-  nodes.forEach(d => { d.x0=d.x; d.y0=d.y; });
+  nodes.forEach(d=>{
+    d.x0=d.x;
+    d.y0=d.y;
+  });
 }
 
 function diagonal(s,d){
@@ -184,10 +188,10 @@ function diagonal(s,d){
 }
 
 /* ---------- NODE CLICK ---------- */
-function toggle(event, d){
-  event.stopPropagation(); // 🔥 prevent double firing
+function toggle(event,d){
 
-  // 1️⃣ Always select immediately
+  event.stopPropagation();
+
   window.selectedNode = {
     personId: d.data.personId,
     name: d.data.name
@@ -196,28 +200,24 @@ function toggle(event, d){
   localStorage.setItem("selectedParent", d.data.personId);
   localStorage.setItem("selectedParentName", d.data.name);
 
-  // 2️⃣ Highlight instantly
   g.selectAll(".node").classed("search-match", false);
   d3.select(event.currentTarget).classed("search-match", true);
 
-  console.log("Selected:", d.data.personId, d.data.name);
-
-  // 3️⃣ Expand / collapse AFTER short delay
-  setTimeout(() => {
+  setTimeout(()=>{
     if(d.children){
       d._children = d.children;
       d.children = null;
-    } else {
+    }else{
       d.children = d._children;
       d._children = null;
     }
     update(d);
-  }, 50);
+  },50);
 }
 
 /* ---------- BUTTONS ---------- */
 if(document.getElementById("collapseBtn")){
-  document.getElementById("collapseBtn").onclick = () => {
+  document.getElementById("collapseBtn").onclick=()=>{
     if(!root) return;
     root.children && root.children.forEach(collapse);
     update(root);
@@ -225,29 +225,40 @@ if(document.getElementById("collapseBtn")){
 }
 
 if(document.getElementById("expandBtn")){
-  document.getElementById("expandBtn").onclick = () => {
+  document.getElementById("expandBtn").onclick=()=>{
     if(!root) return;
     root.each(d=>{
       if(d._children){
-        d.children = d._children;
-        d._children = null;
+        d.children=d._children;
+        d._children=null;
       }
     });
     update(root);
   };
 }
 
+/* ---------- GENERATION ---------- */
 function getPersonGen(personId){
-return fetch(API_URL + "?action=getTree&familyId=" + FAMILY_ID)
-.then(r => r.json())
-.then(res => {
-if(res.status !== "OK") return 1;
-const p = res.data.find(x => x.personId === personId);
-return p ? Number(p.generation) : 1;
-});
+
+  const USER_ID = localStorage.getItem("userId");
+
+  return fetch(
+    API_URL +
+    "?action=getTree" +
+    "&familyId=" + FAMILY_ID +
+    "&userId=" + USER_ID
+  )
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.status!=="OK") return 1;
+    const p = res.data.find(x=>x.personId===personId);
+    return p ? Number(p.generation) : 1;
+  });
 }
 
+/* ---------- ADD PERSON ---------- */
 async function addPerson(){
+
   const name = document.getElementById("pname")?.value;
   const gender = document.getElementById("pgender")?.value;
   const dob = document.getElementById("pdob")?.value;
@@ -267,44 +278,44 @@ async function addPerson(){
 
   fetch(
     API_URL +
-      "?action=addPerson" +
-      "&familyId=" + FAMILY_ID +
-      "&name=" + encodeURIComponent(name) +
-      "&gender=" + gender +
-      "&dob=" + dob +
-      "&place=" + encodeURIComponent(place) +
-      "&fatherId=" + fatherId +
-      "&spouseId=" + spouseId +
-      "&generation=" + gen
+    "?action=addPerson" +
+    "&familyId=" + FAMILY_ID +
+    "&name=" + encodeURIComponent(name) +
+    "&gender=" + gender +
+    "&dob=" + dob +
+    "&place=" + encodeURIComponent(place) +
+    "&fatherId=" + fatherId +
+    "&spouseId=" + spouseId +
+    "&generation=" + gen
   )
-  .then(r => r.json())
-  .then(res => {
-    if(res.status === "OK"){
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.status==="OK"){
       alert("Added successfully!");
       localStorage.removeItem("selectedParent");
       localStorage.removeItem("selectedParentName");
-      window.location.href = "index.html";
-    } else {
+      window.location.href="index.html";
+    }else{
       alert("Error adding person");
     }
   })
-  .catch(err=>{
-    console.error(err);
+  .catch(()=>{
     alert("Network error");
   });
 }
 
-
 /* ---------- SEARCH ---------- */
 if(searchBox){
   searchBox.addEventListener("input", function(){
-    const q = this.value.toLowerCase().trim();
+
+    const q=this.value.toLowerCase().trim();
     if(!root || !q) return;
 
-    let found = null;
+    let found=null;
+
     root.each(d=>{
       if(d.data.name.toLowerCase().includes(q)){
-        found = d;
+        found=d;
       }
     });
 
@@ -313,10 +324,10 @@ if(searchBox){
       update(found);
 
       setTimeout(()=>{
-        g.selectAll(".node").classed("search-match", false);
+        g.selectAll(".node").classed("search-match",false);
         g.selectAll(".node").each(function(d){
-          if(d === found){
-            d3.select(this).classed("search-match", true);
+          if(d===found){
+            d3.select(this).classed("search-match",true);
             centerNode(d);
           }
         });
@@ -327,19 +338,20 @@ if(searchBox){
 
 function centerNode(d){
   if(!svg || !g) return;
-  const scale = 1;
-  const x = width / 2 - d.y * scale;
-  const y = 120 - d.x * scale;
+
+  const scale=1;
+  const x=width/2 - d.y*scale;
+  const y=120 - d.x*scale;
 
   svg.transition().duration(400)
     .call(
       d3.zoom().transform,
-      d3.zoomIdentity.translate(x, y).scale(scale)
+      d3.zoomIdentity.translate(x,y).scale(scale)
     );
 }
 
 /* ---------- ADD BUTTON ---------- */
 if(document.getElementById("addBtn")){
-  document.getElementById("addBtn").addEventListener("click", addPerson);
+  document.getElementById("addBtn")
+    .addEventListener("click", addPerson);
 }
-window.selectedNode = selectedNode;
