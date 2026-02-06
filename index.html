@@ -128,8 +128,15 @@ if(shareToken){
 
 <script src="js/tree.js"></script>
 
-
 <script>
+
+  // ✅ VIEW MODE CHECK (ADD THIS BLOCK HERE)
+  const viewMode = localStorage.getItem("viewMode");
+
+  if(viewMode === "viewer"){
+    document.querySelector(".menuWrap").style.display = "none";
+  }
+
   document.getElementById("addPageBtn").onclick = function () {
     window.location.href = "add.html";
   };
