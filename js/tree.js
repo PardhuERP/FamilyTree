@@ -107,8 +107,6 @@ if(VIEW_MODE){
     }
   });
 
-}
-
 /* ---------- BUILD TREE ---------- */
 function buildTree(rows){
   if(!rows || rows.length === 0){
