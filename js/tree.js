@@ -351,6 +351,30 @@ function centerNode(d){
     );
 }
 
+function showProfileCard(p){
+
+  document.getElementById("profileCard").style.display = "block";
+
+  document.getElementById("pName").innerText = p.name || "-";
+  document.getElementById("pDob").innerText = p.dob || "-";
+  document.getElementById("pPlace").innerText = p.place || "-";
+
+  document.getElementById("pFather").innerText =
+    map[p.fatherId]?.name || "-";
+
+  document.getElementById("pMother").innerText =
+    map[p.motherId]?.name || "-";
+
+  document.getElementById("pBlood").innerText =
+    p.bloodGroup || "-";
+
+  document.getElementById("pEdu").innerText =
+    p.qualification || "-";
+
+  document.getElementById("pPhoto").src =
+    p.photoUrl || "https://via.placeholder.com/80";
+}
+
 /* ---------- ADD BUTTON ---------- */
 if(document.getElementById("addBtn")){
   document.getElementById("addBtn")
