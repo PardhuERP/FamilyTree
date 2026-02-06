@@ -362,7 +362,20 @@ function showProfileCard(p){
 
 if(p.dob){
   const d = new Date(p.dob);
-  dobText = d.toISOString().split("T")[0];
+
+  // format date
+  const dateOnly = d.toISOString().split("T")[0];
+
+  // calculate age
+  const today = new Date();
+  let age = today.getFullYear() - d.getFullYear();
+  const m = today.getMonth() - d.getMonth();
+
+  if (m < 0 || (m === 0 && today.getDate() < d.getDate())) {
+    age--;
+  }
+
+  dobText = dateOnly + " (" + age + " yrs)";
 }
 
 document.getElementById("pDob").innerText = dobText;
