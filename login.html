@@ -22,8 +22,10 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
 
 function sendOtp(){
-  const email = document.getElementById("email").value;
+
+  let email = document.getElementById("email").value;
   email = email.trim().toLowerCase();
+
   if(!email){
     alert("Enter Gmail");
     return;
@@ -33,8 +35,10 @@ function sendOtp(){
     .then(r=>r.json())
     .then(res=>{
       document.getElementById("msg").innerText = res.message;
+
       if(res.status==="OK"){
         localStorage.setItem("loginEmail", email);
+
         setTimeout(()=>{
           window.location.href = "verify.html";
         }, 800);
