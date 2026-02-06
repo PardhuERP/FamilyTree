@@ -51,12 +51,13 @@
 
 <svg id="tree"></svg>
   
-  <script>
+<script>
 const API_URL =
 "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
 </script>
 
-  <script>
+
+<script>
 const urlParams = new URLSearchParams(window.location.search);
 const shareToken = urlParams.get("share");
 
@@ -94,9 +95,11 @@ if(shareToken){
     location.href="family-select.html";
   }
 }
-<script>
-    
-<script src="js/tree.js"></script>
+</script>
+
+
+<!-- TREE JS MUST COME AFTER ABOVE SCRIPT -->
+<script src="js/tree.js"></script>  
 
 
 <script>
