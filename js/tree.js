@@ -29,9 +29,6 @@ function applyRoleUI(){
   }
 }
 
-const API_URL =
-"https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
-
 const FAMILY_ID = localStorage.getItem("familyId");
 const USER_ID = localStorage.getItem("userId");
 
