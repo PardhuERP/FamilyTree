@@ -1,3 +1,4 @@
+const VIEW_MODE = localStorage.getItem("viewMode") === "true";
 let USER_ROLE = "viewer";
 function applyRoleUI(){
 
@@ -32,10 +33,11 @@ function applyRoleUI(){
 const FAMILY_ID = localStorage.getItem("familyId");
 const USER_ID = localStorage.getItem("userId");
 
-if(!FAMILY_ID){
+if(!FAMILY_ID && !VIEW_MODE){
   alert("No family selected");
   location.href = "family-select.html";
 }
+
 
 const width = window.innerWidth;
 const height = window.innerHeight - 120;
@@ -62,32 +64,49 @@ if(document.getElementById("tree")){
 
   const USER_ID = localStorage.getItem("userId");
 const FAMILY_ID = localStorage.getItem("familyId");
+const VIEW_MODE = localStorage.getItem("viewMode") === "true";
+  
+// SHARE MODE → directly load tree
+if(VIEW_MODE){
 
-// ✅ STEP 1 — get user role first
-fetch(API_URL +
-  "?action=getUserRole" +
-  "&familyId=" + FAMILY_ID +
-  "&userId=" + USER_ID)
-.then(r => r.json())
-.then(roleRes => {
-
-  if(roleRes.status === "OK"){
-    USER_ROLE = roleRes.role;
-    applyRoleUI();
-  }
-
-  // ✅ STEP 2 — load tree after role
-  return fetch(API_URL +
+  fetch(API_URL +
     "?action=getTree" +
+    "&familyId=" + FAMILY_ID)
+  .then(r => r.json())
+  .then(res => {
+    if(res.status === "OK"){
+      buildTree(res.data);
+    }
+  });
+
+}else{
+
+  // ✅ NORMAL LOGIN FLOW
+
+  fetch(API_URL +
+    "?action=getUserRole" +
     "&familyId=" + FAMILY_ID +
-    "&userId=" + USER_ID);
-})
-.then(r => r.json())
-.then(res => {
-  if(res.status === "OK"){
-    buildTree(res.data);
-  }
-});
+    "&userId=" + USER_ID)
+  .then(r => r.json())
+  .then(roleRes => {
+
+    if(roleRes.status === "OK"){
+      USER_ROLE = roleRes.role;
+      applyRoleUI();
+    }
+
+    return fetch(API_URL +
+      "?action=getTree" +
+      "&familyId=" + FAMILY_ID +
+      "&userId=" + USER_ID);
+  })
+  .then(r => r.json())
+  .then(res => {
+    if(res.status === "OK"){
+      buildTree(res.data);
+    }
+  });
+
 }
 
 /* ---------- BUILD TREE ---------- */
