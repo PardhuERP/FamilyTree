@@ -39,6 +39,7 @@ fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
       buildTree(res.data);
     }
   });
+}
 
 /* ---------- BUILD TREE ---------- */
 function buildTree(rows){
