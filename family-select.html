@@ -80,10 +80,18 @@ function showFamilies(list){
   });
 }
 
-function selectFamily(fid, fname){
+function selectFamily(fid, fname, mode){
+
   localStorage.setItem("familyId", fid);
   localStorage.setItem("familyName", fname);
-  localStorage.setItem("viewMode");
+
+  // ✅ only shared family ki viewer mode
+  if(mode === "viewer"){
+    localStorage.setItem("viewMode", "viewer");
+  }else{
+    localStorage.removeItem("viewMode");
+  }
+
   location.href = "index.html";
 }
 
