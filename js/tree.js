@@ -1,421 +1,126 @@
-const VIEW_MODE = localStorage.getItem("viewMode") === "true";
-let USER_ROLE = "viewer";
-function applyRoleUI(){
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>MyFamilyTree</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
 
-  const editBtn = document.getElementById("menuEdit");
-  const deleteBtn = document.getElementById("menuDelete");
-  const addBtn = document.getElementById("addPageBtn");
+<div class="toolbar toolbarCol">
 
-  if(!editBtn || !deleteBtn || !addBtn) return;
+  <!-- 3 DOT MENU -->
+  <div class="menuWrap">
+    <button id="menuBtn" class="circleBtn">⋮</button>
 
-  // VIEWER
-  if(USER_ROLE === "viewer"){
-    editBtn.style.display = "none";
-    deleteBtn.style.display = "none";
-    addBtn.style.display = "none";
-  }
+    <div id="menuBox" class="menuBox">
+      <div onclick="openEdit()">✏ Edit Member</div>
+      <div onclick="openDelete()">🗑 Delete Member</div>
+      <hr>
+      <a href="relation.html">🔗 Relation Finder</a>
+      <a href="coming-soon.html">🕒 More</a>
+      <a href="#">⚙️ Settings</a>
+      <div onclick="logout()">🚪 Logout</div>
+    </div>
+  </div>
 
-  // EDITOR
-  if(USER_ROLE === "editor"){
-    editBtn.style.display = "block";
-    deleteBtn.style.display = "none";
-    addBtn.style.display = "block";
-  }
+  <!-- ROW 1 -->
+  <div class="row rowTop">
+    <span id="familyTitle" class="appTitle">🌳 MyFamilyTree</span>
+  </div>
 
-  // OWNER
-  if(USER_ROLE === "owner"){
-    editBtn.style.display = "block";
-    deleteBtn.style.display = "block";
-    addBtn.style.display = "block";
-  }
-}
+  <!-- ROW 2 -->
+  <div class="row rowSearch">
+    <input id="searchBox" class="searchInput" placeholder="Search name...">
+  </div>
 
-const FAMILY_ID = localStorage.getItem("familyId");
-const USER_ID = localStorage.getItem("userId");
+  <!-- ROW 3 -->
+  <div class="row rowActions">
+    <button id="addPageBtn" class="addBtnUI">
+      <span class="icon">➕</span>
+      <span class="text">Add Name</span>
+    </button>
 
-if(!FAMILY_ID && !VIEW_MODE){
-  alert("No family selected");
-  location.href = "family-select.html";
-}
+    <button id="collapseBtn" class="circleBtn">−</button>
+    <button id="expandBtn" class="circleBtn">+</button>
+  </div>
 
+</div>
 
-const width = window.innerWidth;
-const height = window.innerHeight - 120;
+<svg id="tree"></svg>
 
-/* ---------- TREE SETUP ---------- */
-// GLOBAL selected node (shared with menu)
-window.selectedNode = null;
-let svg, g, treeLayout, root, i = 0;
-let map = {};
-const searchBox = document.getElementById("searchBox");
+  <script>
+const API_URL =
+"https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
 
-if(document.getElementById("tree")){
-  svg = d3.select("#tree")
-    .attr("width", width)
-    .attr("height", height)
-    .call(d3.zoom().scaleExtent([0.3,3]).on("zoom", e=>{
-      g.attr("transform", e.transform);
-    }));
+const urlParams = new URLSearchParams(window.location.search);
+const shareToken = urlParams.get("share");
 
-  g = svg.append("g")
-    .attr("transform", `translate(${width/2}, 80)`);
+if(shareToken){
 
-  treeLayout = d3.tree().nodeSize([80,180]);
+  // ✅ SHARE MODE (NO LOGIN REQUIRED)
+  fetch(API_URL + "?action=getFamilyByShare&shareToken=" + shareToken)
+    .then(r => r.json())
+    .then(res => {
 
-  const USER_ID = localStorage.getItem("userId");
-const FAMILY_ID = localStorage.getItem("familyId");
-const VIEW_MODE = localStorage.getItem("viewMode") === "true";
-  
-// SHARE MODE → directly load tree
-if(VIEW_MODE){
+      if(res.status === "OK"){
 
-  fetch(API_URL +
-    "?action=getTree" +
-    "&familyId=" + FAMILY_ID)
-  .then(r => r.json())
-  .then(res => {
-    if(res.status === "OK"){
-      buildTree(res.data);
-    }
-  });
+        localStorage.setItem("familyId", res.familyId);
+
+        document.getElementById("familyTitle").innerText =
+          "🌳 " + res.familyName;
+
+        // hide edit buttons
+        document.getElementById("addPageBtn").style.display = "none";
+        document.getElementById("collapseBtn").style.display = "none";
+        document.getElementById("expandBtn").style.display = "none";
+
+      } else {
+        alert("Invalid share link");
+        location.href = "login.html";
+      }
+    });
 
 }else{
 
-  // ✅ NORMAL LOGIN FLOW
-
-  fetch(API_URL +
-    "?action=getUserRole" +
-    "&familyId=" + FAMILY_ID +
-    "&userId=" + USER_ID)
-  .then(r => r.json())
-  .then(roleRes => {
-
-    if(roleRes.status === "OK"){
-      USER_ROLE = roleRes.role;
-      applyRoleUI();
-    }
-
-    return fetch(API_URL +
-      "?action=getTree" +
-      "&familyId=" + FAMILY_ID +
-      "&userId=" + USER_ID);
-  })
-  .then(r => r.json())
-  .then(res => {
-    if(res.status === "OK"){
-      buildTree(res.data);
-    }
-  });
-
-}
-
-/* ---------- BUILD TREE ---------- */
-function buildTree(rows){
-  if(!rows || rows.length === 0){
-    alert("No members found. Add founder.");
-    return;
+  // ✅ NORMAL APP FLOW
+  if(!localStorage.getItem("userId")){
+    location.href = "login.html";
   }
 
-map = {};
-
-// 1️⃣ First create all nodes
-rows.forEach(p => {
-  map[p.personId] = { ...p, children: [] };
-});
-
-// 2️⃣ Then link parents
-rows.forEach(p => {
-  const child = map[p.personId];
-
-  if(p.fatherId && map[p.fatherId] && p.fatherId !== p.personId){
-    const f = map[p.fatherId];
-    if(!f.children.includes(child)){
-      f.children.push(child);
-    }
-  }
-
-  if(p.motherId && map[p.motherId] && p.motherId !== p.personId){
-    const m = map[p.motherId];
-    if(!m.children.includes(child)){
-      m.children.push(child);
-    }
-  }
-});
-
-  // connect spouses
-  rows.forEach(p=>{
-    if(p.spouseId && map[p.spouseId]){
-      map[p.personId].spouse = map[p.spouseId];
-      map[p.spouseId].spouse = map[p.personId];
-    }
-  });
-
-  const founder = rows.find(r => !r.fatherId);
-  root = d3.hierarchy(map[founder.personId]);
-
-  root.x0 = height/2;
-  root.y0 = 0;
-
-  root.children && root.children.forEach(collapse);
-  update(root);
-  centerNode(root);
-}
-
-function collapse(d){
-  if(d.children){
-    d._children = d.children;
-    d._children.forEach(collapse);
-    d.children = null;
+  if(!localStorage.getItem("familyId")){
+    location.href = "family-select.html";
   }
 }
+</script>
 
-function expandPath(d){
-  let p = d;
-  while(p){
-    if(p._children){
-      p.children = p._children;
-      p._children = null;
-    }
-    p = p.parent;
-  }
-}
+<script src="js/tree.js"></script>
 
 
-function update(source){
-  const treeData = treeLayout(root);
-  const nodes = treeData.descendants();
-  const links = treeData.links();
-  nodes.forEach(d => d.y = d.depth * 180);
-
-  const node = g.selectAll(".node")
-    .data(nodes, d => d.id || (d.id = ++i));
-
-  // ENTER
-  const nodeEnter = node.enter().append("g")
-    .attr("class","node")
-    .attr("transform", `translate(${source.y0},${source.x0})`)
-    .style("cursor","pointer")
-    .on("click", toggle);
-
-  // RECT
-  nodeEnter.append("rect")
-    .attr("height", 34)
-    .attr("rx", 12)
-    .attr("ry", 12)
-    .attr("y", -17);
-  
-
-  // TEXT
-  nodeEnter.append("text")
-    .attr("text-anchor","middle")
-    .attr("dy",".35em")
-    .style("font-weight","600")
-    .text(d => {
-      const name = d.data.name || "";
-      const spouse = d.data.spouse && d.data.spouse.name ? d.data.spouse.name : "";
-      return spouse ? `${name} 👩‍❤️‍👨 ${spouse}` : name;
-    });
-  
-  // AUTO SIZE BOX
-  nodeEnter.each(function(){
-    const text = d3.select(this).select("text");
-    const bbox = text.node().getBBox();
-    const padding = 20;
-
-    d3.select(this).select("rect")
-      .attr("width", bbox.width + padding)
-      .attr("x", -(bbox.width + padding) / 2);
-  });
-
-  // UPDATE + ENTER
-  nodeEnter.merge(node)
-    .transition().duration(400)
-    .attr("transform", d => `translate(${d.y},${d.x})`);
-
-  // LINKS
-  const link = g.selectAll(".link")
-    .data(links, d => d.target.id);
-
-  link.enter().insert("path","g")
-    .attr("class","link")
-    .merge(link)
-    .transition().duration(400)
-    .attr("d", d => diagonal(d.source,d.target));
-
-  nodes.forEach(d => { d.x0=d.x; d.y0=d.y; });
-}
-
-function diagonal(s,d){
-  return `M ${s.y} ${s.x}
-          C ${(s.y+d.y)/2} ${s.x},
-            ${(s.y+d.y)/2} ${d.x},
-            ${d.y} ${d.x}`;
-}
-
-/* ---------- NODE CLICK ---------- */
-function toggle(event, d){
-  event.stopPropagation(); // 🔥 prevent double firing
-
-  // 1️⃣ Always select immediately
-  window.selectedNode = {
-    personId: d.data.personId,
-    name: d.data.name
+<script>
+  document.getElementById("addPageBtn").onclick = function () {
+    window.location.href = "add.html";
   };
 
-  localStorage.setItem("selectedParent", d.data.personId);
-  localStorage.setItem("selectedParentName", d.data.name);
+  // MENU
+  var btn = document.getElementById("menuBtn");
+  var box = document.getElementById("menuBox");
 
-  // 2️⃣ Highlight instantly
-  g.selectAll(".node").classed("search-match", false);
-  d3.select(event.currentTarget).classed("search-match", true);
-
-  console.log("Selected:", d.data.personId, d.data.name);
-
-  // 3️⃣ Expand / collapse AFTER short delay
-  setTimeout(() => {
-    if(d.children){
-      d._children = d.children;
-      d.children = null;
-    } else {
-      d.children = d._children;
-      d._children = null;
-    }
-    update(d);
-  }, 50);
-}
-
-/* ---------- BUTTONS ---------- */
-if(document.getElementById("collapseBtn")){
-  document.getElementById("collapseBtn").onclick = () => {
-    if(!root) return;
-    root.children && root.children.forEach(collapse);
-    update(root);
+  btn.onclick = function (e) {
+    e.stopPropagation();
+    box.classList.toggle("show");
   };
-}
 
-if(document.getElementById("expandBtn")){
-  document.getElementById("expandBtn").onclick = () => {
-    if(!root) return;
-    root.each(d=>{
-      if(d._children){
-        d.children = d._children;
-        d._children = null;
-      }
-    });
-    update(root);
+  document.onclick = function (e) {
+    if (!box.contains(e.target)) {
+      box.classList.remove("show");
+    }
   };
-}
-
-function getPersonGen(personId){
-return fetch(API_URL + "?action=getTree&familyId=" + FAMILY_ID)
-.then(r => r.json())
-.then(res => {
-if(res.status !== "OK") return 1;
-const p = res.data.find(x => x.personId === personId);
-return p ? Number(p.generation) : 1;
-});
-}
-
-async function addPerson(){
-  const name = document.getElementById("pname")?.value;
-  const gender = document.getElementById("pgender")?.value;
-  const dob = document.getElementById("pdob")?.value;
-  const place = document.getElementById("pplace")?.value;
-  const fatherId = document.getElementById("pfather")?.value;
-  const spouseId = document.getElementById("pspouse")?.value || "";
-
-  if(!name){
-    alert("Enter name");
-    return;
-  }
-
-  let gen = 1;
-  if(fatherId){
-    gen = await getPersonGen(fatherId) + 1;
-  }
-
-  fetch(
-    API_URL +
-      "?action=addPerson" +
-      "&familyId=" + FAMILY_ID +
-      "&name=" + encodeURIComponent(name) +
-      "&gender=" + gender +
-      "&dob=" + dob +
-      "&place=" + encodeURIComponent(place) +
-      "&fatherId=" + fatherId +
-      "&spouseId=" + spouseId +
-      "&generation=" + gen
-  )
-  .then(r => r.json())
-  .then(res => {
-    if(res.status === "OK"){
-      alert("Added successfully!");
-      localStorage.removeItem("selectedParent");
-      localStorage.removeItem("selectedParentName");
-      window.location.href = "index.html";
-    } else {
-      alert("Error adding person");
-    }
-  })
-  .catch(err=>{
-    console.error(err);
-    alert("Network error");
-  });
-}
-
-
-/* ---------- SEARCH ---------- */
-if(searchBox){
-  searchBox.addEventListener("input", function(){
-    const q = this.value.toLowerCase().trim();
-    if(!root || !q) return;
-
-    let found = null;
-    root.each(d=>{
-      if(d.data.name.toLowerCase().includes(q)){
-        found = d;
-      }
-    });
-
-    if(found){
-      expandPath(found);
-      update(found);
-
-      setTimeout(()=>{
-        g.selectAll(".node").classed("search-match", false);
-        g.selectAll(".node").each(function(d){
-          if(d === found){
-            d3.select(this).classed("search-match", true);
-            centerNode(d);
-          }
-        });
-      },300);
-    }
-  });
-}
-
-function centerNode(d){
-  if(!svg || !g) return;
-  const scale = 1;
-  const x = width / 2 - d.y * scale;
-  const y = 120 - d.x * scale;
-
-  svg.transition().duration(400)
-    .call(
-      d3.zoom().transform,
-      d3.zoomIdentity.translate(x, y).scale(scale)
-    );
-}
 
   function openEdit(){
-
-  // ✅ ROLE CHECK
-  if(USER_ROLE === "viewer"){
-    alert("You don't have edit permission");
-    return;
-  }
-
-  if(!window.selectedNode){
+  if(!window.selectedNode || !window.selectedNode.personId){
     alert("Tap a member first");
     return;
   }
@@ -436,15 +141,7 @@ function centerNode(d){
     }
   });
   }
-
-function openDelete(){
-
-  // ✅ ONLY OWNER
-  if(USER_ROLE !== "owner"){
-    alert("Only owner can delete members");
-    return;
-  }
-
+  function openDelete(){
   if(!window.selectedNode){
     alert("Tap a member first");
     return;
@@ -452,21 +149,21 @@ function openDelete(){
 
   if(!confirm("Delete " + window.selectedNode.name + "?")) return;
 
-  fetch(API_URL +
-    "?action=deletePerson" +
-    "&personId=" + window.selectedNode.personId
-  )
-  .then(r=>r.json())
-  .then(res=>{
-    if(res.status==="OK"){
-      alert("Deleted");
-      location.reload();
-    }
-  });
-  }
-
-/* ---------- ADD BUTTON ---------- */
-if(document.getElementById("addBtn")){
-  document.getElementById("addBtn").addEventListener("click", addPerson);
+  fetch(API_URL + "?action=deletePerson&personId=" + window.selectedNode.personId)
+    .then(r=>r.json())
+    .then(res=>{
+      if(res.status==="OK"){
+        alert("Deleted");
+        location.reload();
+      }
+    });
 }
-window.selectedNode = selectedNode;
+  
+  function logout(){
+  localStorage.clear();
+  location.href = "login.html";
+  }
+</script>
+</body>
+ 
+</html>
