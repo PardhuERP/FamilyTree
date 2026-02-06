@@ -196,6 +196,7 @@ function toggle(event,d){
     personId: d.data.personId,
     name: d.data.name
   };
+  showProfileCard(d.data);
 
   localStorage.setItem("selectedParent", d.data.personId);
   localStorage.setItem("selectedParentName", d.data.name);
