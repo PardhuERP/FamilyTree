@@ -263,6 +263,8 @@ async function addPerson(){
   const name = document.getElementById("pname")?.value;
   const gender = document.getElementById("pgender")?.value;
   const dob = document.getElementById("pdob")?.value;
+  const blood = document.getElementById("pblood")?.value;
+  const edu = document.getElementById("pedu")?.value;
   const place = document.getElementById("pplace")?.value;
   const fatherId = document.getElementById("pfather")?.value;
   const spouseId = document.getElementById("pspouse")?.value || "";
