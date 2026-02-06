@@ -50,16 +50,13 @@
 </div>
 
 <svg id="tree"></svg>
- <script>
+  
+  <script>
 const API_URL =
 "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
+</script>
 
-function loadTree(){
-  const s = document.createElement("script");
-  s.src = "js/tree.js";
-  document.body.appendChild(s);
-}
-
+  <script>
 const urlParams = new URLSearchParams(window.location.search);
 const shareToken = urlParams.get("share");
 
@@ -81,9 +78,6 @@ if(shareToken){
         document.getElementById("collapseBtn").style.display="none";
         document.getElementById("expandBtn").style.display="none";
 
-        // ✅ LOAD TREE AFTER FAMILY SET
-        loadTree();
-
       }else{
         alert("Invalid share link");
         location.href="login.html";
@@ -92,37 +86,17 @@ if(shareToken){
 
 }else{
 
-  const userId = localStorage.getItem("userId");
-  const familyId = localStorage.getItem("familyId");
-
-  if(!userId){
+  if(!localStorage.getItem("userId")){
     location.href="login.html";
   }
 
-  if(!familyId){
+  if(!localStorage.getItem("familyId")){
     location.href="family-select.html";
   }
-
-  // ✅ LOAD FAMILY NAME
-  fetch(API_URL +
-    "?action=getFamilies&userId=" + userId)
-    .then(r => r.json())
-    .then(res => {
-
-      if(res.status === "OK"){
-        const fam = res.families.find(f => f.familyId === familyId);
-
-        if(fam){
-          document.getElementById("familyTitle").innerText =
-            "🌳 " + fam.name;
-        }
-      }
-
-      // load tree after title set
-      loadTree();
-    });
 }
-</script> 
+<script>
+    
+<script src="js/tree.js"></script>
 
 
 <script>
