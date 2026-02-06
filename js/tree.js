@@ -353,8 +353,6 @@ function centerNode(d){
 
 function showProfileCard(p){
 
-  document.getElementById("profileCard").style.display = "block";
-
   document.getElementById("pName").innerText = p.name || "-";
   document.getElementById("pDob").innerText = p.dob || "-";
   document.getElementById("pPlace").innerText = p.place || "-";
@@ -365,14 +363,11 @@ function showProfileCard(p){
   document.getElementById("pMother").innerText =
     map[p.motherId]?.name || "-";
 
-  document.getElementById("pBlood").innerText =
-    p.bloodGroup || "-";
+  document.getElementById("profileCard").style.display = "block";
+}
 
-  document.getElementById("pEdu").innerText =
-    p.qualification || "-";
-
-  document.getElementById("pPhoto").src =
-    p.photoUrl || "https://via.placeholder.com/80";
+function closeProfile(){
+  document.getElementById("profileCard").style.display = "none";
 }
 
 /* ---------- ADD BUTTON ---------- */
