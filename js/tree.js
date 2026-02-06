@@ -366,6 +366,13 @@ function applyRoleUI(){
     document.getElementById("addPageBtn").style.display = "none";
   }
 
+  if(USER_ROLE === "editor"){
+    // editor can add but not delete
+  }
+
+  if(USER_ROLE === "owner"){
+    // full access
+  }
 }
 
 /* ---------- ADD BUTTON ---------- */
