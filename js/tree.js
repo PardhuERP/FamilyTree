@@ -1,4 +1,33 @@
 let USER_ROLE = "viewer";
+function applyRoleUI(){
+
+  const editBtn = document.getElementById("menuEdit");
+  const deleteBtn = document.getElementById("menuDelete");
+  const addBtn = document.getElementById("addPageBtn");
+
+  if(!editBtn || !deleteBtn || !addBtn) return;
+
+  // VIEWER
+  if(USER_ROLE === "viewer"){
+    editBtn.style.display = "none";
+    deleteBtn.style.display = "none";
+    addBtn.style.display = "none";
+  }
+
+  // EDITOR
+  if(USER_ROLE === "editor"){
+    editBtn.style.display = "block";
+    deleteBtn.style.display = "none";
+    addBtn.style.display = "block";
+  }
+
+  // OWNER
+  if(USER_ROLE === "owner"){
+    editBtn.style.display = "block";
+    deleteBtn.style.display = "block";
+    addBtn.style.display = "block";
+  }
+}
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
@@ -418,21 +447,6 @@ function openDelete(){
     }
   });
   }
-  
-function applyRoleUI(){
-
-  if(USER_ROLE === "viewer"){
-    document.getElementById("addPageBtn").style.display = "none";
-  }
-
-  if(USER_ROLE === "editor"){
-    // editor can add but not delete
-  }
-
-  if(USER_ROLE === "owner"){
-    // full access
-  }
-}
 
 /* ---------- ADD BUTTON ---------- */
 if(document.getElementById("addBtn")){
