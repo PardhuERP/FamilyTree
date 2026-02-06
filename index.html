@@ -92,15 +92,35 @@ if(shareToken){
 
 }else{
 
-  if(!localStorage.getItem("userId")){
+  const userId = localStorage.getItem("userId");
+  const familyId = localStorage.getItem("familyId");
+
+  if(!userId){
     location.href="login.html";
   }
 
-  if(!localStorage.getItem("familyId")){
+  if(!familyId){
     location.href="family-select.html";
   }
 
-  loadTree();
+  // ✅ LOAD FAMILY NAME
+  fetch(API_URL +
+    "?action=getFamilies&userId=" + userId)
+    .then(r => r.json())
+    .then(res => {
+
+      if(res.status === "OK"){
+        const fam = res.families.find(f => f.familyId === familyId);
+
+        if(fam){
+          document.getElementById("familyTitle").innerText =
+            "🌳 " + fam.name;
+        }
+      }
+
+      // load tree after title set
+      loadTree();
+    });
 }
 </script> 
 
