@@ -120,13 +120,14 @@ function createFamily(){
 
     div.innerHTML = `
       <button style="width:100%;background:#f3f4f6"
-        onclick="selectFamily('${f.familyId}', '${f.name}', 'viewer')"
+        onclick="selectFamily('${f.familyId}', '${f.name}', 'viewer')">
+        🤝 ${f.name}
       </button>
     `;
 
     box.appendChild(div);
   });
-      }
+}
 </script>
 
 </body>
