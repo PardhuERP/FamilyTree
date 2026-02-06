@@ -62,21 +62,22 @@ function showFamilies(list){
   }
 
   list.forEach(f=>{
-  const div = document.createElement("div");
-  div.style.marginBottom = "10px";
+    const div = document.createElement("div");
+    div.style.marginBottom = "10px";
 
- div.className = "familyCard";
-div.onclick = function(){
-  selectFamily(f.familyId, f.name);
-};
+    div.className = "familyCard";
 
-div.innerHTML = `
-  <div class="familyTitle">🌳 ${f.name}</div>
-  <div class="familySub">Tap to open family tree</div>
-`; 
+    div.onclick = function(){
+      selectFamily(f.familyId, f.name, "owner");
+    };
 
-  box.appendChild(div);
-});
+    div.innerHTML = `
+      <div class="familyTitle">🌳 ${f.name}</div>
+      <div class="familySub">Tap to open family tree</div>
+    `;
+
+    box.appendChild(div);
+  });
 }
 
 function selectFamily(fid, fname){
