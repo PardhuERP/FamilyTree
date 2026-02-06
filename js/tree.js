@@ -91,6 +91,7 @@ fetch(API_URL +
     buildTree(res.data);
   }
 });
+}
 
 /* ---------- BUILD TREE ---------- */
 function buildTree(rows){
