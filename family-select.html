@@ -61,10 +61,10 @@ function showFamilies(list){
   });
 }
 
-function selectFamily(fid){
+function selectFamily(fid, fname){
   localStorage.setItem("familyId", fid);
-  localStorage.setItem("familyName", familyName);
-  location.href = "index.html"; // tree later
+  localStorage.setItem("familyName", fname);
+  location.href = "index.html";
 }
 
 function createFamily(){
