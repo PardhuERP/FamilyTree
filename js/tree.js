@@ -358,7 +358,14 @@ function centerNode(d){
 function showProfileCard(p){
 
   document.getElementById("pName").innerText = p.name || "-";
-  document.getElementById("pDob").innerText = p.dob || "-";
+  let dobText = "-";
+
+if(p.dob){
+  const d = new Date(p.dob);
+  dobText = d.toISOString().split("T")[0];
+}
+
+document.getElementById("pDob").innerText = dobText;
   document.getElementById("pBlood").innerText =
   p.bloodGroup || "-";
 
