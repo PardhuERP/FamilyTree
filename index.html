@@ -16,8 +16,8 @@
     <button id="menuBtn" class="circleBtn">⋮</button>
 
     <div id="menuBox" class="menuBox">
-      <div id="menuEdit" onclick="openEdit()">✏ Edit Member</div>
-<div id="menuDelete" onclick="openDelete()">🗑 Delete Member</div>
+      <div onclick="openEdit()">✏ Edit Member</div>
+      <div onclick="openDelete()">🗑 Delete Member</div>
       <hr>
       <a href="relation.html">🔗 Relation Finder</a>
       <a href="coming-soon.html">🕒 More</a>
@@ -50,21 +50,17 @@
 </div>
 
 <svg id="tree"></svg>
- <script>
+
+  <script>
 const API_URL =
 "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
-
-function loadTree(){
-  const s = document.createElement("script");
-  s.src = "js/tree.js";
-  document.body.appendChild(s);
-}
 
 const urlParams = new URLSearchParams(window.location.search);
 const shareToken = urlParams.get("share");
 
 if(shareToken){
 
+  // ✅ SHARE MODE (NO LOGIN REQUIRED)
   fetch(API_URL + "?action=getFamilyByShare&shareToken=" + shareToken)
     .then(r => r.json())
     .then(res => {
@@ -72,37 +68,35 @@ if(shareToken){
       if(res.status === "OK"){
 
         localStorage.setItem("familyId", res.familyId);
-        localStorage.setItem("viewMode","true");
 
         document.getElementById("familyTitle").innerText =
           "🌳 " + res.familyName;
 
-        document.getElementById("addPageBtn").style.display="none";
-        document.getElementById("collapseBtn").style.display="none";
-        document.getElementById("expandBtn").style.display="none";
+        // hide edit buttons
+        document.getElementById("addPageBtn").style.display = "none";
+        document.getElementById("collapseBtn").style.display = "none";
+        document.getElementById("expandBtn").style.display = "none";
 
-        // ✅ LOAD TREE AFTER FAMILY SET
-        loadTree();
-
-      }else{
+      } else {
         alert("Invalid share link");
-        location.href="login.html";
+        location.href = "login.html";
       }
     });
 
 }else{
 
+  // ✅ NORMAL APP FLOW
   if(!localStorage.getItem("userId")){
-    location.href="login.html";
+    location.href = "login.html";
   }
 
   if(!localStorage.getItem("familyId")){
-    location.href="family-select.html";
+    location.href = "family-select.html";
   }
-
-  loadTree();
 }
-</script> 
+</script>
+
+<script src="js/tree.js"></script>
 
 
 <script>
