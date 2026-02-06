@@ -1,5 +1,10 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
+let USER_ROLE = "viewer";
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
+
 const FAMILY_ID = localStorage.getItem("familyId");
+const USER_ID = localStorage.getItem("userId");
 
 if(!FAMILY_ID){
   alert("No family selected");
@@ -32,14 +37,31 @@ if(document.getElementById("tree")){
   const USER_ID = localStorage.getItem("userId");
 const FAMILY_ID = localStorage.getItem("familyId");
 
-fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
-  .then(r => r.json())
-  .then(res => {
-    if(res.status === "OK"){
-      buildTree(res.data);
-    }
-  });
-}
+// ✅ STEP 1 — get user role first
+fetch(API_URL +
+  "?action=getUserRole" +
+  "&familyId=" + FAMILY_ID +
+  "&userId=" + USER_ID)
+.then(r => r.json())
+.then(roleRes => {
+
+  if(roleRes.status === "OK"){
+    USER_ROLE = roleRes.role;
+    applyRoleUI();
+  }
+
+  // ✅ STEP 2 — load tree after role
+  return fetch(API_URL +
+    "?action=getTree" +
+    "&familyId=" + FAMILY_ID +
+    "&userId=" + USER_ID);
+})
+.then(r => r.json())
+.then(res => {
+  if(res.status === "OK"){
+    buildTree(res.data);
+  }
+});
 
 /* ---------- BUILD TREE ---------- */
 function buildTree(rows){
@@ -337,6 +359,13 @@ function centerNode(d){
       d3.zoom().transform,
       d3.zoomIdentity.translate(x, y).scale(scale)
     );
+}
+function applyRoleUI(){
+
+  if(USER_ROLE === "viewer"){
+    document.getElementById("addPageBtn").style.display = "none";
+  }
+
 }
 
 /* ---------- ADD BUTTON ---------- */
