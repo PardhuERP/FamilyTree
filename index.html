@@ -57,6 +57,12 @@ const API_URL =
 
 const urlParams = new URLSearchParams(window.location.search);
 const shareToken = urlParams.get("share");
+    // ✅ SHOW FAMILY NAME (NORMAL LOGIN MODE)
+const fname = localStorage.getItem("familyName");
+if(fname){
+  document.getElementById("familyTitle").innerText =
+    "🌳 " + fname;
+}
 
 if(shareToken){
 
