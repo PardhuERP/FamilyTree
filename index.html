@@ -130,20 +130,32 @@ if(shareToken){
 
 <script>
 
-  // ✅ VIEW MODE CHECK (ADD THIS BLOCK HERE)
-  const viewMode = localStorage.getItem("viewMode");
+// ✅ VIEW MODE CHECK
+const viewMode = localStorage.getItem("viewMode");
 
-  if(viewMode === "viewer"){
-    document.querySelector(".menuWrap").style.display = "none";
+if(viewMode === "viewer"){
+  const menuWrap = document.querySelector(".menuWrap");
+  if(menuWrap){
+    menuWrap.style.display = "none";
   }
 
-  document.getElementById("addPageBtn").onclick = function () {
-    window.location.href = "add.html";
-  };
+  const addBtn = document.getElementById("addPageBtn");
+  if(addBtn){
+    addBtn.style.display = "none";
+  }
+}
 
-  // MENU
-  var btn = document.getElementById("menuBtn");
-  var box = document.getElementById("menuBox");
+// ADD PAGE BUTTON
+document.getElementById("addPageBtn").onclick = function () {
+  window.location.href = "add.html";
+};
+
+// MENU
+var btn = document.getElementById("menuBtn");
+var box = document.getElementById("menuBox");
+
+// ✅ only if menu exists
+if(btn && box){
 
   btn.onclick = function (e) {
     e.stopPropagation();
@@ -155,6 +167,8 @@ if(shareToken){
       box.classList.remove("show");
     }
   };
+
+}  
 
   function openEdit(){
   if(!window.selectedNode || !window.selectedNode.personId){
