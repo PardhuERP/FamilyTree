@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
+// API_URL comes from index.html
 const FAMILY_ID = localStorage.getItem("familyId");
 
 if(!FAMILY_ID){
