@@ -78,6 +78,7 @@ if(VIEW_MODE){
       buildTree(res.data);
     }
   });
+}
 
 }else{
 
