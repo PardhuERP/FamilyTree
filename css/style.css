@@ -361,3 +361,47 @@ body::after{
   padding-top:15px;
   border-top:1px solid #e5e7eb;
 }
+/* PROFILE CARD */
+.profileCard{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  width:320px;
+  background:#fff;
+  border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+  padding:15px;
+  display:none;
+  z-index:1000;
+}
+
+.profileHeader{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.profileHeader img{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid #2563eb;
+}
+
+.pName{
+  font-size:18px;
+  font-weight:700;
+}
+
+.pSub{
+  font-size:13px;
+  color:#666;
+}
+
+.profileBody div{
+  font-size:14px;
+  margin-bottom:6px;
+}
