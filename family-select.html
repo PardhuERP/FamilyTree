@@ -34,7 +34,7 @@ if(!userId){
 }
 
 // Load families
-fetch(API_URL + "?action=getOwnFamilies&userId=" + userId)
+fetch(API_URL + "?action=getOwnerFamilies&userId=" + userId)
   .then(r=>r.json())
   .then(res=>{
     if(res.status==="OK"){
