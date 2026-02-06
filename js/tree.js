@@ -286,6 +286,8 @@ async function addPerson(){
     "&name=" + encodeURIComponent(name) +
     "&gender=" + gender +
     "&dob=" + dob +
+    "&bloodGroup=" + blood +
+    "&qualification=" + encodeURIComponent(edu)+
     "&place=" + encodeURIComponent(place) +
     "&fatherId=" + fatherId +
     "&spouseId=" + spouseId +
@@ -357,6 +359,12 @@ function showProfileCard(p){
 
   document.getElementById("pName").innerText = p.name || "-";
   document.getElementById("pDob").innerText = p.dob || "-";
+  document.getElementById("pBlood").innerText =
+  p.bloodGroup || "-";
+
+document.getElementById("pEdu").innerText =
+  p.qualification || "-";
+  
   document.getElementById("pPlace").innerText = p.place || "-";
 
   document.getElementById("pFather").innerText =
