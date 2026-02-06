@@ -53,12 +53,15 @@ function showFamilies(list){
   const div = document.createElement("div");
   div.style.marginBottom = "10px";
 
-  div.innerHTML = `
-    <button style="width:100%"
-      onclick="selectFamily('${f.familyId}', '${f.name}')">
-      🌳 ${f.name}
-    </button>
-  `;
+ div.className = "familyCard";
+div.onclick = function(){
+  selectFamily(f.familyId, f.name);
+};
+
+div.innerHTML = `
+  <div class="familyTitle">🌳 ${f.name}</div>
+  <div class="familySub">Tap to open family tree</div>
+`; 
 
   box.appendChild(div);
 });
