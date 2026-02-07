@@ -196,11 +196,15 @@ function toggle(event,d){
     personId: d.data.personId,
     name: d.data.name
   };
+
+  // ✅ OPEN PROFILE
   showProfileCard(d.data);
+  document.getElementById("profileOverlay").style.display = "flex";
 
   localStorage.setItem("selectedParent", d.data.personId);
   localStorage.setItem("selectedParentName", d.data.name);
 
+  // highlight
   g.selectAll(".node").classed("search-match", false);
   d3.select(event.currentTarget).classed("search-match", true);
 
@@ -215,6 +219,7 @@ function toggle(event,d){
     update(d);
   },50);
 }
+
 
 /* ---------- BUTTONS ---------- */
 if(document.getElementById("collapseBtn")){
