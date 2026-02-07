@@ -103,20 +103,27 @@ document.addEventListener("DOMContentLoaded", function(){
   });
 
 });
-
-    document.getElementById("updateBtn").onclick = function(){
+    
+document.getElementById("updateBtn").onclick = function(){
 
   const id = localStorage.getItem("editPersonId");
+
+  const name = document.getElementById("pname").value;
+  const gender = document.getElementById("pgender").value;
+  const dob = document.getElementById("pdob").value;
+  const place = document.getElementById("pplace").value;
+  const blood = document.getElementById("pblood").value;
+  const edu = document.getElementById("pedu").value;
 
   fetch(API_URL +
     "?action=updatePerson" +
     "&personId=" + id +
-    "&name=" + encodeURIComponent(pname.value) +
-    "&gender=" + pgender.value +
-    "&dob=" + pdob.value +
-    "&place=" + encodeURIComponent(pplace.value) +
-    "&bloodGroup=" + pblood.value +
-    "&qualification=" + encodeURIComponent(pedu.value)
+    "&name=" + encodeURIComponent(name) +
+    "&gender=" + gender +
+    "&dob=" + dob +
+    "&place=" + encodeURIComponent(place) +
+    "&bloodGroup=" + blood +
+    "&qualification=" + encodeURIComponent(edu)
   )
   .then(r=>r.json())
   .then(res=>{
@@ -124,6 +131,7 @@ document.addEventListener("DOMContentLoaded", function(){
     window.location.href = "index.html";
   });
 };
+    
       </script>
 
 </body>
