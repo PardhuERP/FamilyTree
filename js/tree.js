@@ -362,34 +362,41 @@ function centerNode(d){
 function showProfileCard(p){
 
   document.getElementById("pName").innerText = p.name || "-";
+
   let dobText = "-";
 
-if(p.dob){
-  const d = new Date(p.dob);
+  if(p.dob){
+    const d = new Date(p.dob);
 
-  // format date
-  const dateOnly = d.toISOString().split("T")[0];
+    const dateOnly = d.toISOString().split("T")[0];
 
-  // calculate age
-  const today = new Date();
-  let age = today.getFullYear() - d.getFullYear();
-  const m = today.getMonth() - d.getMonth();
+    const today = new Date();
+    let age = today.getFullYear() - d.getFullYear();
+    const m = today.getMonth() - d.getMonth();
 
-  if (m < 0 || (m === 0 && today.getDate() < d.getDate())) {
-    age--;
+    if (m < 0 || (m === 0 && today.getDate() < d.getDate())) {
+      age--;
+    }
+
+    dobText = dateOnly + " (" + age + " yrs)";
   }
 
-  dobText = dateOnly + " (" + age + " yrs)";
-}
+  document.getElementById("pDob").innerText = dobText;
 
-document.getElementById("pDob").innerText = dobText;
   document.getElementById("pBlood").innerText =
-  p.bloodGroup || "-";
+    p.bloodGroup || "-";
 
-document.getElementById("pEdu").innerText =
-  p.qualification || "-";
-  
-  document.getElementById("pPlace").innerText = p.place || "-";
+  document.getElementById("pEdu").innerText =
+    p.qualification || "-";
+
+  document.getElementById("pPlace").innerText =
+    p.place || "-";
+
+  // ✅ ADD THIS BLOCK (PHOTO)
+  document.getElementById("pPhoto").src =
+    (p.photoUrl && p.photoUrl !== "")
+      ? p.photoUrl
+      : "https://via.placeholder.com/80";
 
   document.getElementById("pFather").innerText =
     map[p.fatherId]?.name || "-";
@@ -398,10 +405,6 @@ document.getElementById("pEdu").innerText =
     map[p.motherId]?.name || "-";
 
   document.getElementById("profileCard").style.display = "block";
-}
-
-function closeProfile(){
-  document.getElementById("profileCard").style.display = "none";
 }
 
 /* ---------- ADD BUTTON ---------- */
