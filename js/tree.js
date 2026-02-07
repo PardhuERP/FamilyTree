@@ -376,15 +376,12 @@ function showProfileCard(p){
   if(p.dob){
     const d = new Date(p.dob);
 
-    const dateOnly =
-      d.toISOString().split("T")[0];
+    const dateOnly = d.toISOString().split("T")[0];
 
     const today = new Date();
-    let age =
-      today.getFullYear() - d.getFullYear();
+    let age = today.getFullYear() - d.getFullYear();
 
-    const m =
-      today.getMonth() - d.getMonth();
+    const m = today.getMonth() - d.getMonth();
 
     if (m < 0 ||
        (m === 0 && today.getDate() < d.getDate())){
@@ -407,20 +404,20 @@ function showProfileCard(p){
     p.place || "-";
 
   document.getElementById("pFather").innerText =
-    map[p.fatherId]?.name || "-";
+    (map[p.fatherId] ? map[p.fatherId].name : "-");
 
   document.getElementById("pMother").innerText =
-    map[p.motherId]?.name || "-";
+    (map[p.motherId] ? map[p.motherId].name : "-");
 
   // ---- PHOTO ----
   const photo = document.getElementById("pPhoto");
+
   if(photo){
     photo.src =
       (p.photoUrl && p.photoUrl !== "")
         ? p.photoUrl
         : "https://via.placeholder.com/80";
   }
-}
 
   // ---- SHOW CARD ----
   const overlay =
@@ -430,6 +427,7 @@ function showProfileCard(p){
     overlay.style.display = "flex";
   }
 }
+        
 
   // ✅ ADD THIS BLOCK (PHOTO)
   document.getElementById("pPhoto").src =
