@@ -64,10 +64,12 @@
 
   
 <!-- PROFILE OVERLAY -->
-<div id="profileOverlay" class="profileOverlay">
+<div id="profileOverlay" class="profileOverlay"
+     onclick="closeProfile()">
   
 <!-- MEMBER PROFILE POPUP -->
-<div id="profileCard" class="profileCard">
+<div id="profileCard" class="profileCard"
+     onclick="event.stopPropagation()">
 
   <!-- CLOSE BUTTON -->
   <div class="profileClose" onclick="closeProfile()">✕</div>
