@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Add Member | MyFamilyTree</title>
+<title>Edit Member | MyFamilyTree</title>
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -11,16 +11,15 @@
 
 <div class="toolbar addBar">
   <button class="backBtn" onclick="history.back()">←</button>
-  <span class="appTitle">Add Person</span>
+  <span class="appTitle">Edit Person</span>
 </div>
 
 <div class="addPage">
 
   <h2>Edit Family Member</h2>
-  <button id="updateBtn">Update Person</button>
 
   <label class="fieldLabel">Full Name</label>
-  <input id="pname" placeholder="Enter name">
+  <input id="pname">
 
   <label class="fieldLabel">Gender</label>
   <select id="pgender">
@@ -32,20 +31,35 @@
   <input type="date" id="pdob">
 
   <label class="fieldLabel">Blood Group</label>
-<input id="pblood" placeholder="O+, A+, B+">
+  <input id="pblood">
 
-<label class="fieldLabel">Qualification</label>
-<input id="pedu" placeholder="B.Tech, MBA etc">
+  <label class="fieldLabel">Qualification</label>
+  <input id="pedu">
 
   <label class="fieldLabel">Place</label>
-  <input id="pplace" placeholder="Village / City">
+  <input id="pplace">
 
   <label class="fieldLabel">Father ID</label>
-  <small id="parentInfo" style="color:#2563eb; display:block; margin-bottom:6px;"></small>
+  <small id="parentInfo"
+         style="color:#2563eb;display:block;margin-bottom:6px;">
+  </small>
   <input id="pfather">
 
-  <label class="fieldLabel">Spouse ID (optional)</label>
-  <input id="pspouse" placeholder="Cut above👆 ID & paste here">
+  <label class="fieldLabel">Spouse ID</label>
+  <input id="pspouse">
+
+  <!-- ✅ PHOTO SECTION -->
+  <label class="fieldLabel">Photo</label>
+  <input type="file" id="pphoto" accept="image/*">
+
+  <img id="previewPhoto"
+       style="width:80px;height:80px;
+              border-radius:10px;
+              margin-top:8px;
+              display:none;">
+
+  <br><br>
+  <button id="updateBtn">Update Person</button>
 
 </div>
 
@@ -57,23 +71,6 @@ window.API_URL =
 <script src="js/tree.js"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const pid = localStorage.getItem("selectedParent");
-  const pname = localStorage.getItem("selectedParentName");
-
-  const pfather = document.getElementById("pfather");
-  const info = document.getElementById("parentInfo");
-
-  if (pid && pfather && info) {
-    pfather.value = pid;
-    info.innerText = "Child of: " + pname + " (" + pid + ")";
-  } else if(info) {
-    info.innerText = "No parent selected. Go back and tap a person.";
-  }
-});
-</script>
-
-  <script>
 document.addEventListener("DOMContentLoaded", function(){
 
   const personId = localStorage.getItem("editPersonId");
@@ -89,67 +86,26 @@ document.addEventListener("DOMContentLoaded", function(){
     const p = res.data.find(x=>x.personId === personId);
     if(!p) return;
 
-    document.getElementById("pname").value = p.name || "";
-    document.getElementById("pgender").value = p.gender || "";
-    document.getElementById("pdob").value =
-      (p.dob || "").split("T")[0];
+    pname.value = p.name || "";
+    pgender.value = p.gender || "";
+    pdob.value = (p.dob || "").split("T")[0];
+    pplace.value = p.place || "";
+    pfather.value = p.fatherId || "";
+    pspouse.value = p.spouseId || "";
+    pblood.value = p.bloodGroup || "";
+    pedu.value = p.qualification || "";
 
-    document.getElementById("pplace").value = p.place || "";
-    document.getElementById("pfather").value = p.fatherId || "";
-    document.getElementById("pspouse").value = p.spouseId || "";
-    document.getElementById("pblood").value = p.bloodGroup || "";
-    document.getElementById("pedu").value = p.qualification || "";
-    <label class="fieldLabel">Photo</label>
-
-<input type="file" id="pphoto" accept="image/*">
-
-<img id="previewPhoto"
-     style="width:80px;height:80px;
-            border-radius:10px;
-            margin-top:8px;
-            display:none;">
+    if(p.photoUrl){
+      previewPhoto.src = p.photoUrl;
+      previewPhoto.style.display = "block";
+    }
   });
 
 });
-    
-document.getElementById("updateBtn").onclick = function(){
+</script>
 
-  const id = localStorage.getItem("editPersonId");
-
-  const name = document.getElementById("pname").value;
-  const gender = document.getElementById("pgender").value;
-  const dob = document.getElementById("pdob").value;
-  const place = document.getElementById("pplace").value;
-  const blood = document.getElementById("pblood").value;
-  const edu = document.getElementById("pedu").value;
-  <label class="fieldLabel">Photo</label>
-
-<input type="file" id="pphoto" accept="image/*">
-
-<img id="previewPhoto"
-     style="width:80px;height:80px;
-            border-radius:10px;
-            margin-top:8px;
-            display:none;">
-
-  fetch(API_URL +
-    "?action=updatePerson" +
-    "&personId=" + id +
-    "&name=" + encodeURIComponent(name) +
-    "&gender=" + gender +
-    "&dob=" + dob +
-    "&place=" + encodeURIComponent(place) +
-    "&bloodGroup=" + blood +
-    "&qualification=" + encodeURIComponent(edu)
-  )
-  .then(r=>r.json())
-  .then(res=>{
-  alert("Updated");
-  localStorage.removeItem("editPersonId");
-  window.location.href = "index.html";
-});
-};
-    
+<script>
+/* PHOTO PREVIEW */
 document.getElementById("pphoto")
 .addEventListener("change", function(e){
 
@@ -157,16 +113,40 @@ document.getElementById("pphoto")
   if(!file) return;
 
   const reader = new FileReader();
+
   reader.onload = function(ev){
-    const img = document.getElementById("previewPhoto");
-    img.src = ev.target.result;
-    img.style.display = "block";
+    previewPhoto.src = ev.target.result;
+    previewPhoto.style.display = "block";
   };
 
   reader.readAsDataURL(file);
 });
+</script>
 
-      </script>
+<script>
+/* UPDATE PERSON */
+document.getElementById("updateBtn").onclick = function(){
+
+  const id = localStorage.getItem("editPersonId");
+
+  fetch(API_URL +
+    "?action=updatePerson" +
+    "&personId=" + id +
+    "&name=" + encodeURIComponent(pname.value) +
+    "&gender=" + pgender.value +
+    "&dob=" + pdob.value +
+    "&place=" + encodeURIComponent(pplace.value) +
+    "&bloodGroup=" + pblood.value +
+    "&qualification=" + encodeURIComponent(pedu.value)
+  )
+  .then(r=>r.json())
+  .then(res=>{
+    alert("Updated");
+    localStorage.removeItem("editPersonId");
+    window.location.href = "index.html";
+  });
+};
+</script>
 
 </body>
 </html>
