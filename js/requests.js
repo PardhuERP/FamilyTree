@@ -48,9 +48,12 @@ function showRequests(list){
     </div>
 
     <div style="margin-bottom:6px;">
-      <b>Requested by:</b><br>
-      ${r.requesterEmail}
-    </div>
+  <b>Requested by:</b><br>
+  ${r.requesterEmail}<br>
+  <small style="color:#6b7280">
+    (${r.requesterFamilyName || "Family not set"})
+  </small>
+</div>
 
     <div style="color:#6b7280; font-size:12px; margin-bottom:10px;">
       ${new Date(r.requestTime).toLocaleString()}
