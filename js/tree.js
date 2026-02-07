@@ -276,39 +276,39 @@ async function addPerson(){
   }
 
   let gen = 1;
-  if(fatherId){
-    gen = await getPersonGen(fatherId) + 1;
-  }
+if(fatherId){
+  gen = await getPersonGen(fatherId) + 1;
+}
 
-  fetch(
-    API_URL +
-    "?action=addPerson" +
-    "&familyId=" + FAMILY_ID +
-    "&name=" + encodeURIComponent(name) +
-    "&gender=" + gender +
-    "&dob=" + dob +
-    "&bloodGroup=" + blood +
-    "&qualification=" + encodeURIComponent(edu)+
-    "&place=" + encodeURIComponent(place) +
-    "&fatherId=" + fatherId +
-    "&spouseId=" + spouseId +
-    "&photoUrl=" + encodeURIComponent(photoUrl)+
-    "&generation=" + gen
-  )
-  .then(r=>r.json())
-  .then(res=>{
-    if(res.status==="OK"){
-      alert("Added successfully!");
-      localStorage.removeItem("selectedParent");
-      localStorage.removeItem("selectedParentName");
-      window.location.href="index.html";
-    }else{
-      alert("Error adding person");
-    }
-  })
-  .catch(()=>{
-    alert("Network error");
-  });
+fetch(
+  API_URL +
+  "?action=addPerson" +
+  "&familyId=" + FAMILY_ID +
+  "&name=" + encodeURIComponent(name) +
+  "&gender=" + gender +
+  "&dob=" + dob +
+  "&bloodGroup=" + blood +
+  "&qualification=" + encodeURIComponent(edu) +
+  "&place=" + encodeURIComponent(place) +
+  "&fatherId=" + fatherId +
+  "&spouseId=" + spouseId +
+  "&photoUrl=" + encodeURIComponent(window.photoBase64 || "") +
+  "&generation=" + gen
+)
+.then(r=>r.json())
+.then(res=>{
+  if(res.status==="OK"){
+    alert("Added successfully!");
+    localStorage.removeItem("selectedParent");
+    localStorage.removeItem("selectedParentName");
+    window.location.href="index.html";
+  }else{
+    alert("Error adding person");
+  }
+})
+.catch(()=>{
+  alert("Network error");
+});
 }
 
 /* ---------- SEARCH ---------- */
