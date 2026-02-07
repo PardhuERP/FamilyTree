@@ -18,9 +18,12 @@ function searchFamily(){
     return;
   }
 
+  const userId = localStorage.getItem("userId");
+
   fetch(API_URL +
-    "?action=searchFamilies&name=" +
-    encodeURIComponent(name)
+    "?action=searchFamilies" +
+    "&name=" + encodeURIComponent(name) +
+    "&userId=" + userId
   )
   .then(r=>r.json())
   .then(res=>{
