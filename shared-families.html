@@ -9,7 +9,20 @@
 
 <body>
 
+<!-- TOP TOOLBAR -->
+<div class="toolbar addBar">
+
+  <button class="backBtn" onclick="goBackHome()">
+    ← Back
+  </button>
+
+  <span class="appTitle">Find Families</span>
+
+</div>
+
+<!-- PAGE CONTENT -->
 <div class="addPage">
+
   <h2>Search Family</h2>
 
   <!-- SEARCH BOX -->
@@ -26,6 +39,12 @@
 </div>
 
 <script src="js/shared-family.js"></script>
+
+<script>
+function goBackHome(){
+  window.location.href = "index.html";
+}
+</script>
 
 </body>
 </html>
