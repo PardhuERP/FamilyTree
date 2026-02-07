@@ -181,27 +181,20 @@ if(btn && box){
 }  
 
   function openEdit(){
+
   if(!window.selectedNode || !window.selectedNode.personId){
     alert("Tap a member first");
     return;
   }
 
-  const newName = prompt("Edit name:", window.selectedNode.name);
-  if(!newName) return;
+  localStorage.setItem(
+    "editPersonId",
+    window.selectedNode.personId
+  );
 
-  fetch(API_URL +
-    "?action=updatePerson" +
-    "&personId=" + window.selectedNode.personId +
-    "&name=" + encodeURIComponent(newName)
-  )
-  .then(r=>r.json())
-  .then(res=>{
-    if(res.status==="OK"){
-      alert("Updated");
-      location.reload();
-    }
-  });
+  window.location.href = "edit.html";
   }
+  
   function openDelete(){
   if(!window.selectedNode){
     alert("Tap a member first");
