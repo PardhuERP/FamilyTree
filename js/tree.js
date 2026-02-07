@@ -365,23 +365,21 @@ function centerNode(d){
 }
 
 function showProfileCard(p){
-function showProfileCard(p){
 
-  document.getElementById("pName").innerText =
-    p.name || "-";
+  document.getElementById("pName").innerText = p.name || "-";
 
   let dobText = "-";
 
   if(p.dob){
     const d = new Date(p.dob);
+
     const dateOnly = d.toISOString().split("T")[0];
 
     const today = new Date();
     let age = today.getFullYear() - d.getFullYear();
     const m = today.getMonth() - d.getMonth();
 
-    if (m < 0 ||
-       (m === 0 && today.getDate() < d.getDate())){
+    if (m < 0 || (m === 0 && today.getDate() < d.getDate())) {
       age--;
     }
 
@@ -399,24 +397,11 @@ function showProfileCard(p){
   document.getElementById("pPlace").innerText =
     p.place || "-";
 
-  document.getElementById("pFather").innerText =
-    map[p.fatherId]?.name || "-";
-
-  document.getElementById("pMother").innerText =
-    map[p.motherId]?.name || "-";
-
-  const photo = document.getElementById("pPhoto");
-
-  if(photo){
-    photo.src =
-      (p.photoUrl && p.photoUrl !== "")
-        ? p.photoUrl
-        : "https://via.placeholder.com/80";
-  }
-
-  document.getElementById("profileOverlay").style.display = "flex";
-}
-        
+  // ✅ ADD THIS BLOCK (PHOTO)
+  document.getElementById("pPhoto").src =
+    (p.photoUrl && p.photoUrl !== "")
+      ? p.photoUrl
+      : "https://via.placeholder.com/80";
 
   document.getElementById("pFather").innerText =
     map[p.fatherId]?.name || "-";
