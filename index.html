@@ -28,10 +28,19 @@
     </div>
   </div>
 
-  <!-- ROW 1 -->
-  <div class="row rowTop">
-    <span id="familyTitle" class="appTitle">🌳 MyFamilyTree</span>
-  </div>
+<div class="row rowTop" style="justify-content:space-between;padding:0 10px;">
+  
+  <button class="backBtn" onclick="goBackFamily()">
+    ← Families
+  </button>
+
+  <span id="familyTitle" class="appTitle">
+    🌳 MyFamilyTree
+  </span>
+
+  <div style="width:80px"></div>
+
+</div>
 
   <!-- ROW 2 -->
   <div class="row rowSearch">
@@ -214,6 +223,12 @@ if(btn && box){
   function logout(){
   localStorage.clear();
   location.href = "login.html";
+  }
+  
+  function goBackFamily(){
+  localStorage.removeItem("familyId");
+  localStorage.removeItem("familyName");
+  location.href = "family-select.html";
   }
 </script>
 </body>
