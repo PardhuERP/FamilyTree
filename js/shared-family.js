@@ -41,23 +41,50 @@ function showResults(list){
     return;
   }
 
-  list.forEach(f=>{
-    const div = document.createElement("div");
-    div.style.marginBottom = "10px";
+ list.forEach(f=>{
+  const div = document.createElement("div");
+  div.style.marginBottom = "10px";
 
-    div.innerHTML = `
-      <div style="padding:12px;
-                  border-radius:12px;
-                  background:#f3f4f6">
-        <b>🌳 ${f.name}</b><br>
-        <button onclick="requestAccess('${f.familyId}')">
-          Request Access
-        </button>
-      </div>
+  let actionHTML = "";
+
+  // ✅ already requested
+  if(f.requestStatus === "pending"){
+    actionHTML = `
+      <span style="color:orange;font-weight:600">
+        ⏳ Request Sent
+      </span>
     `;
+  }
 
-    box.appendChild(div);
-  });
+  // ✅ already approved
+  else if(f.requestStatus === "approved"){
+    actionHTML = `
+      <span style="color:green;font-weight:600">
+        ✅ Access Granted
+      </span>
+    `;
+  }
+
+  // ✅ new request allowed
+  else{
+    actionHTML = `
+      <button onclick="requestAccess('${f.familyId}')">
+        Request Access
+      </button>
+    `;
+  }
+
+  div.innerHTML = `
+    <div style="padding:12px;
+                border-radius:12px;
+                background:#f3f4f6">
+      <b>🌳 ${f.name}</b><br><br>
+      ${actionHTML}
+    </div>
+  `;
+
+  box.appendChild(div);
+}); 
 }
 
 /* ---------- REQUEST ACCESS ---------- */
