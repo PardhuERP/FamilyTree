@@ -407,6 +407,9 @@ function showProfileCard(p){
   document.getElementById("profileCard").style.display = "block";
 }
 
+function closeProfile(){
+  document.getElementById("profileCard").style.display = "none";
+}
 /* ---------- ADD BUTTON ---------- */
 if(document.getElementById("addBtn")){
   document.getElementById("addBtn")
