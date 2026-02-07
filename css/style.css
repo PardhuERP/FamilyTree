@@ -431,3 +431,45 @@ body::after{
   flex:1;
   text-align:center;
 }
+
+.profileOverlay{
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.35);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+
+.profileCard{
+  background:#fff;
+  border-radius:14px;
+  padding:16px;
+  width:90%;
+  max-width:340px;
+  box-shadow:0 8px 25px rgba(0,0,0,.2);
+  animation: popupAnim .25s ease;
+}
+
+@keyframes popupAnim{
+  from{
+    transform:translateY(20px);
+    opacity:0;
+  }
+  to{
+    transform:translateY(0);
+    opacity:1;
+  }
+}
+
+.closeBtn{
+  position:absolute;
+  right:12px;
+  top:8px;
+  cursor:pointer;
+  font-size:18px;
+}
