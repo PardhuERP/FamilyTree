@@ -280,21 +280,23 @@ if(fatherId){
   gen = await getPersonGen(fatherId) + 1;
 }
 
-fetch(
-  API_URL +
-  "?action=addPerson" +
-  "&familyId=" + FAMILY_ID +
-  "&name=" + encodeURIComponent(name) +
-  "&gender=" + gender +
-  "&dob=" + dob +
-  "&bloodGroup=" + blood +
-  "&qualification=" + encodeURIComponent(edu) +
-  "&place=" + encodeURIComponent(place) +
-  "&fatherId=" + fatherId +
-  "&spouseId=" + spouseId +
-  "&photoUrl=" + encodeURIComponent(window.photoBase64 || "") +
-  "&generation=" + gen
-)
+fetch(API_URL, {
+  method: "POST",
+  body: JSON.stringify({
+    action: "addPerson",
+    familyId: FAMILY_ID,
+    name: name,
+    gender: gender,
+    dob: dob,
+    bloodGroup: blood,
+    qualification: edu,
+    place: place,
+    fatherId: fatherId,
+    spouseId: spouseId,
+    photoUrl: window.photoBase64 || "",
+    generation: gen
+  })
+})
 .then(r=>r.json())
 .then(res=>{
   if(res.status==="OK"){
