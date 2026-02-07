@@ -31,25 +31,57 @@ function showRequests(list){
     div.style.marginBottom = "10px";
 
     div.innerHTML = `
-      <div style="padding:12px;
-                  border-radius:12px;
-                  background:#f3f4f6">
+  <div style="
+      padding:14px;
+      border-radius:14px;
+      background:#ffffff;
+      box-shadow:0 3px 8px rgba(0,0,0,.08);
+      border-left:4px solid #2563eb;
+  ">
 
-        <b>Family:</b> ${r.familyName}<br>
-        <b>Requested by:</b> ${r.requesterEmail}<br>
-        <small style="color:#666">
-          ${new Date(r.requestTime).toLocaleString()}
-        </small>
-        <br><br>
+    <div style="font-weight:600; font-size:15px; margin-bottom:6px;">
+      📩 Family Access Request
+    </div>
 
-        <button onclick="approve('${r.requestId}')">
-          ✅ Approve
-        </button>
+    <div style="margin-bottom:6px;">
+      <b>Family:</b> ${r.familyName}
+    </div>
 
-        <button onclick="reject('${r.requestId}')">
-          ❌ Reject
-        </button>
-      </div>
+    <div style="margin-bottom:6px;">
+      <b>Requested by:</b><br>
+      ${r.requesterEmail}
+    </div>
+
+    <div style="color:#6b7280; font-size:12px; margin-bottom:10px;">
+      ${new Date(r.requestTime).toLocaleString()}
+    </div>
+
+    <div style="display:flex; gap:8px;">
+      <button onclick="approve('${r.requestId}')"
+        style="
+          flex:1;
+          background:#16a34a;
+          color:#fff;
+          border:none;
+          padding:8px;
+          border-radius:8px;
+        ">
+        ✅ Approve
+      </button>
+
+      <button onclick="reject('${r.requestId}')"
+        style="
+          flex:1;
+          background:#dc2626;
+          color:#fff;
+          border:none;
+          padding:8px;
+          border-radius:8px;
+        ">
+        ❌ Reject
+      </button>
+    </div>
+    
     `;
 
     box.appendChild(div);
