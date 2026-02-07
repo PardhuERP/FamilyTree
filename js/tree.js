@@ -268,7 +268,8 @@ async function addPerson(){
   const place = document.getElementById("pplace")?.value;
   const fatherId = document.getElementById("pfather")?.value;
   const spouseId = document.getElementById("pspouse")?.value || "";
-
+  const photoUrl =
+  document.getElementById("previewPhoto")?.src || "";
   if(!name){
     alert("Enter name");
     return;
@@ -291,6 +292,7 @@ async function addPerson(){
     "&place=" + encodeURIComponent(place) +
     "&fatherId=" + fatherId +
     "&spouseId=" + spouseId +
+    "&photoUrl=" + encodeURIComponent(photoUrl)+
     "&generation=" + gen
   )
   .then(r=>r.json())
