@@ -28,17 +28,34 @@
     </div>
   </div>
 
-<div class="row rowTop" style="justify-content:space-between;padding:0 10px;">
-  
+<div class="row rowTop headerBar">
+
+  <!-- BACK BUTTON -->
   <button class="backBtn" onclick="goBackFamily()">
     ← Families
   </button>
 
-  <span id="familyTitle" class="appTitle">
+  <!-- TITLE -->
+  <span id="familyTitle" class="appTitle centerTitle">
     🌳 MyFamilyTree
   </span>
 
-  <div style="width:80px"></div>
+  <!-- 3 DOT MENU -->
+  <div class="menuWrap">
+    <button id="menuBtn" class="circleBtn">⋮</button>
+
+    <div id="menuBox" class="menuBox">
+      <a href="shared-families.html">👥 Find Families</a>
+      <a href="requests.html">📩 Requests</a>
+      <div onclick="openEdit()">✏ Edit Member</div>
+      <div onclick="openDelete()">🗑 Delete Member</div>
+      <hr>
+      <a href="relation.html">🔗 Relation Finder</a>
+      <a href="coming-soon.html">🕒 More</a>
+      <a href="#">⚙️ Settings</a>
+      <div onclick="logout()">🚪 Logout</div>
+    </div>
+  </div>
 
 </div>
 
