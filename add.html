@@ -34,6 +34,16 @@
 <input id="pblood" placeholder="O+, A+, B+">
 
 <label class="fieldLabel">Qualification</label>
+<label class="fieldLabel">Photo</label>
+
+<input type="file" id="pphoto" accept="image/*">
+
+<img id="previewPhoto"
+     style="width:80px;height:80px;
+            border-radius:10px;
+            margin-top:8px;
+            display:none;">
+  
 <input id="pedu" placeholder="B.Tech, MBA etc">
 
   <label class="fieldLabel">Place</label>
@@ -72,6 +82,25 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 </script>
+  
+  <script>
+document.getElementById("pphoto")
+.addEventListener("change", function(e){
+
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(ev){
+    const img = document.getElementById("previewPhoto");
+    img.src = ev.target.result;
+    img.style.display = "block";
+  };
+
+  reader.readAsDataURL(file);
+});
+  </script>
 
 </body>
 </html>
