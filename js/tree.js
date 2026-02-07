@@ -404,7 +404,7 @@ function showProfileCard(p){
   document.getElementById("pMother").innerText =
     map[p.motherId]?.name || "-";
 
-  document.getElementById("profileCard").style.display = "block";
+  document.getElementById("profileOverlay").style.display = "flex";
 }
 
 document.getElementById("profileOverlay")
