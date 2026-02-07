@@ -196,15 +196,11 @@ function toggle(event,d){
     personId: d.data.personId,
     name: d.data.name
   };
-
-  // ✅ OPEN PROFILE
   showProfileCard(d.data);
-  document.getElementById("profileOverlay").style.display = "flex";
 
   localStorage.setItem("selectedParent", d.data.personId);
   localStorage.setItem("selectedParentName", d.data.name);
 
-  // highlight
   g.selectAll(".node").classed("search-match", false);
   d3.select(event.currentTarget).classed("search-match", true);
 
@@ -219,7 +215,6 @@ function toggle(event,d){
     update(d);
   },50);
 }
-
 
 /* ---------- BUTTONS ---------- */
 if(document.getElementById("collapseBtn")){
@@ -409,7 +404,7 @@ function showProfileCard(p){
   document.getElementById("pMother").innerText =
     map[p.motherId]?.name || "-";
 
-  document.getElementById("profileOverlay").style.display = "flex";
+  document.getElementById("profileCard").style.display = "block";
 }
 
 document.getElementById("profileOverlay")
@@ -419,13 +414,9 @@ document.getElementById("profileOverlay")
   }
 });
 
-window.closeProfile = function(){
-  const overlay = document.getElementById("profileOverlay");
-  if(overlay){
-    overlay.style.display = "none";
-  }
-};
-
+function closeProfile(){
+  document.getElementById("profileCard").style.display = "none";
+}
 /* ---------- ADD BUTTON ---------- */
 if(document.getElementById("addBtn")){
   document.getElementById("addBtn")
