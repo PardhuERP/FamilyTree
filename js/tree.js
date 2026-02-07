@@ -429,12 +429,6 @@ function showProfileCard(p){
 }
         
 
-  // ✅ ADD THIS BLOCK (PHOTO)
-  document.getElementById("pPhoto").src =
-    (p.photoUrl && p.photoUrl !== "")
-      ? p.photoUrl
-      : "https://via.placeholder.com/80";
-
   document.getElementById("pFather").innerText =
     map[p.fatherId]?.name || "-";
 
