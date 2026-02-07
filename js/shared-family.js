@@ -98,5 +98,11 @@ function requestAccess(fid){
   .then(r=>r.json())
   .then(res=>{
     alert(res.message);
+
+    // ✅ refresh search results again
+    const searchText =
+      document.getElementById("searchInput").value;
+
+    searchFamilies(searchText);
   });
 }
