@@ -34,8 +34,13 @@ function showRequests(list){
       <div style="padding:12px;
                   border-radius:12px;
                   background:#f3f4f6">
-        <b>Family:</b> ${r.familyId}<br>
-        <b>User:</b> ${r.requesterId}<br><br>
+
+        <b>Family:</b> ${r.familyName}<br>
+        <b>Requested by:</b> ${r.requesterEmail}<br>
+        <small style="color:#666">
+          ${new Date(r.requestTime).toLocaleString()}
+        </small>
+        <br><br>
 
         <button onclick="approve('${r.requestId}')">
           ✅ Approve
