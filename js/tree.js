@@ -414,9 +414,13 @@ document.getElementById("profileOverlay")
   }
 });
 
-function closeProfile(){
-  document.getElementById("profileCard").style.display = "none";
-}
+window.closeProfile = function(){
+  const overlay = document.getElementById("profileOverlay");
+  if(overlay){
+    overlay.style.display = "none";
+  }
+};
+
 /* ---------- ADD BUTTON ---------- */
 if(document.getElementById("addBtn")){
   document.getElementById("addBtn")
