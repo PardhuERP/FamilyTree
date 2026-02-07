@@ -407,13 +407,6 @@ function showProfileCard(p){
   document.getElementById("profileCard").style.display = "block";
 }
 
-document.getElementById("profileOverlay")
-.addEventListener("click", function(e){
-  if(e.target.id === "profileOverlay"){
-    closeProfile();
-  }
-});
-
 function closeProfile(){
   document.getElementById("profileCard").style.display = "none";
 }
