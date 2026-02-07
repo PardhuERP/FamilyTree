@@ -126,9 +126,10 @@ document.getElementById("updateBtn").onclick = function(){
   )
   .then(r=>r.json())
   .then(res=>{
-    alert("Updated");
-    window.location.href = "index.html";
-  });
+  alert("Updated");
+  localStorage.removeItem("editPersonId");
+  window.location.href = "index.html";
+});
 };
     
       </script>
