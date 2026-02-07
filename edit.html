@@ -1,1 +1,130 @@
-.
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Add Member | MyFamilyTree</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="toolbar addBar">
+  <button class="backBtn" onclick="history.back()">←</button>
+  <span class="appTitle">Add Person</span>
+</div>
+
+<div class="addPage">
+
+  <h2>Edit Family Member</h2>
+  <button id="updateBtn">Update Person</button>
+
+  <label class="fieldLabel">Full Name</label>
+  <input id="pname" placeholder="Enter name">
+
+  <label class="fieldLabel">Gender</label>
+  <select id="pgender">
+    <option>Male</option>
+    <option>Female</option>
+  </select>
+
+  <label class="fieldLabel">Date of Birth</label>
+  <input type="date" id="pdob">
+
+  <label class="fieldLabel">Blood Group</label>
+<input id="pblood" placeholder="O+, A+, B+">
+
+<label class="fieldLabel">Qualification</label>
+<input id="pedu" placeholder="B.Tech, MBA etc">
+
+  <label class="fieldLabel">Place</label>
+  <input id="pplace" placeholder="Village / City">
+
+  <label class="fieldLabel">Father ID</label>
+  <small id="parentInfo" style="color:#2563eb; display:block; margin-bottom:6px;"></small>
+  <input id="pfather">
+
+  <label class="fieldLabel">Spouse ID (optional)</label>
+  <input id="pspouse" placeholder="Cut above👆 ID & paste here">
+
+  <button id="addBtn">Save Person</button>
+</div>
+
+<script>
+window.API_URL =
+"https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
+</script>
+
+<script src="js/tree.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const pid = localStorage.getItem("selectedParent");
+  const pname = localStorage.getItem("selectedParentName");
+
+  const pfather = document.getElementById("pfather");
+  const info = document.getElementById("parentInfo");
+
+  if (pid && pfather && info) {
+    pfather.value = pid;
+    info.innerText = "Child of: " + pname + " (" + pid + ")";
+  } else if(info) {
+    info.innerText = "No parent selected. Go back and tap a person.";
+  }
+});
+</script>
+
+  <script>
+document.addEventListener("DOMContentLoaded", function(){
+
+  const personId = localStorage.getItem("editPersonId");
+  const familyId = localStorage.getItem("familyId");
+
+  fetch(API_URL +
+    "?action=getTree" +
+    "&familyId=" + familyId +
+    "&userId=" + localStorage.getItem("userId"))
+  .then(r=>r.json())
+  .then(res=>{
+
+    const p = res.data.find(x=>x.personId === personId);
+    if(!p) return;
+
+    document.getElementById("pname").value = p.name || "";
+    document.getElementById("pgender").value = p.gender || "";
+    document.getElementById("pdob").value =
+      (p.dob || "").split("T")[0];
+
+    document.getElementById("pplace").value = p.place || "";
+    document.getElementById("pfather").value = p.fatherId || "";
+    document.getElementById("pspouse").value = p.spouseId || "";
+    document.getElementById("pblood").value = p.bloodGroup || "";
+    document.getElementById("pedu").value = p.qualification || "";
+  });
+
+});
+
+    document.getElementById("updateBtn").onclick = function(){
+
+  const id = localStorage.getItem("editPersonId");
+
+  fetch(API_URL +
+    "?action=updatePerson" +
+    "&personId=" + id +
+    "&name=" + encodeURIComponent(pname.value) +
+    "&gender=" + pgender.value +
+    "&dob=" + pdob.value +
+    "&place=" + encodeURIComponent(pplace.value) +
+    "&bloodGroup=" + pblood.value +
+    "&qualification=" + encodeURIComponent(pedu.value)
+  )
+  .then(r=>r.json())
+  .then(res=>{
+    alert("Updated");
+    window.location.href = "index.html";
+  });
+};
+      </script>
+
+</body>
+</html>
