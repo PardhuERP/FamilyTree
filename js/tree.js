@@ -365,22 +365,19 @@ function centerNode(d){
 }
 
 function showProfileCard(p){
+function showProfileCard(p){
 
-  // ---- NAME ----
   document.getElementById("pName").innerText =
     p.name || "-";
 
-  // ---- DOB + AGE ----
   let dobText = "-";
 
   if(p.dob){
     const d = new Date(p.dob);
-
     const dateOnly = d.toISOString().split("T")[0];
 
     const today = new Date();
     let age = today.getFullYear() - d.getFullYear();
-
     const m = today.getMonth() - d.getMonth();
 
     if (m < 0 ||
@@ -393,7 +390,6 @@ function showProfileCard(p){
 
   document.getElementById("pDob").innerText = dobText;
 
-  // ---- OTHER DETAILS ----
   document.getElementById("pBlood").innerText =
     p.bloodGroup || "-";
 
@@ -404,12 +400,11 @@ function showProfileCard(p){
     p.place || "-";
 
   document.getElementById("pFather").innerText =
-    (map[p.fatherId] ? map[p.fatherId].name : "-");
+    map[p.fatherId]?.name || "-";
 
   document.getElementById("pMother").innerText =
-    (map[p.motherId] ? map[p.motherId].name : "-");
+    map[p.motherId]?.name || "-";
 
-  // ---- PHOTO ----
   const photo = document.getElementById("pPhoto");
 
   if(photo){
@@ -419,13 +414,7 @@ function showProfileCard(p){
         : "https://via.placeholder.com/80";
   }
 
-  // ---- SHOW CARD ----
-  const overlay =
-    document.getElementById("profileOverlay");
-
-  if(overlay){
-    overlay.style.display = "flex";
-  }
+  document.getElementById("profileOverlay").style.display = "flex";
 }
         
 
