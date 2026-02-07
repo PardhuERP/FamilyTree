@@ -99,6 +99,15 @@ document.addEventListener("DOMContentLoaded", function(){
     document.getElementById("pspouse").value = p.spouseId || "";
     document.getElementById("pblood").value = p.bloodGroup || "";
     document.getElementById("pedu").value = p.qualification || "";
+    <label class="fieldLabel">Photo</label>
+
+<input type="file" id="pphoto" accept="image/*">
+
+<img id="previewPhoto"
+     style="width:80px;height:80px;
+            border-radius:10px;
+            margin-top:8px;
+            display:none;">
   });
 
 });
@@ -113,6 +122,15 @@ document.getElementById("updateBtn").onclick = function(){
   const place = document.getElementById("pplace").value;
   const blood = document.getElementById("pblood").value;
   const edu = document.getElementById("pedu").value;
+  <label class="fieldLabel">Photo</label>
+
+<input type="file" id="pphoto" accept="image/*">
+
+<img id="previewPhoto"
+     style="width:80px;height:80px;
+            border-radius:10px;
+            margin-top:8px;
+            display:none;">
 
   fetch(API_URL +
     "?action=updatePerson" +
@@ -132,6 +150,22 @@ document.getElementById("updateBtn").onclick = function(){
 });
 };
     
+document.getElementById("pphoto")
+.addEventListener("change", function(e){
+
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    const img = document.getElementById("previewPhoto");
+    img.src = ev.target.result;
+    img.style.display = "block";
+  };
+
+  reader.readAsDataURL(file);
+});
+
       </script>
 
 </body>
