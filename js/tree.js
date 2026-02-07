@@ -420,6 +420,7 @@ function showProfileCard(p){
         ? p.photoUrl
         : "https://via.placeholder.com/80";
   }
+}
 
   // ---- SHOW CARD ----
   const overlay =
