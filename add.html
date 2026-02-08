@@ -98,7 +98,10 @@ document.addEventListener("DOMContentLoaded", function () {
   if (pid && pfather && info) {
     pfather.value = pid;
     info.innerText = "Child of: " + pname + " (" + pid + ")";
+    loadMothers();
   }
+  document.getElementById("pfather")
+    .addEventListener("change", loadMothers);
 });
   </script>
   
