@@ -58,25 +58,44 @@ function buildTree(rows){
     map[p.personId] = {...p, children:[]};
   });
 
-  // link parents
-  rows.forEach(p=>{
-    const child = map[p.personId];
+// link parents (father + mother grouping)
+rows.forEach(p=>{
 
-    if(p.fatherId && map[p.fatherId] && p.fatherId !== p.personId){
-      const f = map[p.fatherId];
-      if(!f.children.includes(child)){
-        f.children.push(child);
-      }
+  const child = map[p.personId];
+
+  if(p.fatherId && map[p.fatherId]){
+
+    const father = map[p.fatherId];
+
+    // create marriage group key
+    const key =
+      p.fatherId + "_" + (p.motherId || "single");
+
+    // create marriage container if not exists
+    if(!father._marriages){
+      father._marriages = {};
     }
 
-    if(p.motherId && map[p.motherId] && p.motherId !== p.personId){
-      const m = map[p.motherId];
-      if(!m.children.includes(child)){
-        m.children.push(child);
-      }
-    }
-  });
+    // create marriage node
+    if(!father._marriages[key]){
 
+      father._marriages[key] = {
+        name: "",
+        isMarriageNode: true,
+        children: []
+      };
+
+      // attach marriage node to father
+      father.children.push(
+        father._marriages[key]
+      );
+    }
+
+    // add child under that marriage
+    father._marriages[key].children.push(child);
+  }
+
+});
   // connect spouses (MULTIPLE SUPPORT)
 rows.forEach(p => {
 
@@ -162,17 +181,27 @@ function update(source){
     .attr("y", -17);
 
   nodeEnter.append("text")
-    .attr("text-anchor","middle")
-    .attr("dy",".35em")
-    .style("font-weight","600")
-    .text(d=>{
-      const name = d.data.name || "";
-      const spouse =
-  d.data.spouses
-    ? d.data.spouses.map(s => s.name).join(" , ")
-    : "";
-      return spouse ? `${name} 👩‍❤️‍👨 ${spouse}` : name;
-    });
+  .attr("text-anchor","middle")
+  .attr("dy",".35em")
+  .style("font-weight","600")
+  .text(d=>{
+
+    // ✅ hide marriage helper nodes
+    if(d.data.isMarriageNode){
+      return "";
+    }
+
+    const name = d.data.name || "";
+
+    const spouse =
+      d.data.spouses
+        ? d.data.spouses.map(s => s.name).join(" , ")
+        : "";
+
+    return spouse
+      ? `${name} 👩‍❤️‍👨 ${spouse}`
+      : name;
+  });
 
   nodeEnter.each(function(){
     const text = d3.select(this).select("text");
