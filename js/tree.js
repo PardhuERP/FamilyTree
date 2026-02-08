@@ -167,7 +167,10 @@ function update(source){
     .style("font-weight","600")
     .text(d=>{
       const name = d.data.name || "";
-      const spouse = d.data.spouse?.name || "";
+      const spouse =
+  d.data.spouses
+    ? d.data.spouses.map(s => s.name).join(" , ")
+    : "";
       return spouse ? `${name} 👩‍❤️‍👨 ${spouse}` : name;
     });
 
