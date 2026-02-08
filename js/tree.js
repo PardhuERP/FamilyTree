@@ -80,7 +80,7 @@ rows.forEach(p=>{
     if(!father._marriages[key]){
 
       father._marriages[key] = {
-        name: "",
+        name: map[p.motherId]?.name || "",
         isMarriageNode: true,
         children: []
       };
