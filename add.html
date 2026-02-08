@@ -51,6 +51,12 @@
   <small id="parentInfo" style="color:#2563eb; display:block; margin-bottom:6px;"></small>
   <input id="pfather">
 
+  <label class="fieldLabel">Mother</label>
+<select id="pmother">
+  <option value="">Select Mother</option>
+</select>
+  
+
   <label class="fieldLabel">Spouse ID (optional)</label>
   <input id="pspouse" placeholder="Cut above👆 ID & paste here">
 
@@ -131,6 +137,49 @@ document.getElementById("pphoto")
 
   reader.readAsDataURL(file);
 });
+  </script>
+
+  <script>
+document.getElementById("pfather")
+.addEventListener("change", loadMothers);
+
+function loadMothers(){
+
+  const fatherId =
+    document.getElementById("pfather").value;
+
+  if(!fatherId) return;
+
+  fetch(API_URL +
+    "?action=getTree" +
+    "&familyId=" + localStorage.getItem("familyId") +
+    "&userId=" + localStorage.getItem("userId"))
+  .then(r=>r.json())
+  .then(res=>{
+
+    if(res.status !== "OK") return;
+
+    const persons = res.data;
+
+    // wives of selected father
+    const wives = persons.filter(p =>
+      p.spouseId === fatherId
+    );
+
+    const sel = document.getElementById("pmother");
+
+    sel.innerHTML =
+      '<option value="">Select Mother</option>';
+
+    wives.forEach(w=>{
+      sel.innerHTML +=
+        `<option value="${w.personId}">
+           ${w.name}
+         </option>`;
+    });
+
+  });
+}
   </script>
 
 </body>
