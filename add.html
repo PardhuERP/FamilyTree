@@ -86,6 +86,21 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 </script>
+
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+  const pid = localStorage.getItem("selectedParent");
+  const pname = localStorage.getItem("selectedParentName");
+
+  const pfather = document.getElementById("pfather");
+  const info = document.getElementById("parentInfo");
+
+  if (pid && pfather && info) {
+    pfather.value = pid;
+    info.innerText = "Child of: " + pname + " (" + pid + ")";
+  }
+});
+  </script>
   
   <script>
 document.getElementById("pphoto")
