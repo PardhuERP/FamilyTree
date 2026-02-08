@@ -77,13 +77,33 @@ function buildTree(rows){
     }
   });
 
-  // connect spouses
-  rows.forEach(p=>{
-    if(p.spouseId && map[p.spouseId]){
-      map[p.personId].spouse = map[p.spouseId];
-      map[p.spouseId].spouse = map[p.personId];
+  // connect spouses (MULTIPLE SUPPORT)
+rows.forEach(p => {
+
+  if(!p.spouseId) return;
+
+  const spouseIds = String(p.spouseId).split(",");
+
+  map[p.personId].spouses = [];
+
+  spouseIds.forEach(id => {
+
+    if(map[id]){
+      map[p.personId].spouses.push(map[id]);
+
+      // reverse link also
+      if(!map[id].spouses){
+        map[id].spouses = [];
+      }
+
+      if(!map[id].spouses.includes(map[p.personId])){
+        map[id].spouses.push(map[p.personId]);
+      }
     }
+
   });
+
+});
 
   // safer founder detection
   const founder = rows.find(r => !r.fatherId && !r.motherId);
