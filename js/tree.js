@@ -290,6 +290,8 @@ async function addPerson(){
   const edu = document.getElementById("pedu")?.value;
   const place = document.getElementById("pplace")?.value;
   const fatherId = document.getElementById("pfather")?.value;
+  const motherId =
+  document.getElementById("pmother")?.value || "";
   const spouseId = document.getElementById("pspouse")?.value || "";
   const photoUrl =
   document.getElementById("previewPhoto")?.src || "";
@@ -315,6 +317,7 @@ fetch(API_URL, {
     qualification: edu,
     place: place,
     fatherId: fatherId,
+    motherId: motherId,
     spouseId: spouseId,
     photoUrl: window.photoBase64 || "",
     generation: gen
