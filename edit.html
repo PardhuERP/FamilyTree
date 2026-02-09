@@ -126,6 +126,44 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 </script>
+  <script>
+function loadMothers(){
+
+  const fatherId =
+    document.getElementById("pfather").value;
+
+  if(!fatherId) return;
+
+  fetch(API_URL +
+    "?action=getTree" +
+    "&familyId=" + localStorage.getItem("familyId") +
+    "&userId=" + localStorage.getItem("userId"))
+  .then(r=>r.json())
+  .then(res=>{
+
+    if(res.status !== "OK") return;
+
+    const persons = res.data;
+
+    const wives = persons.filter(p =>
+      p.spouseId === fatherId
+    );
+
+    const sel = document.getElementById("pmother");
+
+    sel.innerHTML =
+      '<option value="">Select Mother</option>';
+
+    wives.forEach(w=>{
+      sel.innerHTML +=
+        `<option value="${w.personId}">
+           ${w.name}
+         </option>`;
+    });
+
+  });
+}
+  </script>
 
 <script>
 /* PHOTO PREVIEW */
