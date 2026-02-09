@@ -70,8 +70,8 @@ function filterPerson(type,value){
 }
 
 function checkRelation(){
-  const a = document.getElementById("personA").value;
-  const b = document.getElementById("personB").value;
+  const a = document.getElementById("personAInput").dataset.id;
+const b = document.getElementById("personBInput").dataset.id;
 
   const res = findRelation(a, b);
   document.getElementById("result").innerText = res;
