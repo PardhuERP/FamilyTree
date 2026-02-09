@@ -269,16 +269,32 @@ function toggle(event,d){
   g.selectAll(".node").classed("search-match", false);
   d3.select(event.currentTarget).classed("search-match", true);
 
-  setTimeout(()=>{
-    if(d.children){
-      d._children = d.children;
-      d.children = null;
-    }else{
-      d.children = d._children;
-      d._children = null;
-    }
-    update(d);
-  },50);
+ setTimeout(()=>{
+
+  // normal expand / collapse
+  if(d.children){
+    d._children = d.children;
+    d.children = null;
+  }else{
+    d.children = d._children;
+    d._children = null;
+  }
+
+  // ✅ AUTO EXPAND marriage nodes
+  if(d.children){
+    d.children.forEach(c=>{
+      if(c.data && c.data.isMarriageNode){
+        if(c._children){
+          c.children = c._children;
+          c._children = null;
+        }
+      }
+    });
+  }
+
+  update(d);
+
+},50); 
 }
 
 /* ---------- BUTTONS ---------- */
