@@ -243,7 +243,7 @@ document.getElementById("pphoto")
   </script>
 <script>
 
-document.getElementById("updateBtn").onclick = function(){
+  document.getElementById("updateBtn").onclick = function(){
 
   const id = localStorage.getItem("editPersonId");
 
@@ -257,24 +257,23 @@ document.getElementById("updateBtn").onclick = function(){
   const motherId = document.getElementById("pmother").value;
   const spouseId = document.getElementById("pspouse").value;
 
-  fetch(API_URL +
-    "?action=updatePerson" +
-    "&personId=" + id +
-    "&name=" + encodeURIComponent(name) +
-    "&gender=" + gender +
-    "&dob=" + dob +
-    "&bloodGroup=" + blood +
-    "&qualification=" + encodeURIComponent(edu) +
-    "&place=" + encodeURIComponent(place) +
-    "&fatherId=" + fatherId +
-    "&motherId=" + motherId +
-    "&spouseId=" + spouseId +
-    "&photoUrl=" + encodeURIComponent(
-   window.photoBase64 ||
-   document.getElementById("previewPhoto").src ||
-   ""
-)
-  )
+  fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "updatePerson",
+      personId: id,
+      name: name,
+      gender: gender,
+      dob: dob,
+      bloodGroup: blood,
+      qualification: edu,
+      place: place,
+      fatherId: fatherId,
+      motherId: motherId,
+      spouseId: spouseId,
+      photoUrl: window.photoBase64 || ""
+    })
+  })
   .then(r=>r.json())
   .then(res=>{
     alert("Updated successfully");
@@ -285,7 +284,6 @@ document.getElementById("updateBtn").onclick = function(){
   });
 
 };
-
 </script>
 </body>
 </html>  
