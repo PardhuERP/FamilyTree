@@ -104,6 +104,28 @@ function getAncestorLevel(childId, ancestorId){
   return 0;
 }
 
+function getPerson(id){
+  return people.find(p => p.personId === id);
+}
+
+function getFather(p){
+  return getPerson(p.fatherId);
+}
+
+function getMother(p){
+  return getPerson(p.motherId);
+}
+
+function areSiblings(A,B){
+  return (
+    A.personId !== B.personId &&
+    (
+      (A.fatherId && A.fatherId === B.fatherId) ||
+      (A.motherId && A.motherId === B.motherId)
+    )
+  );
+}
+
 function findRelation(a, b){
 
   if(!dataReady || !people.length){
@@ -132,6 +154,57 @@ function findRelation(a, b){
   return `${A.name} is ${
     A.gender === "Female" ? "sister" : "brother"
   } of ${B.name}`;
+}
+ // UNCLE / AUNT
+const A_father = getFather(A);
+const A_mother = getMother(A);
+
+if(A_father && areSiblings(A_father, B)){
+  return `${B.name} is uncle/aunt of ${A.name}`;
+}
+
+if(A_mother && areSiblings(A_mother, B)){
+  return `${B.name} is uncle/aunt of ${A.name}`;
+}
+ //Reverse check 
+ if(B_father && areSiblings(B_father, A)){
+  return `${A.name} is uncle/aunt of ${B.name}`;
+}
+
+if(B_mother && areSiblings(B_mother, A)){
+  return `${A.name} is uncle/aunt of ${B.name}`;
+}
+//Nepew/niece
+ if(A_father && areSiblings(A, B_father)){
+  return `${A.name} is nephew/niece of ${B.name}`;
+}
+
+if(A_mother && areSiblings(A, B_mother)){
+  return `${A.name} is nephew/niece of ${B.name}`;
+}
+ //cousin 
+ if(
+  A_father && B_father &&
+  areSiblings(A_father, B_father)
+){
+  return `${A.name} and ${B.name} are cousins`;
+}
+
+if(
+  A_mother && B_mother &&
+  areSiblings(A_mother, B_mother)
+){
+  return `${A.name} and ${B.name} are cousins`;
+}
+ // Cousin return
+ if(A_father && B_father &&
+   areSiblings(A_father, B_father)){
+  return `${A.name} and ${B.name} are paternal cousins`;
+}
+
+if(A_mother && B_mother &&
+   areSiblings(A_mother, B_mother)){
+  return `${A.name} and ${B.name} are maternal cousins`;
 }
 
   // Father / Mother
