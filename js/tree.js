@@ -189,8 +189,30 @@ nodeEnter.append("rect")
   .attr("ry", 12)
   .attr("x", d => d.data.isMarriageNode ? -10 : -60)
   .attr("y", d => d.data.isMarriageNode ? -10 : -17)
-  .style("fill", d => d.data.isMarriageNode ? "transparent" : "#fff")
-  .style("stroke", d => d.data.isMarriageNode ? "transparent" : "#2563eb");
+
+  // background
+  .style("fill", d => {
+    if(d.data.isMarriageNode) return "transparent";
+
+    return d.data.gender === "Female"
+      ? "#fff0f6"   // light pink background
+      : "#ffffff";  // male white
+  })
+
+  // border color
+  .style("stroke", d => {
+
+    if(d.data.isMarriageNode)
+      return "transparent";
+
+    if(d.data.gender === "Female")
+      return "#e91e63";   // female pink
+
+    return "#2563eb";     // male blue
+  })
+
+  .style("stroke-width", 2);
+  
   
   nodeEnter.append("text")
   .attr("text-anchor","middle")
