@@ -17,11 +17,32 @@
 <div class="addPage">
   <h2>Find Relationship</h2>
 
-  <label>Select Person A</label>
-<select id="personA" size="6"></select>
+  <label>Person A</label>
+<div class="searchSelect">
+  <input type="text" id="personAInput"
+         placeholder="Select person..."
+         readonly onclick="openDropdown('A')">
 
-<label>Select Person B</label>
-<select id="personB" size="6"></select>
+  <div id="personADrop" class="dropdownBox">
+    <input type="text" placeholder="Search..."
+           onkeyup="filterPerson('A', this.value)">
+    <div id="personAList"></div>
+  </div>
+</div>
+
+
+<label>Person B</label>
+<div class="searchSelect">
+  <input type="text" id="personBInput"
+         placeholder="Select person..."
+         readonly onclick="openDropdown('B')">
+
+  <div id="personBDrop" class="dropdownBox">
+    <input type="text" placeholder="Search..."
+           onkeyup="filterPerson('B', this.value)">
+    <div id="personBList"></div>
+  </div>
+</div>
   
 
   <button onclick="checkRelation()">Find Relation</button>
