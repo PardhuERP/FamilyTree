@@ -231,7 +231,12 @@ nodeEnter.append("rect")
     .attr("transform", d=>`translate(${d.y},${d.x})`);
 
   const link = g.selectAll(".link")
-    .data(links, d=>d.target.id);
+  .data(
+    links.filter(d =>
+      !d.target.data.isMarriageNode
+    ),
+    d => d.target.id
+  );
 
   link.enter().insert("path","g")
     .attr("class","link")
