@@ -182,15 +182,16 @@ function update(source){
     .style("cursor","pointer")
     .on("click", toggle);
 
-  nodeEnter.append("rect")
-  .attr("height", d => d.data.isMarriageNode ? 0 : 34)
-  .attr("width", d => d.data.isMarriageNode ? 0 : 120)
+nodeEnter.append("rect")
+  .attr("height", d => d.data.isMarriageNode ? 20 : 34)
+  .attr("width",  d => d.data.isMarriageNode ? 20 : 120)
   .attr("rx", 12)
   .attr("ry", 12)
-  .attr("y", d => d.data.isMarriageNode ? 0 : -17)
-  .style("stroke", d => d.data.isMarriageNode ? "none" : null)
-  .style("fill", d => d.data.isMarriageNode ? "none" : null);
-
+  .attr("x", d => d.data.isMarriageNode ? -10 : -60)
+  .attr("y", d => d.data.isMarriageNode ? -10 : -17)
+  .style("fill", d => d.data.isMarriageNode ? "transparent" : "#fff")
+  .style("stroke", d => d.data.isMarriageNode ? "transparent" : "#2563eb");
+  
   nodeEnter.append("text")
   .attr("text-anchor","middle")
   .attr("dy",".35em")
