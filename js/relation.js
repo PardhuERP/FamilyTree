@@ -1,10 +1,14 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
-const FAMILY_ID = "F001";
+const FAMILY_ID = localStorage.getItem("familyId");
+const USER_ID = localStorage.getItem("userId");
 
 let people = [];
 let dataReady = false;
 
-fetch(API_URL + "?action=getTree&familyId=" + FAMILY_ID)
+fetch(API_URL +
+ "?action=getTree" +
+ "&familyId=" + FAMILY_ID +
+ "&userId=" + USER_ID)
   .then(r => r.json())
   .then(res => {
     if(res.status === "OK"){
@@ -47,19 +51,22 @@ function findRelation(a, b){
   if(!A || !B) return "Relation not found";
 
   // Spouse
-  if(A.spouseId === B.personId || B.spouseId === A.personId){
-    return `${A.name} is spouse of ${B.name}`;
-  }
+  if(
+  String(A.spouseId || "").split(",").includes(B.personId) ||
+  String(B.spouseId || "").split(",").includes(A.personId)
+){
+  return `${A.name} is spouse of ${B.name}`;
+}
 
   // Siblings
-  if (
-    (A.fatherId && A.fatherId === B.fatherId) ||
-    (A.motherId && A.motherId === B.motherId)
-  ) {
-    if (A.personId !== B.personId) {
-      return `${A.name} and ${B.name} are siblings`;
-    }
-  }
+  if(
+  (A.fatherId && A.fatherId === B.fatherId) ||
+  (A.motherId && A.motherId === B.motherId)
+){
+  return `${A.name} is ${
+    A.gender === "Female" ? "sister" : "brother"
+  } of ${B.name}`;
+}
 
   // Father / Mother
   if(B.fatherId === A.personId){
@@ -70,12 +77,11 @@ function findRelation(a, b){
   }
 
   // Son / Daughter
-  if(A.fatherId === B.personId){
-    return `${A.name} is son of ${B.name}`;
-  }
-  if(A.motherId === B.personId){
-    return `${A.name} is daughter of ${B.name}`;
-  }
+  if(A.fatherId === B.personId || A.motherId === B.personId){
+  return `${A.name} is ${
+    A.gender === "Female" ? "daughter" : "son"
+  } of ${B.name}`;
+}
 
   // Grandparent
   const A_father = people.find(p => p.personId === A.fatherId);
