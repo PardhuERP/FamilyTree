@@ -196,6 +196,7 @@ function update(source){
   .attr("dy",".35em")
   .style("font-weight","600")
   .text(d=>{
+  if(d.data.isMarriageNode) return "";
 
     // ✅ hide marriage helper nodes
     if(d.data.isMarriageNode){
