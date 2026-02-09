@@ -63,10 +63,7 @@ rows.forEach(p=>{
 
   const child = map[p.personId];
 
-  if(
-   (p.fatherId && map[p.fatherId]) ||
-   (p.motherId && map[p.motherId])
-){
+  if(p.fatherId && map[p.fatherId]){
 
     const father = map[p.fatherId];
 
