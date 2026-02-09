@@ -183,10 +183,13 @@ function update(source){
     .on("click", toggle);
 
   nodeEnter.append("rect")
-    .attr("height", 34)
-    .attr("rx", 12)
-    .attr("ry", 12)
-    .attr("y", -17);
+  .attr("height", d => d.data.isMarriageNode ? 0 : 34)
+  .attr("width", d => d.data.isMarriageNode ? 0 : 120)
+  .attr("rx", 12)
+  .attr("ry", 12)
+  .attr("y", d => d.data.isMarriageNode ? 0 : -17)
+  .style("stroke", d => d.data.isMarriageNode ? "none" : null)
+  .style("fill", d => d.data.isMarriageNode ? "none" : null);
 
   nodeEnter.append("text")
   .attr("text-anchor","middle")
