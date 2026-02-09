@@ -157,3 +157,30 @@ if(levelBA > 0){
 
   return "Relation not mapped yet";
 }
+
+document.getElementById("searchA")
+.addEventListener("input", function(){
+  filterList(this.value, "personA");
+});
+
+document.getElementById("searchB")
+.addEventListener("input", function(){
+  filterList(this.value, "personB");
+});
+
+function filterList(text, selectId){
+
+  const sel = document.getElementById(selectId);
+  sel.innerHTML = "";
+
+  const q = text.toLowerCase();
+
+  people
+    .filter(p => p.name.toLowerCase().includes(q))
+    .forEach(p=>{
+      sel.add(new Option(
+        p.name + " ("+p.personId+")",
+        p.personId
+      ));
+    });
+}
