@@ -233,7 +233,8 @@ nodeEnter.append("rect")
   const link = g.selectAll(".link")
   .data(
     links.filter(d =>
-      !d.target.data.isMarriageNode
+      !(d.target.data.isMarriageNode &&
+        (!d.target.children || d.target.children.length === 0))
     ),
     d => d.target.id
   );
