@@ -236,6 +236,47 @@ function loadMothers(){
   });
 }
   </script>
+<script>
 
+document.getElementById("updateBtn").onclick = function(){
+
+  const id = localStorage.getItem("editPersonId");
+
+  const name = document.getElementById("pname").value;
+  const gender = document.getElementById("pgender").value;
+  const dob = document.getElementById("pdob").value;
+  const blood = document.getElementById("pblood").value;
+  const edu = document.getElementById("pedu").value;
+  const place = document.getElementById("pplace").value;
+  const fatherId = document.getElementById("pfather").value;
+  const motherId = document.getElementById("pmother").value;
+  const spouseId = document.getElementById("pspouse").value;
+
+  fetch(API_URL +
+    "?action=updatePerson" +
+    "&personId=" + id +
+    "&name=" + encodeURIComponent(name) +
+    "&gender=" + gender +
+    "&dob=" + dob +
+    "&bloodGroup=" + blood +
+    "&qualification=" + encodeURIComponent(edu) +
+    "&place=" + encodeURIComponent(place) +
+    "&fatherId=" + fatherId +
+    "&motherId=" + motherId +
+    "&spouseId=" + spouseId +
+    "&photoUrl=" + encodeURIComponent(window.photoBase64 || "")
+  )
+  .then(r=>r.json())
+  .then(res=>{
+    alert("Updated successfully");
+    window.location.href = "index.html";
+  })
+  .catch(()=>{
+    alert("Network error");
+  });
+
+};
+
+</script>
 </body>
 </html>  
