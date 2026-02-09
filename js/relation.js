@@ -99,30 +99,35 @@ function areSiblings(A,B){
   );
 }
 
-function getAncestorLevel(childId, ancestorId){
+// ANCESTOR LEVEL
+function getAncestorLevel(childId, ancestorId, level = 0){
 
-  let level = 0;
-  let current = getPerson(childId);
+  const person = getPerson(childId);
+  if(!person) return 0;
 
-  while(current){
-
-    if(current.fatherId === ancestorId ||
-       current.motherId === ancestorId){
-      return level + 1;
-    }
-
-    current =
-      getPerson(current.fatherId) ||
-      getPerson(current.motherId);
-
-    level++;
-
-    if(level > 10) break;
+  // direct parent
+  if(person.fatherId === ancestorId ||
+     person.motherId === ancestorId){
+    return level + 1;
   }
 
-  return 0;
-}
+  let fatherSide = 0;
+  let motherSide = 0;
 
+  // check father branch
+  if(person.fatherId){
+    fatherSide =
+      getAncestorLevel(person.fatherId, ancestorId, level+1);
+  }
+
+  // check mother branch
+  if(person.motherId){
+    motherSide =
+      getAncestorLevel(person.motherId, ancestorId, level+1);
+  }
+
+  return fatherSide || motherSide;
+}
 /* ---------- MAIN RELATION ---------- */
 
 function checkRelation(){
