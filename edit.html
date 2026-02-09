@@ -184,9 +184,10 @@ function loadMothers(){
 
     const persons = res.data;
 
-    // wives of selected father
     const wives = persons.filter(p =>
-      p.spouseId === fatherId
+      String(p.spouseId || "")
+        .split(",")
+        .includes(fatherId)
     );
 
     const sel = document.getElementById("pmother");
