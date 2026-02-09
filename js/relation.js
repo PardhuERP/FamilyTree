@@ -49,6 +49,7 @@ function findRelation(a, b){
   const B = people.find(p => p.personId === b);
 
   if(!A || !B) return "Relation not found";
+  if(a === b) return "Same person";
 
   // Spouse
   if(
@@ -69,12 +70,11 @@ function findRelation(a, b){
 }
 
   // Father / Mother
-  if(B.fatherId === A.personId){
-    return `${A.name} is father of ${B.name}`;
-  }
-  if(B.motherId === A.personId){
-    return `${A.name} is mother of ${B.name}`;
-  }
+ if(B.fatherId === A.personId || B.motherId === A.personId){
+  return `${A.name} is ${
+    A.gender === "Female" ? "mother" : "father"
+  } of ${B.name}`;
+} 
 
   // Son / Daughter
   if(A.fatherId === B.personId || A.motherId === B.personId){
