@@ -104,6 +104,29 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 </script>
 
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const pid = localStorage.getItem("selectedParent");
+  const pname = localStorage.getItem("selectedParentName");
+
+  const pfather = document.getElementById("pfather");
+  const info = document.getElementById("parentInfo");
+
+  if (pfather && info) {
+
+    if (pfather.value) {
+      info.innerText =
+        "Child of: " + pname + " (" + pfather.value + ")";
+      loadMothers();   // ✅ load mothers in edit also
+    }
+
+    pfather.addEventListener("change", loadMothers);
+  }
+
+});
+</script>
+
 <script>
 /* PHOTO PREVIEW */
 document.getElementById("pphoto")
