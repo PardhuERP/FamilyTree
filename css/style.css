@@ -432,16 +432,40 @@ body::after{
   text-align:center;
 }
 
-select {
-  width:100%;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #ddd;
-  font-size:14px;
+.searchSelect {
+  position: relative;
+  margin-bottom: 15px;
 }
-select {
+
+.searchSelect input {
   width: 100%;
-  height: 150px;
-  padding: 8px;
+  padding: 10px;
   border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.dropdownBox {
+  display: none;
+  position: absolute;
+  width: 100%;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.15);
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.dropdownBox input {
+  border: none;
+  border-bottom: 1px solid #eee;
+}
+
+.dropdownItem {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.dropdownItem:hover {
+  background: #f3f4f6;
 }
