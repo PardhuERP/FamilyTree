@@ -81,31 +81,62 @@ window.API_URL =
 </script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function(){
 
-  const pid = localStorage.getItem("selectedParent");
-  const pname = localStorage.getItem("selectedParentName");
+  const personId = localStorage.getItem("editPersonId");
+  const familyId = localStorage.getItem("familyId");
 
-  const pfather = document.getElementById("pfather");
-  const info = document.getElementById("parentInfo");
+  if(!personId) return;
 
-  // ✅ Auto fill father if selected from tree
-  if (pid && pfather && info) {
-    pfather.value = pid;
-    info.innerText = "Child of: " + pname + " (" + pid + ")";
+  fetch(API_URL +
+    "?action=getTree" +
+    "&familyId=" + familyId +
+    "&userId=" + localStorage.getItem("userId"))
+  .then(r=>r.json())
+  .then(res=>{
 
-    // load mothers immediately
+    if(res.status !== "OK") return;
+
+    const p = res.data.find(x => x.personId === personId);
+    if(!p) return;
+
+    document.getElementById("pname").value = p.name || "";
+    document.getElementById("pgender").value = p.gender || "";
+    document.getElementById("pdob").value =
+      (p.dob || "").split("T")[0];
+
+    document.getElementById("pblood").value =
+      p.bloodGroup || "";
+
+    document.getElementById("pedu").value =
+      p.qualification || "";
+
+    document.getElementById("pplace").value =
+      p.place || "";
+
+    document.getElementById("pfather").value =
+      p.fatherId || "";
+
+    document.getElementById("pspouse").value =
+      p.spouseId || "";
+
+    // photo preview
+    if(p.photoUrl){
+      document.getElementById("previewPhoto").src =
+        p.photoUrl;
+      document.getElementById("previewPhoto").style.display = "block";
+    }
+
+    // load mothers
     loadMothers();
-  } 
-  else if(info) {
-    info.innerText =
-      "No parent selected. Go back and tap a person.";
-  }
 
-  // ✅ when father changed manually
-  if(pfather){
-    pfather.addEventListener("change", loadMothers);
-  }
+    // select existing mother
+    setTimeout(()=>{
+      document.getElementById("pmother").value =
+        p.motherId || "";
+    },300);
+
+  });
 
 });
 </script>
