@@ -20,14 +20,52 @@ fetch(API_URL +
   });
 
 function fillDropdowns(){
-  const A = document.getElementById("personA");
-  const B = document.getElementById("personB");
+  const A = document.getElementById("personAList");
+  const B = document.getElementById("personBList");
+
+  A.innerHTML = "";
+  B.innerHTML = "";
 
   people.forEach(p=>{
-    const opt1 = new Option(p.name + " ("+p.personId+")", p.personId);
-    const opt2 = new Option(p.name + " ("+p.personId+")", p.personId);
-    A.add(opt1);
-    B.add(opt2);
+    A.innerHTML +=
+      `<div class="dropdownItem"
+         onclick="selectPerson('A','${p.personId}','${p.name}')">
+         ${p.name}
+       </div>`;
+
+    B.innerHTML +=
+      `<div class="dropdownItem"
+         onclick="selectPerson('B','${p.personId}','${p.name}')">
+         ${p.name}
+       </div>`;
+  });
+}
+
+function openDropdown(type){
+  document.getElementById("personADrop").style.display = "none";
+  document.getElementById("personBDrop").style.display = "none";
+
+  document.getElementById("person"+type+"Drop").style.display = "block";
+}
+
+function selectPerson(type,id,name){
+  document.getElementById("person"+type+"Input").value = name;
+  document.getElementById("person"+type+"Input").dataset.id = id;
+  document.getElementById("person"+type+"Drop").style.display = "none";
+}
+
+function filterPerson(type,value){
+  value = value.toLowerCase();
+
+  const items =
+    document.querySelectorAll("#person"+type+"List .dropdownItem");
+
+  items.forEach(i=>{
+    if(i.innerText.toLowerCase().includes(value)){
+      i.style.display = "block";
+    }else{
+      i.style.display = "none";
+    }
   });
 }
 
