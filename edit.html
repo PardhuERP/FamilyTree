@@ -32,7 +32,7 @@
   <input type="date" id="pdob">
 
   <label class="fieldLabel">Blood Group</label>
-<select id="pblood">
+  <select id="pblood">
   <option value="">Select Blood Group</option>
   <option>O+</option>
   <option>O-</option>
@@ -43,36 +43,35 @@
   <option>AB+</option>
   <option>AB-</option>
 </select>
-  
-<label class="fieldLabel">Qualification</label>
-<input id="pedu" placeholder="B.Tech, MBA etc">
 
-<label class="fieldLabel">Photo</label> 
-<input type="file" id="pphoto" accept="image/*">
+  <label class="fieldLabel">Qualification</label>
+  <input id="pedu" placeholder="B.Tech, B.com">
 
-<img id="previewPhoto"
-     style="width:80px;height:80px;
-            border-radius:10px;
-            margin-top:8px;
-            display:none;">
+  <label class="fieldLabel">Photo</label>
+  <input type="file" id="pphoto" accept="image/*" capture="environment">
+
+  <img id="previewPhoto"
+       style="width:80px;height:80px;border-radius:10px;
+              margin-top:8px;display:none;">
 
   <label class="fieldLabel">Place</label>
-  <input id="pplace" placeholder="Village / City">
+  <input id="pplace" placeholder="Village name">
 
   <label class="fieldLabel">Father ID</label>
-  <small id="parentInfo" style="color:#2563eb; display:block; margin-bottom:6px;"></small>
+  <small id="parentInfo"
+         style="color:#2563eb; display:block; margin-bottom:6px;"></small>
   <input id="pfather">
 
   <label class="fieldLabel">Mother</label>
-<select id="pmother">
-  <option value="">Select Mother</option>
-</select>
-  
+  <select id="pmother">
+    <option value="">Select Mother</option>
+  </select>
 
-  <label class="fieldLabel">Spouse ID (optional)</label>
-  <input id="pspouse" placeholder="Cut above👆 Father ID & paste here">
+  <label class="fieldLabel">Spouse ID</label>
+  <input id="pspouse" placeholder="Cut above 👆 Father ID & Paste here">
 
   <button id="updateBtn">Update Person😊</button>
+
 </div>
 
 <script>
@@ -81,75 +80,80 @@ window.API_URL =
 </script>
 
 <script>
+
+/* ---------- LOAD PERSON DATA ---------- */
 document.addEventListener("DOMContentLoaded", function(){
 
   const personId = localStorage.getItem("editPersonId");
   const familyId = localStorage.getItem("familyId");
-
-  const pfather = document.getElementById("pfather");
-
-  // ✅ attach listener here (ONLY ONCE)
-  if(pfather){
-    pfather.addEventListener("change", loadMothers);
-  }
-
-  if(!personId) return;
+  const userId = localStorage.getItem("userId");
 
   fetch(API_URL +
     "?action=getTree" +
     "&familyId=" + familyId +
+    "&userId=" + userId)
+  .then(r=>r.json())
+  .then(res=>{
+
+    const p = res.data.find(x=>x.personId === personId);
+    if(!p) return;
+
+    pname.value = p.name || "";
+    pgender.value = p.gender || "";
+    pdob.value = (p.dob || "").split("T")[0];
+    pplace.value = p.place || "";
+    pfather.value = p.fatherId || "";
+    pspouse.value = p.spouseId || "";
+    pblood.value = p.bloodGroup || "";
+    pedu.value = p.qualification || "";
+
+    if(p.photoUrl){
+      previewPhoto.src = p.photoUrl;
+      previewPhoto.style.display = "block";
+    }
+
+    loadMothers();
+  });
+
+});
+
+/* ---------- LOAD MOTHERS ---------- */
+function loadMothers(){
+
+  const fatherId = pfather.value;
+  if(!fatherId) return;
+
+  fetch(API_URL +
+    "?action=getTree" +
+    "&familyId=" + localStorage.getItem("familyId") +
     "&userId=" + localStorage.getItem("userId"))
   .then(r=>r.json())
   .then(res=>{
 
-    if(res.status !== "OK") return;
+    const persons = res.data;
 
-    const p = res.data.find(x => x.personId === personId);
-    if(!p) return;
+    const wives = persons.filter(p =>
+      p.spouseId &&
+      String(p.spouseId).split(",").includes(fatherId)
+    );
 
-    document.getElementById("pname").value = p.name || "";
-    document.getElementById("pgender").value = p.gender || "";
-    document.getElementById("pdob").value =
-      (p.dob || "").split("T")[0];
+    pmother.innerHTML =
+      '<option value="">Select Mother</option>';
 
-    document.getElementById("pblood").value =
-      p.bloodGroup || "";
-
-    document.getElementById("pedu").value =
-      p.qualification || "";
-
-    document.getElementById("pplace").value =
-      p.place || "";
-
-    document.getElementById("pfather").value =
-      p.fatherId || "";
-
-    document.getElementById("pspouse").value =
-      p.spouseId || "";
-
-    // photo preview
-    if(p.photoUrl){
-      document.getElementById("previewPhoto").src = p.photoUrl;
-      document.getElementById("previewPhoto").style.display = "block";
-    }
-
-    // ✅ load mothers after father filled
-    loadMothers();
-
-    // ✅ select existing mother
-    setTimeout(()=>{
-      document.getElementById("pmother").value =
-        p.motherId || "";
-    },300);
+    wives.forEach(w=>{
+      pmother.innerHTML +=
+        `<option value="${w.personId}">
+           ${w.name}
+         </option>`;
+    });
 
   });
+}
 
-});
-</script>
-  
-  <script>
-document.getElementById("pphoto")
-.addEventListener("change", function(e){
+pfather.addEventListener("change", loadMothers);
+
+/* ---------- PHOTO COMPRESS ---------- */
+pphoto.addEventListener("change", function(e){
 
   const file = e.target.files[0];
   if(!file) return;
@@ -157,29 +161,21 @@ document.getElementById("pphoto")
   const img = new Image();
   const reader = new FileReader();
 
-  reader.onload = function(ev){
-    img.src = ev.target.result;
-  };
+  reader.onload = ev => img.src = ev.target.result;
 
   img.onload = function(){
 
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    const MAX = 200; // thumbnail size
+    const MAX = 200;
     let w = img.width;
     let h = img.height;
 
     if(w > h){
-      if(w > MAX){
-        h *= MAX / w;
-        w = MAX;
-      }
+      if(w > MAX){ h *= MAX/w; w = MAX; }
     }else{
-      if(h > MAX){
-        w *= MAX / h;
-        h = MAX;
-      }
+      if(h > MAX){ w *= MAX/h; h = MAX; }
     }
 
     canvas.width = w;
@@ -189,95 +185,43 @@ document.getElementById("pphoto")
     const compressed =
       canvas.toDataURL("image/jpeg",0.7);
 
-    document.getElementById("previewPhoto").src = compressed;
-    document.getElementById("previewPhoto").style.display="block";
+    previewPhoto.src = compressed;
+    previewPhoto.style.display="block";
 
-    window.photoBase64 = compressed; // 🔥 store for upload
+    window.photoBase64 = compressed;
   };
 
   reader.readAsDataURL(file);
 });
-  </script>
 
-  <script>
-
-   function loadMothers(){
-
-  const fatherId =
-    document.getElementById("pfather").value;
-
-  if(!fatherId) return;
-
- fetch(API_URL,{
-  method:"POST",
-  body: JSON.stringify({
-    action:"updatePerson",
-    personId:id,
-    name:name,
-    gender:gender,
-    dob:dob,
-    bloodGroup:blood,
-    qualification:edu,
-    place:place,
-    fatherId:fatherId,
-    motherId:motherId,
-    spouseId:spouseId,
-    photoUrl: window.photoBase64 || ""
-  })
-})
-.then(r=>r.json())
-.then(res=>{
-  alert("Updated successfully");
-  window.location.href="index.html";
-})
-.catch(()=>{
-  alert("Network error");
-}); 
-} 
-  </script>
-<script>
-
-  document.getElementById("updateBtn").onclick = function(){
+/* ---------- UPDATE PERSON ---------- */
+updateBtn.onclick = function(){
 
   const id = localStorage.getItem("editPersonId");
 
-  const name = document.getElementById("pname").value;
-  const gender = document.getElementById("pgender").value;
-  const dob = document.getElementById("pdob").value;
-  const blood = document.getElementById("pblood").value;
-  const edu = document.getElementById("pedu").value;
-  const place = document.getElementById("pplace").value;
-  const fatherId = document.getElementById("pfather").value;
-  const motherId = document.getElementById("pmother").value;
-  const spouseId = document.getElementById("pspouse").value;
-
-  fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({
-      action: "updatePerson",
-      personId: id,
-      name: name,
-      gender: gender,
-      dob: dob,
-      bloodGroup: blood,
-      qualification: edu,
-      place: place,
-      fatherId: fatherId,
-      motherId: motherId,
-      spouseId: spouseId,
-      photoUrl: window.photoBase64 || ""
-    })
-  })
+  fetch(API_URL +
+    "?action=updatePerson" +
+    "&personId=" + id +
+    "&name=" + encodeURIComponent(pname.value) +
+    "&gender=" + pgender.value +
+    "&dob=" + pdob.value +
+    "&place=" + encodeURIComponent(pplace.value) +
+    "&bloodGroup=" + pblood.value +
+    "&qualification=" + encodeURIComponent(pedu.value) +
+    "&fatherId=" + pfather.value +
+    "&motherId=" + pmother.value +
+    "&spouseId=" + pspouse.value +
+    "&photoUrl=" + encodeURIComponent(window.photoBase64 || "")
+  )
   .then(r=>r.json())
   .then(res=>{
-    alert("Updated successfully");
-    window.location.href = "index.html";
-  })
-  .catch(()=>{
-    alert("Network error");
+    alert("Updated");
+    localStorage.removeItem("editPersonId");
+    window.location.href="index.html";
   });
 
 };
 </script>
+
 </body>
-</html>  
+</html>
