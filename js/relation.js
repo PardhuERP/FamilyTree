@@ -138,99 +138,91 @@ function findRelation(a, b){
   if(!A || !B) return "Relation not found";
   if(a === b) return "Same person";
 
-  // Spouse
+  // ---- PARENTS (DECLARE ONLY ONCE) ----
+  const A_father = getFather(A);
+  const A_mother = getMother(A);
+  const B_father = getFather(B);
+  const B_mother = getMother(B);
+
+  // ---- SPOUSE ----
   if(
-  String(A.spouseId || "").split(",").includes(B.personId) ||
-  String(B.spouseId || "").split(",").includes(A.personId)
-){
-  return `${A.name} is spouse of ${B.name}`;
-}
+    String(A.spouseId || "").split(",").includes(B.personId) ||
+    String(B.spouseId || "").split(",").includes(A.personId)
+  ){
+    return `${A.name} is spouse of ${B.name}`;
+  }
 
-  // Siblings
+  // ---- SIBLINGS ----
   if(
-  (A.fatherId && A.fatherId === B.fatherId) ||
-  (A.motherId && A.motherId === B.motherId)
-){
-  return `${A.name} is ${
-    A.gender === "Female" ? "sister" : "brother"
-  } of ${B.name}`;
-}
- // UNCLE / AUNT
-const A_father = getFather(A);
-const A_mother = getMother(A);
+    (A.fatherId && A.fatherId === B.fatherId) ||
+    (A.motherId && A.motherId === B.motherId)
+  ){
+    return `${A.name} is ${
+      A.gender === "Female" ? "sister" : "brother"
+    } of ${B.name}`;
+  }
 
-if(A_father && areSiblings(A_father, B)){
-  return `${B.name} is uncle/aunt of ${A.name}`;
-}
+  // ---- FATHER / MOTHER ----
+  if(B.fatherId === A.personId || B.motherId === A.personId){
+    return `${A.name} is ${
+      A.gender === "Female" ? "mother" : "father"
+    } of ${B.name}`;
+  }
 
-if(A_mother && areSiblings(A_mother, B)){
-  return `${B.name} is uncle/aunt of ${A.name}`;
-}
- //Reverse check 
- if(B_father && areSiblings(B_father, A)){
-  return `${A.name} is uncle/aunt of ${B.name}`;
-}
-
-if(B_mother && areSiblings(B_mother, A)){
-  return `${A.name} is uncle/aunt of ${B.name}`;
-}
-//Nepew/niece
- if(A_father && areSiblings(A, B_father)){
-  return `${A.name} is nephew/niece of ${B.name}`;
-}
-
-if(A_mother && areSiblings(A, B_mother)){
-  return `${A.name} is nephew/niece of ${B.name}`;
-}
- //cousin 
- if(
-  A_father && B_father &&
-  areSiblings(A_father, B_father)
-){
-  return `${A.name} and ${B.name} are cousins`;
-}
-
-if(
-  A_mother && B_mother &&
-  areSiblings(A_mother, B_mother)
-){
-  return `${A.name} and ${B.name} are cousins`;
-}
- // Cousin return
- if(A_father && B_father &&
-   areSiblings(A_father, B_father)){
-  return `${A.name} and ${B.name} are paternal cousins`;
-}
-
-if(A_mother && B_mother &&
-   areSiblings(A_mother, B_mother)){
-  return `${A.name} and ${B.name} are maternal cousins`;
-}
-
-  // Father / Mother
- if(B.fatherId === A.personId || B.motherId === A.personId){
-  return `${A.name} is ${
-    A.gender === "Female" ? "mother" : "father"
-  } of ${B.name}`;
-} 
-
-  // Son / Daughter
+  // ---- SON / DAUGHTER ----
   if(A.fatherId === B.personId || A.motherId === B.personId){
-  return `${A.name} is ${
-    A.gender === "Female" ? "daughter" : "son"
-  } of ${B.name}`;
-}
+    return `${A.name} is ${
+      A.gender === "Female" ? "daughter" : "son"
+    } of ${B.name}`;
+  }
 
-  // Grandparent
-  const A_father = people.find(p => p.personId === A.fatherId);
-  const A_mother = people.find(p => p.personId === A.motherId);
+  // ---- UNCLE / AUNT ----
+  if(A_father && areSiblings(A_father, B)){
+    return `${B.name} is uncle/aunt of ${A.name}`;
+  }
 
+  if(A_mother && areSiblings(A_mother, B)){
+    return `${B.name} is uncle/aunt of ${A.name}`;
+  }
+
+  if(B_father && areSiblings(B_father, A)){
+    return `${A.name} is uncle/aunt of ${B.name}`;
+  }
+
+  if(B_mother && areSiblings(B_mother, A)){
+    return `${A.name} is uncle/aunt of ${B.name}`;
+  }
+
+  // ---- NEPHEW / NIECE ----
+  if(B_father && areSiblings(A, B_father)){
+    return `${A.name} is nephew/niece of ${B.name}`;
+  }
+
+  if(B_mother && areSiblings(A, B_mother)){
+    return `${A.name} is nephew/niece of ${B.name}`;
+  }
+
+  // ---- COUSINS ----
+  if(A_father && B_father && areSiblings(A_father, B_father)){
+    return `${A.name} and ${B.name} are paternal cousins`;
+  }
+
+  if(A_mother && B_mother && areSiblings(A_mother, B_mother)){
+    return `${A.name} and ${B.name} are maternal cousins`;
+  }
+
+  // ---- GRANDPARENT ----
   if(A_father && A_father.fatherId === B.personId){
     return `${A.name} is grandson of ${B.name}`;
   }
+
   if(A_mother && A_mother.motherId === B.personId){
     return `${A.name} is granddaughter of ${B.name}`;
   }
+
+  return "Relation not mapped yet";
+}
+
  // ---------- ANCESTOR CHECK ----------
 
 // A is child of B ?
