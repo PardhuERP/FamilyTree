@@ -63,37 +63,45 @@ rows.forEach(p=>{
 
   const child = map[p.personId];
 
+  // ✅ decide parent (father priority, else mother)
+  let parentId = null;
+
   if(p.fatherId && map[p.fatherId]){
-
-    const father = map[p.fatherId];
-
-    // create marriage group key
-    const key =
-      p.fatherId + "_" + (p.motherId || "single");
-
-    // create marriage container if not exists
-    if(!father._marriages){
-      father._marriages = {};
-    }
-
-    // create marriage node
-    if(!father._marriages[key]){
-
-      father._marriages[key] = {
-        name: map[p.motherId]?.name || "",
-        isMarriageNode: true,
-        children: []
-      };
-
-      // attach marriage node to father
-      father.children.push(
-        father._marriages[key]
-      );
-    }
-
-    // add child under that marriage
-    father._marriages[key].children.push(child);
+    parentId = p.fatherId;
   }
+  else if(p.motherId && map[p.motherId]){
+    parentId = p.motherId;
+  }
+
+  if(!parentId) return;
+
+  const parent = map[parentId];
+
+  // marriage group key
+  const key =
+    (p.fatherId || "single") + "_" +
+    (p.motherId || "single");
+
+  // create marriage container if not exists
+  if(!parent._marriages){
+    parent._marriages = {};
+  }
+
+  // create marriage node
+  if(!parent._marriages[key]){
+
+    parent._marriages[key] = {
+      name: map[p.motherId]?.name || "",
+      isMarriageNode: true,
+      children: []
+    };
+
+    // attach marriage node to parent
+    parent.children.push(parent._marriages[key]);
+  }
+
+  // add child under that marriage
+  parent._marriages[key].children.push(child);
 
 });
   // connect spouses (MULTIPLE SUPPORT)
