@@ -39,6 +39,33 @@ function checkRelation(){
   document.getElementById("result").innerText = res;
 }
 
+function getAncestorLevel(childId, ancestorId){
+
+  let level = 0;
+  let current = people.find(p => p.personId === childId);
+
+  while(current){
+
+    if(current.fatherId === ancestorId ||
+       current.motherId === ancestorId){
+      return level + 1;
+    }
+
+    // move one level up (prefer father, else mother)
+    current =
+      people.find(p =>
+        p.personId === current.fatherId ||
+        p.personId === current.motherId
+      );
+
+    level++;
+
+    if(level > 10) break; // safety
+  }
+
+  return 0;
+}
+
 function findRelation(a, b){
 
   if(!dataReady || !people.length){
@@ -93,6 +120,40 @@ function findRelation(a, b){
   if(A_mother && A_mother.motherId === B.personId){
     return `${A.name} is granddaughter of ${B.name}`;
   }
+ // ---------- ANCESTOR CHECK ----------
+
+// A is child of B ?
+let levelAB = getAncestorLevel(A.personId, B.personId);
+
+if(levelAB > 0){
+
+  if(levelAB === 1)
+    return `${A.name} is child of ${B.name}`;
+
+  if(levelAB === 2)
+    return `${A.name} is grandchild of ${B.name}`;
+
+  return `${A.name} is ${
+    "great ".repeat(levelAB-2)
+  }grandchild of ${B.name}`;
+}
+
+
+// B is child of A ?
+let levelBA = getAncestorLevel(B.personId, A.personId);
+
+if(levelBA > 0){
+
+  if(levelBA === 1)
+    return `${A.name} is parent of ${B.name}`;
+
+  if(levelBA === 2)
+    return `${A.name} is grandparent of ${B.name}`;
+
+  return `${A.name} is ${
+    "great ".repeat(levelBA-2)
+  }grandparent of ${B.name}`;
+}
 
   return "Relation not mapped yet";
 }
