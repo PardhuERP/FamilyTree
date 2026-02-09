@@ -39,16 +39,23 @@
   <label class="fieldLabel">Place</label>
   <input id="pplace">
 
+  <!-- FATHER -->
   <label class="fieldLabel">Father ID</label>
   <small id="parentInfo"
          style="color:#2563eb;display:block;margin-bottom:6px;">
   </small>
   <input id="pfather">
 
+  <!-- ✅ MOTHER DROPDOWN (ADDED) -->
+  <label class="fieldLabel">Mother</label>
+  <select id="pmother">
+    <option value="">Select Mother</option>
+  </select>
+
   <label class="fieldLabel">Spouse ID</label>
   <input id="pspouse">
 
-  <!-- ✅ PHOTO SECTION -->
+  <!-- PHOTO -->
   <label class="fieldLabel">Photo</label>
   <input type="file" id="pphoto" accept="image/*">
 
@@ -70,6 +77,7 @@ window.API_URL =
 
 <script src="js/tree.js"></script>
 
+<!-- ================= LOAD PERSON DATA ================= -->
 <script>
 document.addEventListener("DOMContentLoaded", function(){
 
@@ -99,39 +107,24 @@ document.addEventListener("DOMContentLoaded", function(){
       previewPhoto.src = p.photoUrl;
       previewPhoto.style.display = "block";
     }
+
+    // show father info
+    if(pfather.value){
+      parentInfo.innerText =
+        "Father ID: " + pfather.value;
+      loadMothers(p.motherId); // ✅ load mothers + select existing
+    }
+
   });
 
 });
 </script>
 
-  <script>
-document.addEventListener("DOMContentLoaded", function () {
+<!-- ================= LOAD MOTHERS ================= -->
+<script>
+function loadMothers(selectedMother){
 
-  const pid = localStorage.getItem("selectedParent");
-  const pname = localStorage.getItem("selectedParentName");
-
-  const pfather = document.getElementById("pfather");
-  const info = document.getElementById("parentInfo");
-
-  if (pfather && info) {
-
-    if (pfather.value) {
-      info.innerText =
-        "Child of: " + pname + " (" + pfather.value + ")";
-      loadMothers();   // ✅ load mothers in edit also
-    }
-
-    pfather.addEventListener("change", loadMothers);
-  }
-
-});
-</script>
-  <script>
-function loadMothers(){
-
-  const fatherId =
-    document.getElementById("pfather").value;
-
+  const fatherId = document.getElementById("pfather").value;
   if(!fatherId) return;
 
   fetch(API_URL +
@@ -146,7 +139,7 @@ function loadMothers(){
     const persons = res.data;
 
     const wives = persons.filter(p =>
-      p.spouseId === fatherId
+      String(p.spouseId || "").includes(fatherId)
     );
 
     const sel = document.getElementById("pmother");
@@ -161,12 +154,19 @@ function loadMothers(){
          </option>`;
     });
 
+    if(selectedMother){
+      sel.value = selectedMother;
+    }
+
   });
 }
-  </script>
 
+document.getElementById("pfather")
+  .addEventListener("change", ()=>loadMothers());
+</script>
+
+<!-- ================= PHOTO PREVIEW ================= -->
 <script>
-/* PHOTO PREVIEW */
 document.getElementById("pphoto")
 .addEventListener("change", function(e){
 
@@ -185,7 +185,7 @@ document.getElementById("pphoto")
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    const MAX = 200; // thumbnail size
+    const MAX = 200;
     let w = img.width;
     let h = img.height;
 
@@ -208,38 +208,33 @@ document.getElementById("pphoto")
     const compressed =
       canvas.toDataURL("image/jpeg",0.7);
 
-    document.getElementById("previewPhoto").src = compressed;
-    document.getElementById("previewPhoto").style.display="block";
+    previewPhoto.src = compressed;
+    previewPhoto.style.display="block";
 
-    window.photoBase64 = compressed; // 🔥 store for upload
+    window.photoBase64 = compressed;
   };
 
   reader.readAsDataURL(file);
 });
 </script>
 
+<!-- ================= UPDATE PERSON ================= -->
 <script>
-/* UPDATE PERSON */
 document.getElementById("updateBtn").onclick = function(){
 
   const id = localStorage.getItem("editPersonId");
 
-  const name = document.getElementById("pname").value;
-  const gender = document.getElementById("pgender").value;
-  const dob = document.getElementById("pdob").value;
-  const place = document.getElementById("pplace").value;
-  const blood = document.getElementById("pblood").value;
-  const edu = document.getElementById("pedu").value;
-
   fetch(API_URL +
     "?action=updatePerson" +
     "&personId=" + id +
-    "&name=" + encodeURIComponent(name) +
-    "&gender=" + gender +
-    "&dob=" + dob +
-    "&place=" + encodeURIComponent(place) +
-    "&bloodGroup=" + blood +
-    "&qualification=" + encodeURIComponent(edu) +
+    "&name=" + encodeURIComponent(pname.value) +
+    "&gender=" + pgender.value +
+    "&dob=" + pdob.value +
+    "&place=" + encodeURIComponent(pplace.value) +
+    "&bloodGroup=" + pblood.value +
+    "&qualification=" + encodeURIComponent(pedu.value) +
+    "&fatherId=" + pfather.value +
+    "&motherId=" + pmother.value +
     "&photoUrl=" + encodeURIComponent(window.photoBase64 || "")
   )
   .then(r=>r.json())
