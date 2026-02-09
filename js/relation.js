@@ -102,33 +102,42 @@ function areSiblings(A,B){
 // ANCESTOR LEVEL
 function getAncestorLevel(childId, ancestorId){
 
-  function checkLevel(currentId, level){
+  let queue = [{ id: childId, level: 0 }];
+  let visited = {};
 
-    const current = people.find(p => p.personId === currentId);
-    if(!current) return 0;
+  while(queue.length){
 
-    // direct parent
-    if(current.fatherId === ancestorId ||
-       current.motherId === ancestorId){
-      return level + 1;
-    }
+    const current = queue.shift();
 
-    // check father side
-    let fLevel = 0;
-    if(current.fatherId){
-      fLevel = checkLevel(current.fatherId, level + 1);
-    }
+    if(visited[current.id]) continue;
+    visited[current.id] = true;
 
-    // check mother side
-    let mLevel = 0;
-    if(current.motherId){
-      mLevel = checkLevel(current.motherId, level + 1);
-    }
+    const person = people.find(p => p.personId === current.id);
+    if(!person) continue;
 
-    return Math.max(fLevel, mLevel);
+    // father check
+    if(person.fatherId === ancestorId)
+      return current.level + 1;
+
+    // mother check
+    if(person.motherId === ancestorId)
+      return current.level + 1;
+
+    // push both parents
+    if(person.fatherId)
+      queue.push({
+        id: person.fatherId,
+        level: current.level + 1
+      });
+
+    if(person.motherId)
+      queue.push({
+        id: person.motherId,
+        level: current.level + 1
+      });
   }
 
-  return checkLevel(childId, 0);
+  return 0;
 }
 
 /* ---------- MAIN RELATION ---------- */
