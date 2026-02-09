@@ -20,24 +20,26 @@ fetch(API_URL +
   });
 
 function fillDropdowns(){
-  const A = document.getElementById("personAList");
-  const B = document.getElementById("personBList");
 
-  A.innerHTML = "";
-  B.innerHTML = "";
+  const listA = document.getElementById("personAList");
+  const listB = document.getElementById("personBList");
+
+  listA.innerHTML = "";
+  listB.innerHTML = "";
 
   people.forEach(p=>{
-    A.innerHTML +=
-      `<div class="dropdownItem"
-         onclick="selectPerson('A','${p.personId}','${p.name}')">
-         ${p.name}
-       </div>`;
 
-    B.innerHTML +=
-      `<div class="dropdownItem"
-         onclick="selectPerson('B','${p.personId}','${p.name}')">
-         ${p.name}
-       </div>`;
+    listA.innerHTML += `
+      <div class="dropdownItem"
+        onclick="selectPerson('A','${p.personId}','${p.name}')">
+        ${p.name}
+      </div>`;
+
+    listB.innerHTML += `
+      <div class="dropdownItem"
+        onclick="selectPerson('B','${p.personId}','${p.name}')">
+        ${p.name}
+      </div>`;
   });
 }
 
@@ -287,3 +289,12 @@ function filterList(text, selectId){
       ));
     });
 }
+
+document.addEventListener("click", function(e){
+
+  if(!e.target.closest(".searchSelect")){
+    document.getElementById("personADrop").style.display = "none";
+    document.getElementById("personBDrop").style.display = "none";
+  }
+
+});
