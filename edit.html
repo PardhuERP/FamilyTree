@@ -86,6 +86,13 @@ document.addEventListener("DOMContentLoaded", function(){
   const personId = localStorage.getItem("editPersonId");
   const familyId = localStorage.getItem("familyId");
 
+  const pfather = document.getElementById("pfather");
+
+  // ✅ attach listener here (ONLY ONCE)
+  if(pfather){
+    pfather.addEventListener("change", loadMothers);
+  }
+
   if(!personId) return;
 
   fetch(API_URL +
@@ -122,15 +129,14 @@ document.addEventListener("DOMContentLoaded", function(){
 
     // photo preview
     if(p.photoUrl){
-      document.getElementById("previewPhoto").src =
-        p.photoUrl;
+      document.getElementById("previewPhoto").src = p.photoUrl;
       document.getElementById("previewPhoto").style.display = "block";
     }
 
-    // load mothers
+    // ✅ load mothers after father filled
     loadMothers();
 
-    // select existing mother
+    // ✅ select existing mother
     setTimeout(()=>{
       document.getElementById("pmother").value =
         p.motherId || "";
@@ -194,10 +200,8 @@ document.getElementById("pphoto")
   </script>
 
   <script>
-document.getElementById("pfather")
-.addEventListener("change", loadMothers);
 
-function loadMothers(){
+   function loadMothers(){
 
   const fatherId =
     document.getElementById("pfather").value;
@@ -223,6 +227,7 @@ function loadMothers(){
 
     const sel = document.getElementById("pmother");
 
+    // rebuild dropdown
     sel.innerHTML =
       '<option value="">Select Mother</option>';
 
@@ -234,7 +239,7 @@ function loadMothers(){
     });
 
   });
-}
+} 
   </script>
 <script>
 
@@ -264,7 +269,11 @@ document.getElementById("updateBtn").onclick = function(){
     "&fatherId=" + fatherId +
     "&motherId=" + motherId +
     "&spouseId=" + spouseId +
-    "&photoUrl=" + encodeURIComponent(window.photoBase64 || "")
+    "&photoUrl=" + encodeURIComponent(
+   window.photoBase64 ||
+   document.getElementById("previewPhoto").src ||
+   ""
+)
   )
   .then(r=>r.json())
   .then(res=>{
