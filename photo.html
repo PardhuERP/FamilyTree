@@ -1,7 +1,115 @@
-<h2>Update Photo</h2>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Update Photo | MyFamilyTree</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="stylesheet" href="css/style.css">
+</head>
 
-<input type="file" id="pphoto" accept="image/*">
+<body>
 
-<img id="previewPhoto" style="width:100px">
+<!-- TOOLBAR -->
+<div class="toolbar addBar">
+  <button class="backBtn" onclick="history.back()">←</button>
+  <span class="appTitle">Update Photo</span>
+</div>
 
-<button onclick="updatePhoto()">Update Photo</button>
+<div class="addPage">
+
+  <h2>Update Member Photo</h2>
+
+  <label class="fieldLabel">Select Photo</label>
+  <input type="file" id="pphoto" accept="image/*">
+
+  <img id="previewPhoto"
+       style="width:100px;height:100px;
+              border-radius:10px;
+              margin-top:10px;
+              display:none;">
+
+  <br><br>
+
+  <button onclick="updatePhoto()">Update Photo</button>
+
+</div>
+
+<script>
+window.API_URL =
+"https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
+</script>
+
+<script>
+
+/* ---------- PHOTO COMPRESS ---------- */
+document.getElementById("pphoto")
+.addEventListener("change", function(e){
+
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const img = new Image();
+  const reader = new FileReader();
+
+  reader.onload = ev => img.src = ev.target.result;
+
+  img.onload = function(){
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const MAX = 200; // thumbnail size
+    let w = img.width;
+    let h = img.height;
+
+    if(w > h){
+      if(w > MAX){
+        h *= MAX / w;
+        w = MAX;
+      }
+    }else{
+      if(h > MAX){
+        w *= MAX / h;
+        h = MAX;
+      }
+    }
+
+    canvas.width = w;
+    canvas.height = h;
+    ctx.drawImage(img,0,0,w,h);
+
+    const compressed =
+      canvas.toDataURL("image/jpeg",0.7);
+
+    previewPhoto.src = compressed;
+    previewPhoto.style.display="block";
+
+    window.photoBase64 = compressed;
+  };
+
+  reader.readAsDataURL(file);
+});
+
+
+/* ---------- UPDATE PHOTO ---------- */
+function updatePhoto(){
+
+  const id = localStorage.getItem("editPersonId");
+
+  if(!window.photoBase64){
+    alert("Select photo first");
+    return;
+  }
+
+  fetch(API_URL +
+    "?action=updatePerson" +
+    "&personId=" + id +
+    "&photoUrl=" +
+    encodeURIComponent(window.photoBase64)
+  )
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.status==="OK"){
+      alert("Photo updated successfully");
+      window.location.href="index.html";
+    }else
