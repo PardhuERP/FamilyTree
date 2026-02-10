@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Upload Photo</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="toolbar addBar">
+  <button class="backBtn" onclick="history.back()">←</button>
+  <span class="appTitle">Upload Photo</span>
+</div>
+
+<div class="addPage">
+
+  <h2>Upload Member Photo</h2>
+
+  <input type="file" id="photoFile" accept="image/*">
+
+  <img id="previewPhoto"
+       style="width:120px;height:120px;
+              border-radius:12px;
+              margin-top:10px;
+              display:none;">
+
+  <br><br>
+
+  <button id="uploadBtn">Upload Photo</button>
+
+</div>
+
+<script>
+window.API_URL =
+"https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
+
+let photoBase64 = "";
+
+/* ---------- PHOTO SELECT ---------- */
+document.getElementById("photoFile")
+.addEventListener("change", function(e){
+
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(ev){
+    photoBase64 = ev.target.result;
+    previewPhoto.src = photoBase64;
+    previewPhoto.style.display = "block";
+  };
+
+  reader.readAsDataURL(file);
+});
+
+
+/* ---------- UPLOAD ---------- */
+document.getElementById("uploadBtn").onclick = function(){
+
+  const personId =
+    localStorage.getItem("editPersonId");
+
+  if(!photoBase64){
+    alert("Select photo first");
+    return;
+  }
+
+  fetch(API_URL,{
+    method:"POST",
+    body: JSON.stringify({
+      action:"uploadPhoto",
+      personId: personId,
+      photoBase64: photoBase64
+    })
+  })
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.status==="OK"){
+      alert("Photo uploaded successfully");
+      window.location.href="index.html";
+    }else{
+      alert("Upload failed");
+    }
+  })
+  .catch(()=>{
+    alert("Network error");
+  });
+
+};
+</script>
+
+</body>
+</html>
