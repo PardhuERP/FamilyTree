@@ -196,21 +196,28 @@ if(btn && box){
   }
   
   function openDelete(){
+
   if(!window.selectedNode){
     alert("Tap a member first");
     return;
   }
 
-  if(!confirm("Delete " + window.selectedNode.name + "?")) return;
+  const msg =
+    window.selectedNode.name +
+    " and all children under this person will be deleted.\n\nContinue?";
 
-  fetch(API_URL + "?action=deletePerson&personId=" + window.selectedNode.personId)
-    .then(r=>r.json())
-    .then(res=>{
-      if(res.status==="OK"){
-        alert("Deleted");
-        location.reload();
-      }
-    });
+  if(!confirm(msg)) return;
+
+  fetch(API_URL +
+    "?action=deletePerson&personId=" +
+    window.selectedNode.personId)
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.status==="OK"){
+      alert("Deleted successfully");
+      location.reload();
+    }
+  });
 }
   
   function logout(){
