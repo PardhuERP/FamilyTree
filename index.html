@@ -195,6 +195,21 @@ if(btn && box){
 
   window.location.href = "edit.html";
   }
+
+  function openPhotoUpload(){
+
+  if(!window.selectedNode){
+    alert("Tap a member first");
+    return;
+  }
+
+  localStorage.setItem(
+    "editPersonId",
+    window.selectedNode.personId
+  );
+
+  window.location.href = "photo.html";
+  }
   
   function openDelete(){
 
