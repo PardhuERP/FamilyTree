@@ -176,7 +176,6 @@ updateBtn.onclick = function(){
   )
   .then(r=>r.json())
   .then(res=>{
-    alert("Updated");
     localStorage.removeItem("editPersonId");
     alert("Updated successfully");
   });
