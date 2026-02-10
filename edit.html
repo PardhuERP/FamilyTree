@@ -110,7 +110,8 @@ document.addEventListener("DOMContentLoaded", function(){
     if(p.photoUrl){
       previewPhoto.src = p.photoUrl;
       previewPhoto.style.display = "block";
-    }
+      window.photoBase64 = p.photoUrl;
+    } 
 
     loadMothers();
   });
@@ -211,7 +212,7 @@ updateBtn.onclick = function(){
     "&fatherId=" + pfather.value +
     "&motherId=" + pmother.value +
     "&spouseId=" + pspouse.value +
-    "&photoUrl=" + encodeURIComponent(window.photoBase64 || "")
+    "&photoUrl=" + encodeURIComponent(window.photoBase64 || previewPhoto.src || "")
   )
   .then(r=>r.json())
   .then(res=>{
