@@ -99,12 +99,14 @@ document.addEventListener("DOMContentLoaded", function(){
     pspouse.value = p.spouseId || "";
     pblood.value = p.bloodGroup || "";
     pedu.value = p.qualification || "";
-    } 
 
+    // load mothers AFTER father set
     loadMothers();
+
   });
 
 });
+
 
 /* ---------- LOAD MOTHERS ---------- */
 function loadMothers(){
@@ -142,7 +144,6 @@ function loadMothers(){
 pfather.addEventListener("change", loadMothers);
 
 
-
 /* ---------- UPDATE PERSON ---------- */
 updateBtn.onclick = function(){
 
@@ -159,8 +160,7 @@ updateBtn.onclick = function(){
     "&qualification=" + encodeURIComponent(pedu.value) +
     "&fatherId=" + pfather.value +
     "&motherId=" + pmother.value +
-    "&spouseId=" + pspouse.value +
-    photoParam
+    "&spouseId=" + pspouse.value
   )
   .then(r=>r.json())
   .then(res=>{
@@ -170,7 +170,8 @@ updateBtn.onclick = function(){
   });
 
 };
-</script>
+
+</script> 
 
 </body>
 </html>
