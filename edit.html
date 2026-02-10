@@ -64,6 +64,17 @@
   <input id="pspouse" placeholder="Cut above 👆 Father ID & Paste here">
 
   <button id="updateBtn">Update Person😊</button>
+
+  <label class="fieldLabel">Photo</label>
+<input type="file" id="pphoto" accept="image/*">
+
+<img id="previewPhoto"
+     style="width:80px;height:80px;
+            border-radius:10px;
+            margin-top:8px;
+            display:none;">
+
+  
   <button id="uploadPhotoBtn">Upload Photo 📷</button>
 
 </div>
@@ -173,6 +184,51 @@ updateBtn.onclick = function(){
 };
 
 </script> 
+
+<script>
+document.getElementById("pphoto")
+.addEventListener("change", function(e){
+
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const img = new Image();
+  const reader = new FileReader();
+
+  reader.onload = ev => img.src = ev.target.result;
+
+  img.onload = function(){
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const MAX = 200;
+    let w = img.width;
+    let h = img.height;
+
+    if(w > h){
+      if(w > MAX){ h *= MAX/w; w = MAX; }
+    }else{
+      if(h > MAX){ w *= MAX/h; h = MAX; }
+    }
+
+    canvas.width = w;
+    canvas.height = h;
+    ctx.drawImage(img,0,0,w,h);
+
+    const compressed =
+      canvas.toDataURL("image/jpeg",0.7);
+
+    previewPhoto.src = compressed;
+    previewPhoto.style.display="block";
+
+    window.photoBase64 = compressed;
+  };
+
+  reader.readAsDataURL(file);
+});
+</script>
+  
   <script>
 
 document.getElementById("uploadPhotoBtn").onclick = function(){
@@ -208,6 +264,8 @@ document.getElementById("uploadPhotoBtn").onclick = function(){
 };
 
   </script>
+
+  
 
 </body>
 </html>
