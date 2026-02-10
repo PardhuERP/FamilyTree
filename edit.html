@@ -88,6 +88,8 @@ document.addEventListener("DOMContentLoaded", function(){
   const familyId = localStorage.getItem("familyId");
   const userId = localStorage.getItem("userId");
 
+  const pphoto = document.getElementById("pphoto");
+
   fetch(API_URL +
     "?action=getTree" +
     "&familyId=" + familyId +
@@ -115,11 +117,8 @@ document.addEventListener("DOMContentLoaded", function(){
     loadMothers();
   });
 
-});
 
-  /* ---------- PHOTO COMPRESS (ADD HERE) ---------- */
-
-  const pphoto = document.getElementById("pphoto");
+  /* ---------- PHOTO COMPRESS ---------- */
 
   if(pphoto){
     pphoto.addEventListener("change", function(e){
@@ -155,7 +154,7 @@ document.addEventListener("DOMContentLoaded", function(){
           canvas.toDataURL("image/jpeg",0.7);
 
         previewPhoto.src = compressed;
-        previewPhoto.style.display = "block";
+        previewPhoto.style.display="block";
 
         window.photoBase64 = compressed;
       };
@@ -201,47 +200,6 @@ function loadMothers(){
 
 pfather.addEventListener("change", loadMothers);
 
-/* ---------- PHOTO COMPRESS ---------- */
-pphoto.addEventListener("change", function(e){
-
-  const file = e.target.files[0];
-  if(!file) return;
-
-  const img = new Image();
-  const reader = new FileReader();
-
-  reader.onload = ev => img.src = ev.target.result;
-
-  img.onload = function(){
-
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    const MAX = 200;
-    let w = img.width;
-    let h = img.height;
-
-    if(w > h){
-      if(w > MAX){ h *= MAX/w; w = MAX; }
-    }else{
-      if(h > MAX){ w *= MAX/h; h = MAX; }
-    }
-
-    canvas.width = w;
-    canvas.height = h;
-    ctx.drawImage(img,0,0,w,h);
-
-    const compressed =
-      canvas.toDataURL("image/jpeg",0.7);
-
-    previewPhoto.src = compressed;
-    previewPhoto.style.display="block";
-
-    window.photoBase64 = compressed;
-  };
-
-  reader.readAsDataURL(file);
-});
 
 /* ---------- UPDATE PERSON ---------- */
 updateBtn.onclick = function(){
