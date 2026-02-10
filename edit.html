@@ -200,6 +200,15 @@ updateBtn.onclick = function(){
 
   const id = localStorage.getItem("editPersonId");
 
+  let photoParam = "";
+
+  // ✅ only send photo if new image selected
+  if(window.photoBase64){
+    photoParam =
+      "&photoUrl=" +
+      encodeURIComponent(window.photoBase64);
+  }
+
   fetch(API_URL +
     "?action=updatePerson" +
     "&personId=" + id +
@@ -212,7 +221,7 @@ updateBtn.onclick = function(){
     "&fatherId=" + pfather.value +
     "&motherId=" + pmother.value +
     "&spouseId=" + pspouse.value +
-    "&photoUrl=" + encodeURIComponent(window.photoBase64 || previewPhoto.src || "")
+    photoParam
   )
   .then(r=>r.json())
   .then(res=>{
