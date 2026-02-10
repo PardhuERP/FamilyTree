@@ -64,6 +64,7 @@
   <input id="pspouse" placeholder="Cut above 👆 Father ID & Paste here">
 
   <button id="updateBtn">Update Person😊</button>
+  <button id="uploadPhotoBtn">Upload Photo 📷</button>
 
 </div>
 
@@ -172,6 +173,41 @@ updateBtn.onclick = function(){
 };
 
 </script> 
+  <script>
+
+document.getElementById("uploadPhotoBtn").onclick = function(){
+
+  const id = localStorage.getItem("editPersonId");
+
+  if(!window.photoBase64){
+    alert("Select photo first");
+    return;
+  }
+
+  fetch(API_URL, {
+    method:"POST",
+    body: JSON.stringify({
+      action: "uploadPhoto",
+      personId: id,
+      photoBase64: window.photoBase64
+    })
+  })
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.status==="OK"){
+      alert("Photo uploaded successfully");
+      location.reload();
+    }else{
+      alert("Upload failed");
+    }
+  })
+  .catch(()=>{
+    alert("Network error");
+  });
+
+};
+
+  </script>
 
 </body>
 </html>
