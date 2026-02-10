@@ -251,7 +251,7 @@ document.getElementById("uploadPhotoBtn").onclick = function(){
   .then(res=>{
     if(res.status==="OK"){
       alert("Photo uploaded successfully");
-      location.reload();
+      window.location.href="index.html";
     }else{
       alert("Upload failed");
     }
