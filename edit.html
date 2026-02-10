@@ -88,8 +88,6 @@ document.addEventListener("DOMContentLoaded", function(){
   const familyId = localStorage.getItem("familyId");
   const userId = localStorage.getItem("userId");
 
-  const pphoto = document.getElementById("pphoto");
-
   fetch(API_URL +
     "?action=getTree" +
     "&familyId=" + familyId +
@@ -116,52 +114,6 @@ document.addEventListener("DOMContentLoaded", function(){
 
     loadMothers();
   });
-
-
-  /* ---------- PHOTO COMPRESS ---------- */
-
-  if(pphoto){
-    pphoto.addEventListener("change", function(e){
-
-      const file = e.target.files[0];
-      if(!file) return;
-
-      const img = new Image();
-      const reader = new FileReader();
-
-      reader.onload = ev => img.src = ev.target.result;
-
-      img.onload = function(){
-
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-
-        const MAX = 200;
-        let w = img.width;
-        let h = img.height;
-
-        if(w > h){
-          if(w > MAX){ h *= MAX/w; w = MAX; }
-        }else{
-          if(h > MAX){ w *= MAX/h; h = MAX; }
-        }
-
-        canvas.width = w;
-        canvas.height = h;
-        ctx.drawImage(img,0,0,w,h);
-
-        const compressed =
-          canvas.toDataURL("image/jpeg",0.7);
-
-        previewPhoto.src = compressed;
-        previewPhoto.style.display="block";
-
-        window.photoBase64 = compressed;
-      };
-
-      reader.readAsDataURL(file);
-    });
-  }
 
 });
 
@@ -200,37 +152,72 @@ function loadMothers(){
 
 pfather.addEventListener("change", loadMothers);
 
+/* ---------- PHOTO COMPRESS ---------- */
+pphoto.addEventListener("change", function(e){
+
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const img = new Image();
+  const reader = new FileReader();
+
+  reader.onload = ev => img.src = ev.target.result;
+
+  img.onload = function(){
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const MAX = 200;
+    let w = img.width;
+    let h = img.height;
+
+    if(w > h){
+      if(w > MAX){ h *= MAX/w; w = MAX; }
+    }else{
+      if(h > MAX){ w *= MAX/h; h = MAX; }
+    }
+
+    canvas.width = w;
+    canvas.height = h;
+    ctx.drawImage(img,0,0,w,h);
+
+    const compressed =
+      canvas.toDataURL("image/jpeg",0.7);
+
+    previewPhoto.src = compressed;
+    previewPhoto.style.display="block";
+
+    window.photoBase64 = compressed;
+  };
+
+  reader.readAsDataURL(file);
+});
 
 /* ---------- UPDATE PERSON ---------- */
 updateBtn.onclick = function(){
 
   const id = localStorage.getItem("editPersonId");
 
-  fetch(API_URL,{
-    method:"POST",
-    body: JSON.stringify({
-      action:"updatePerson",
-      personId:id,
-      name:pname.value,
-      gender:pgender.value,
-      dob:pdob.value,
-      place:pplace.value,
-      bloodGroup:pblood.value,
-      qualification:pedu.value,
-      fatherId:pfather.value,
-      motherId:pmother.value,
-      spouseId:pspouse.value,
-      photoUrl: window.photoBase64 || ""
-    })
-  })
+  fetch(API_URL +
+    "?action=updatePerson" +
+    "&personId=" + id +
+    "&name=" + encodeURIComponent(pname.value) +
+    "&gender=" + pgender.value +
+    "&dob=" + pdob.value +
+    "&place=" + encodeURIComponent(pplace.value) +
+    "&bloodGroup=" + pblood.value +
+    "&qualification=" + encodeURIComponent(pedu.value) +
+    "&fatherId=" + pfather.value +
+    "&motherId=" + pmother.value +
+    "&spouseId=" + pspouse.value +
+    "&photoUrl=" + encodeURIComponent(window.photoBase64 || "")
+  )
   .then(r=>r.json())
   .then(res=>{
     alert("Updated");
     localStorage.removeItem("editPersonId");
     window.location.href="index.html";
-  })
-  .catch(()=>{
-    alert("Network error");
   });
 
 };
