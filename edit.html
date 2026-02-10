@@ -184,7 +184,7 @@ pphoto.addEventListener("change", function(e){
     ctx.drawImage(img,0,0,w,h);
 
     const compressed =
-      canvas.toDataURL("image/jpeg",0.7);
+      canvas.toDataURL("image/jpeg",0.5);
 
     previewPhoto.src = compressed;
     previewPhoto.style.display="block";
