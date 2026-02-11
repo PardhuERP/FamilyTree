@@ -519,7 +519,11 @@ function showProfileCard(p){
   document.getElementById("profileCard").style.display = "block";
 }
 
-function openHDPhoto(){
+function closeProfile(){
+  document.getElementById("profileCard").style.display = "none";
+}
+
+function openHDPhotoUpload(){
 
   if(!window.currentPerson) return;
 
@@ -534,13 +538,10 @@ function openHDPhoto(){
   document.getElementById("hdPhotoOverlay").style.display = "flex";
 }
 
-function closeHDPhoto(){
+function closeHDPhotoUpload(){
   document.getElementById("hdPhotoOverlay").style.display = "none";
 }
 
-function closeProfile(){
-  document.getElementById("profileCard").style.display = "none";
-}
 /* ---------- ADD BUTTON ---------- */
 if(document.getElementById("addBtn")){
   document.getElementById("addBtn")
