@@ -73,9 +73,9 @@
   <div class="profileClose" onclick="closeProfile()">✕</div>
 
 <div class="profileHeader">
-  <img id="pPhoto"
-       onclick="openHDPhotoUpload()"
-       src="https://via.placeholder.com/80">
+ <img id="pPhoto"
+     onclick="event.stopPropagation(); openHDPhotoUpload();"
+     src="https://via.placeholder.com/80"> 
   <div>
       <div id="pName" class="pName">Name</div>
       <div id="pDob" class="pSub">DOB</div>
@@ -103,6 +103,14 @@
             justify-content:center;
             align-items:center;"
      onclick="closeHDPhoto()">
+  <div id="hdCloseBtn"
+     style="position:absolute;
+            top:20px;
+            right:20px;
+            color:white;
+            font-size:28px;
+            cursor:pointer;"
+     onclick="closeHDPhotoUpload()">✕</div>
 
   <img id="hdPhotoView"
        style="max-width:95%;
