@@ -255,7 +255,11 @@ nodeEnter.append("rect")
 
   nodeEnter.merge(node)
     .transition().duration(400)
-    .attr("transform", d=>`translate(${d.y},${d.x})`);
+    .attr("transform", d=>{
+  const x = (d.x !== undefined) ? d.x : 0;
+  const y = (d.y !== undefined) ? d.y : 0;
+  return `translate(${y},${x})`;
+});
 
   const link = g.selectAll(".link")
   .data(
