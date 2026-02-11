@@ -61,25 +61,6 @@
     <button id="collapseBtn" class="circleBtn">−</button>
     <button id="expandBtn" class="circleBtn">+</button>
   </div>
-  <!-- HD PHOTO VIEW -->
-<div id="hdPhotoOverlay"
-     style="display:none;
-            position:fixed;
-            top:0;
-            left:0;
-            width:100%;
-            height:100%;
-            background:rgba(0,0,0,0.9);
-            z-index:9999;
-            justify-content:center;
-            align-items:center;"
-     onclick="closeHDPhoto()">
-
-  <img id="hdPhotoView"
-       style="max-width:95%;
-              max-height:95%;
-              border-radius:10px;">
-</div>
 
 </div>
 
@@ -92,10 +73,8 @@
   <div class="profileClose" onclick="closeProfile()">✕</div>
 
   <div class="profileHeader">
-  <img id="pPhoto"
-       onclick="openHDPhotoUpload()"
-       src="https://via.placeholder.com/80">
-  <div>
+    <img id="pPhoto" src="https://via.placeholder.com/80">
+    <div>
       <div id="pName" class="pName">Name</div>
       <div id="pDob" class="pSub">DOB</div>
     </div>
@@ -235,7 +214,7 @@ if(btn && box){
   window.location.href = "photo.html";
   }
 
-  function openHDPhotoUpload(){
+  function openHDPhoto(){
 
   if(!window.selectedNode){
     alert("Tap a member first");
