@@ -23,12 +23,17 @@ const searchBox = document.getElementById("searchBox");
 
 if(document.getElementById("tree")){
 
-  svg = d3.select("#tree")
-    .attr("width", width)
-    .attr("height", height)
-    .call(d3.zoom().scaleExtent([0.3,3]).on("zoom", e=>{
-      g.attr("transform", e.transform);
-    }));
+  // ✅ create zoom globally
+zoom = d3.zoom()
+  .scaleExtent([0.3,3])
+  .on("zoom", (event) => {
+    g.attr("transform", event.transform);
+  });
+
+svg = d3.select("#tree")
+  .attr("width", width)
+  .attr("height", height)
+  .call(zoom);
 
   g = svg.append("g")
     .attr("transform", `translate(${width/2}, 80)`);
@@ -460,19 +465,6 @@ if(searchBox){
   });
 }
 
-function centerNode(d){
-  if(!svg || !g) return;
-
-  const scale=1;
-  const x=width/2 - d.y*scale;
-  const y=120 - d.x*scale;
-
-  svg.transition().duration(400)
-    .call(
-      d3.zoom().transform,
-      d3.zoomIdentity.translate(x,y).scale(scale)
-    );
-}
 
 function showProfileCard(p){
   window.currentPerson = p;
