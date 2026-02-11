@@ -600,21 +600,20 @@ function expandParents(node){
 
 function centerNode(source){
 
-  if(!source || source.x0 == null || source.y0 == null)
+  if(!source || source.x == null || source.y == null)
     return;
 
   const scale = 1;
-  const x = -source.y0;
-  const y = -source.x0;
 
-  d3.select("svg")
-    .transition()
+  const x = width/2 - source.y;
+  const y = height/2 - source.x;
+
+  svg.transition()
     .duration(400)
     .call(
       zoom.transform,
       d3.zoomIdentity
-        .translate(width/2, height/2)
-        .scale(scale)
         .translate(x, y)
+        .scale(scale)
     );
 }
