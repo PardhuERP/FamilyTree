@@ -547,3 +547,81 @@ if(document.getElementById("addBtn")){
   document.getElementById("addBtn")
     .addEventListener("click", addPerson);
 }
+
+document.getElementById("searchBox")
+.addEventListener("input", function(){
+
+  const text = this.value.toLowerCase();
+
+  if(!text) return;
+
+  const match = findPerson(root, text);
+
+  if(match){
+    expandParents(match);
+    update(match);
+    centerNode(match);
+  }
+
+});
+
+function findPerson(node, text){
+
+  if(node.data.name &&
+     node.data.name.toLowerCase().includes(text)){
+    return node;
+  }
+
+  let found = null;
+
+  if(node.children){
+    node.children.forEach(c=>{
+      if(!found){
+        found = findPerson(c, text);
+      }
+    });
+  }
+
+  if(node._children){
+    node._children.forEach(c=>{
+      if(!found){
+        found = findPerson(c, text);
+      }
+    });
+  }
+
+  return found;
+}
+
+function expandParents(node){
+
+  let parent = node.parent;
+
+  while(parent){
+    if(parent._children){
+      parent.children = parent._children;
+      parent._children = null;
+    }
+    parent = parent.parent;
+  }
+}
+
+function centerNode(source){
+
+  const scale = 1;
+  const x = -source.y0;
+  const y = -source.x0;
+
+  d3.select("svg")
+    .transition()
+    .duration(400)
+    .call(
+      zoom.transform,
+      d3.zoomIdentity
+        .translate(width/2, height/2)
+        .scale(scale)
+        .translate(x, y)
+    );
+}
+
+
