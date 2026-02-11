@@ -9,7 +9,6 @@ if(!FAMILY_ID){
 const width = window.innerWidth;
 const height = window.innerHeight - 120;
 let zoom;
-let svg;
 let v;
 
 /* ---------- TREE SETUP ---------- */
