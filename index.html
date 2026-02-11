@@ -213,6 +213,22 @@ if(btn && box){
 
   window.location.href = "photo.html";
   }
+
+  function openHDPhoto(){
+
+  if(!window.selectedNode){
+    alert("Tap a member first");
+    return;
+  }
+
+  // store selected person
+  localStorage.setItem(
+    "editPersonId",
+    window.selectedNode.personId
+  );
+
+  location.href = "hdphoto.html";
+  }
   
   function openDelete(){
 
