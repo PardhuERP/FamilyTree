@@ -64,20 +64,18 @@ document.getElementById("pphoto")
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    const MAX = 800;   // HD size (not thumbnail)
+    const MAX = 1920;   // TRUE HD LIMIT
+
     let w = img.width;
     let h = img.height;
 
-    if(w > h){
-      if(w > MAX){
-        h *= MAX / w;
-        w = MAX;
-      }
-    }else{
-      if(h > MAX){
-        w *= MAX / h;
-        h = MAX;
-      }
+    if(w > h && w > MAX){
+      h *= MAX / w;
+      w = MAX;
+    }
+    else if(h > MAX){
+      w *= MAX / h;
+      h = MAX;
     }
 
     canvas.width = w;
@@ -86,10 +84,10 @@ document.getElementById("pphoto")
     ctx.drawImage(img,0,0,w,h);
 
     const compressed =
-      canvas.toDataURL("image/jpeg",0.85);
+      canvas.toDataURL("image/jpeg",0.95);
 
-    document.getElementById("previewPhoto").src = compressed;
-    document.getElementById("previewPhoto").style.display = "block";
+    previewPhoto.src = compressed;
+    previewPhoto.style.display = "block";
 
     window.photoBase64 = compressed;
   };
