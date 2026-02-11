@@ -472,7 +472,7 @@ function centerNode(d){
 }
 
 function showProfileCard(p){
-
+  window.currentPerson = p;
   document.getElementById("pName").innerText = p.name || "-";
 
   let dobText = "-";
@@ -517,6 +517,25 @@ function showProfileCard(p){
     map[p.motherId]?.name || "-";
 
   document.getElementById("profileCard").style.display = "block";
+}
+
+function openHDPhoto(){
+
+  if(!window.currentPerson) return;
+
+  const hdUrl = window.currentPerson.hdphotourl;
+
+  if(!hdUrl){
+    alert("HD photo not available");
+    return;
+  }
+
+  document.getElementById("hdPhotoView").src = hdUrl;
+  document.getElementById("hdPhotoOverlay").style.display = "flex";
+}
+
+function closeHDPhoto(){
+  document.getElementById("hdPhotoOverlay").style.display = "none";
 }
 
 function closeProfile(){
