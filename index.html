@@ -61,34 +61,6 @@
     <button id="collapseBtn" class="circleBtn">−</button>
     <button id="expandBtn" class="circleBtn">+</button>
   </div>
-
-</div>
-
-<svg id="tree"></svg>
-
-<!-- MEMBER PROFILE POPUP -->
-<div id="profileCard" class="profileCard">
-
-  <!-- CLOSE BUTTON -->
-  <div class="profileClose" onclick="closeProfile()">✕</div>
-
-  <div class="profileHeader">
-  <img id="pPhoto"
-       onclick="openHDPhoto()"
-       src="https://via.placeholder.com/80">
-  <div>
-      <div id="pName" class="pName">Name</div>
-      <div id="pDob" class="pSub">DOB</div>
-    </div>
-  </div>
-
-  <div class="profileBody">
-    <div><b>Father:</b> <span id="pFather">-</span></div>
-    <div><b>Mother:</b> <span id="pMother">-</span></div>
-    <div><b>Place:</b> <span id="pPlace">-</span></div>
-    <div><b>Blood Group:</b> <span id="pBlood">-</span></div>
-    <div><b>Qualification:</b> <span id="pEdu">-</span></div>
-  </div>
   <!-- HD PHOTO VIEW -->
 <div id="hdPhotoOverlay"
      style="display:none;
@@ -108,6 +80,34 @@
               max-height:95%;
               border-radius:10px;">
 </div>
+
+</div>
+
+<svg id="tree"></svg>
+
+<!-- MEMBER PROFILE POPUP -->
+<div id="profileCard" class="profileCard">
+
+  <!-- CLOSE BUTTON -->
+  <div class="profileClose" onclick="closeProfile()">✕</div>
+
+  <div class="profileHeader">
+  <img id="pPhoto"
+       onclick="openHDPhotoUpload()"
+       src="https://via.placeholder.com/80">
+  <div>
+      <div id="pName" class="pName">Name</div>
+      <div id="pDob" class="pSub">DOB</div>
+    </div>
+  </div>
+
+  <div class="profileBody">
+    <div><b>Father:</b> <span id="pFather">-</span></div>
+    <div><b>Mother:</b> <span id="pMother">-</span></div>
+    <div><b>Place:</b> <span id="pPlace">-</span></div>
+    <div><b>Blood Group:</b> <span id="pBlood">-</span></div>
+    <div><b>Qualification:</b> <span id="pEdu">-</span></div>
+  </div>
 
 </div>
   <script>
@@ -235,7 +235,7 @@ if(btn && box){
   window.location.href = "photo.html";
   }
 
-  function openHDPhoto(){
+  function openHDPhotoUpload(){
 
   if(!window.selectedNode){
     alert("Tap a member first");
