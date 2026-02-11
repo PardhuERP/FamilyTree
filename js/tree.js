@@ -8,22 +8,13 @@ if(!FAMILY_ID){
 
 const width = window.innerWidth;
 const height = window.innerHeight - 120;
-// ✅ GLOBAL VARIABLES
-let svg;
-let g;
-let zoom;
-let treeLayout;
-let root;
-let i = 0;
-
-let map = {};
 
 /* ---------- TREE SETUP ---------- */
 
 // GLOBAL selected node
 window.selectedNode = null;
 
-let svg, g, treeLayout, root, i = 0;
+let svg, g, zoom, treeLayout, root, i = 0;
 let map = {};
 const searchBox = document.getElementById("searchBox");
 
