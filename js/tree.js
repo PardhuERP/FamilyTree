@@ -8,6 +8,7 @@ if(!FAMILY_ID){
 
 const width = window.innerWidth;
 const height = window.innerHeight - 120;
+let zoom;
 
 /* ---------- TREE SETUP ---------- */
 
@@ -608,6 +609,9 @@ function expandParents(node){
 
 function centerNode(source){
 
+  if(!source || source.x0 == null || source.y0 == null)
+    return;
+
   const scale = 1;
   const x = -source.y0;
   const y = -source.x0;
@@ -623,5 +627,3 @@ function centerNode(source){
         .translate(x, y)
     );
 }
-
-
