@@ -183,7 +183,7 @@ function update(source){
 
   const nodeEnter = node.enter().append("g")
     .attr("class","node")
-    .attr("transform", `translate(${source.y0},${source.x0})`)
+    .attr("transform", `translate(${source.y0 || 0},${source.x0 || 0})`)
     .style("cursor","pointer")
     .on("click", toggle);
 
