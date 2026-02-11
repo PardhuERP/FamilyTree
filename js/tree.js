@@ -8,8 +8,15 @@ if(!FAMILY_ID){
 
 const width = window.innerWidth;
 const height = window.innerHeight - 120;
+// ✅ GLOBAL VARIABLES
+let svg;
+let g;
 let zoom;
-let v;
+let treeLayout;
+let root;
+let i = 0;
+
+let map = {};
 
 /* ---------- TREE SETUP ---------- */
 
