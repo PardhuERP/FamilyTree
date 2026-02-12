@@ -16,7 +16,6 @@ window.selectedNode = null;
 
 let svg, g, zoom, treeLayout, root, i = 0;
 let map = {};
-let isLoadingTree = false;
 const searchBox = document.getElementById("searchBox");
 
 if(document.getElementById("tree")){
@@ -40,58 +39,17 @@ svg = d3.select("#tree")
 
   const USER_ID = localStorage.getItem("userId");
 
-function loadTree(retry = 0){
-
-  if(isLoadingTree) return;
-  isLoadingTree = true;
-
-  fetch(API_URL +
-    "?action=getTree&familyId=" +
-    FAMILY_ID +
-    "&userId=" +
-    USER_ID)
-
-  .then(r => r.json())
-  .then(res => {
-
-    isLoadingTree = false;
-
-    if(res.status === "OK"){
-      buildTree(res.data);
-    }else{
-      throw "API error";
-    }
-  })
-  .catch(()=>{
-
-    isLoadingTree = false;
-
-    if(retry < 2){
-      setTimeout(()=>loadTree(retry+1),1000);
-    }else{
-      alert("Server busy. Please refresh once.");
-    }
-  });
-} 
-  }else{
-    throw "API error";
-  }
-})
-.catch(()=>{
-  if(retry < 2){
-    setTimeout(()=>loadTree(retry+1),1000);
-  }else{
-    alert("Server busy. Refresh once.");
-  }
-});
-
+  fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
+    .then(r => r.json())
+    .then(res => {
+      if(res.status === "OK"){
+        buildTree(res.data);
+      }
+    });
 }
-
-setTimeout(loadTree, 500); 
 
 /* ---------- BUILD TREE ---------- */
 function buildTree(rows){
-  document.getElementById("loadingTree").style.display="none";
 
   if(!rows || rows.length === 0){
     alert("No members found. Add founder.");
