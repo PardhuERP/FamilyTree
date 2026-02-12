@@ -44,12 +44,6 @@ svg = d3.select("#tree")
   location.href = "login.html";
   return;
 }
-  if(!FAMILY_ID || !USER_ID){
-  alert("Session expired. Please login again.");
-  location.href = "login.html";
-  return;
-  }
-
 fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
     .then(r => r.json())
     .then(res => {
