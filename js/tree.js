@@ -138,10 +138,7 @@ rows.forEach(p => {
 });
 
   // safer founder detection
-  const founder = rows.reduce((min, p) => {
-  if(!min) return p;
-  return Number(p.generation) < Number(min.generation) ? p : min;
-}, null);
+  const founder = rows.find(r => !r.fatherId && !r.motherId);
 
   root = d3.hierarchy(map[founder.personId]);
 
