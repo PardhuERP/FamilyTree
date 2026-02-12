@@ -39,14 +39,28 @@ svg = d3.select("#tree")
 
   const USER_ID = localStorage.getItem("userId");
 
-  fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
-    .then(r => r.json())
-    .then(res => {
-      if(res.status === "OK"){
-        buildTree(res.data);
-      }
-    });
+ function loadTree(retry = 0){
+
+fetch(API_URL + "?action=getTree&familyId=" + FAMILY_ID + "&userId=" + USER_ID)
+.then(r => r.json())
+.then(res => {
+  if(res.status === "OK"){
+    buildTree(res.data);
+  }else{
+    throw "API error";
+  }
+})
+.catch(()=>{
+  if(retry < 2){
+    setTimeout(()=>loadTree(retry+1),1000);
+  }else{
+    alert("Server busy. Refresh once.");
+  }
+});
+
 }
+
+loadTree(); 
 
 /* ---------- BUILD TREE ---------- */
 function buildTree(rows){
