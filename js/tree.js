@@ -504,7 +504,7 @@ function showProfileCard(p){
   document.getElementById("pPhoto").src =
     (p.photoUrl && p.photoUrl !== "")
       ? p.photoUrl
-      : ""images/default-user.png"";
+      : "https://via.placeholder.com/80";
 
   document.getElementById("pFather").innerText =
     map[p.fatherId]?.name || "-";
