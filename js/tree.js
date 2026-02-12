@@ -87,7 +87,7 @@ function loadTree(retry = 0){
 
 }
 
-loadTree(); 
+setTimeout(loadTree, 300); 
 
 /* ---------- BUILD TREE ---------- */
 function buildTree(rows){
