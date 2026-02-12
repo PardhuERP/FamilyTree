@@ -42,7 +42,6 @@ svg = d3.select("#tree")
   if(!FAMILY_ID || !USER_ID){
   alert("Session expired. Please login again.");
   location.href = "login.html";
-  return;
 }
 setTimeout(()=>{
 
