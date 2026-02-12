@@ -2,9 +2,8 @@
 const FAMILY_ID = localStorage.getItem("familyId");
 
 if(!FAMILY_ID){
-  setTimeout(()=>{
-    location.reload();
-  },500);
+  alert("No family selected");
+  location.href = "family-select.html";
 }
 
 const width = window.innerWidth;
@@ -40,31 +39,15 @@ svg = d3.select("#tree")
 
   const USER_ID = localStorage.getItem("userId");
 
-fetch(API_URL,{
-  method:"POST",
-  headers:{
-    "Content-Type":"application/json"
-  },
-  body: JSON.stringify({
-    action:"getTree",
-    familyId: FAMILY_ID,
-    userId: USER_ID
-  })
-})
-.then(r => r.json())
-.then(res => {
+  fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
+    .then(r => r.json())
+    .then(res => {
+      if(res.status === "OK"){
+        buildTree(res.data);
+      }
+    });
+}
 
-  if(res.status === "OK"){
-    buildTree(res.data);
-  }else{
-    alert("Failed to load family tree");
-  }
-
-})
-.catch(err=>{
-  console.log(err);
-  alert("Network error");
-});
 /* ---------- BUILD TREE ---------- */
 function buildTree(rows){
 
