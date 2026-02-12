@@ -91,6 +91,7 @@ setTimeout(loadTree, 300);
 
 /* ---------- BUILD TREE ---------- */
 function buildTree(rows){
+  document.getElementById("loadingTree").style.display="none";
 
   if(!rows || rows.length === 0){
     alert("No members found. Add founder.");
