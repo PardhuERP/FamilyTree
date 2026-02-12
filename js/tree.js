@@ -16,6 +16,7 @@ window.selectedNode = null;
 
 let svg, g, zoom, treeLayout, root, i = 0;
 let map = {};
+let isLoadingTree = false;
 const searchBox = document.getElementById("searchBox");
 
 if(document.getElementById("tree")){
@@ -39,16 +40,39 @@ svg = d3.select("#tree")
 
   const USER_ID = localStorage.getItem("userId");
 
- function loadTree(retry = 0){
+function loadTree(retry = 0){
 
-fetch(API_URL + "?action=getTree&familyId=" + FAMILY_ID + "&userId=" + USER_ID)
-.then(r => r.json())
-.then(res => {
-  if(res.status === "OK" && res.data && res.data.length){
-  buildTree(res.data);
-}else{
-  throw "Empty data";
-}
+  if(isLoadingTree) return;
+  isLoadingTree = true;
+
+  fetch(API_URL +
+    "?action=getTree&familyId=" +
+    FAMILY_ID +
+    "&userId=" +
+    USER_ID)
+
+  .then(r => r.json())
+  .then(res => {
+
+    isLoadingTree = false;
+
+    if(res.status === "OK"){
+      buildTree(res.data);
+    }else{
+      throw "API error";
+    }
+  })
+  .catch(()=>{
+
+    isLoadingTree = false;
+
+    if(retry < 2){
+      setTimeout(()=>loadTree(retry+1),1000);
+    }else{
+      alert("Server busy. Please refresh once.");
+    }
+  });
+} 
   }else{
     throw "API error";
   }
