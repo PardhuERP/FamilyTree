@@ -44,8 +44,11 @@ svg = d3.select("#tree")
 fetch(API_URL + "?action=getTree&familyId=" + FAMILY_ID + "&userId=" + USER_ID)
 .then(r => r.json())
 .then(res => {
-  if(res.status === "OK"){
-    buildTree(res.data);
+  if(res.status === "OK" && res.data && res.data.length){
+  buildTree(res.data);
+}else{
+  throw "Empty data";
+}
   }else{
     throw "API error";
   }
