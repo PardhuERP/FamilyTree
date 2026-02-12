@@ -44,14 +44,17 @@ svg = d3.select("#tree")
   location.href = "login.html";
   return;
 }
-fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
+setTimeout(()=>{
+
+  fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
     .then(r => r.json())
     .then(res => {
       if(res.status === "OK"){
         buildTree(res.data);
       }
     });
-}
+
+}, 500);
 
 /* ---------- BUILD TREE ---------- */
 function buildTree(rows){
