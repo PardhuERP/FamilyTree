@@ -39,12 +39,6 @@ svg = d3.select("#tree")
 
   const USER_ID = localStorage.getItem("userId");
 
-  if(!FAMILY_ID || !USER_ID){
-  alert("Session expired. Please login again.");
-  location.href = "login.html";
-}
-setTimeout(()=>{
-
   fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
     .then(r => r.json())
     .then(res => {
@@ -52,8 +46,7 @@ setTimeout(()=>{
         buildTree(res.data);
       }
     });
-
-}, 500);
+}
 
 /* ---------- BUILD TREE ---------- */
 function buildTree(rows){
