@@ -2,8 +2,9 @@
 const FAMILY_ID = localStorage.getItem("familyId");
 
 if(!FAMILY_ID){
-  alert("No family selected");
-  location.href = "family-select.html";
+  setTimeout(()=>{
+    location.reload();
+  },500);
 }
 
 const width = window.innerWidth;
