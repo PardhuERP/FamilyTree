@@ -27,6 +27,7 @@ zoom = d3.zoom()
   .on("zoom", (event) => {
     g.attr("transform", event.transform);
   });
+}
 
 svg = d3.select("#tree")
   .attr("width", width)
