@@ -1,9 +1,10 @@
 // API_URL comes from index.html
 const FAMILY_ID = localStorage.getItem("familyId");
 
-if(!FAMILY_ID){
-  alert("No family selected");
-  location.href = "family-select.html";
+if(!FAMILY_ID || FAMILY_ID === "null"){
+  setTimeout(()=>{
+    location.href = "family-select.html";
+  },500);
 }
 
 const width = window.innerWidth;
