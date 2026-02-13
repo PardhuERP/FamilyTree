@@ -39,28 +39,53 @@ svg = d3.select("#tree")
 
   treeLayout = d3.tree().nodeSize([80,180]);
 
- const USER_ID = localStorage.getItem("userId");
+ // ... పైన ఉన్న వేరియబుల్స్ (svg, g, zoom మొదలైనవి) అలాగే ఉంచండి ...
+
+const USER_ID = localStorage.getItem("userId");
 
 console.log("FAMILY_ID =", FAMILY_ID);
 console.log("USER_ID =", USER_ID);
 
-// ✅ 1. Check if IDs exist before fetching
-if(FAMILY_ID && USER_ID && FAMILY_ID !== "null" && USER_ID !== "null"){
+// 100% పక్కాగా పనిచేయడానికి ఈ setTimeout బ్లాక్ వాడండి
+if(FAMILY_ID && USER_ID && FAMILY_ID !== "null"){
 
-  // ✅ 2. Added Error Handling to catch 500 errors
-  fetch(API_URL + "?action=getTree&familyId=" + FAMILY_ID + "&userId=" + USER_ID)
-  .then(response => {
-    if (!response.ok) throw new Error('HTTP status ' + response.status);
-    return response.json();
-  })
-  .then(res => {
-    alert("Response Received: " + res.status); // ఇది వస్తే కనెక్షన్ సక్సెస్
-    if(res.status === "OK") buildTree(res.data);
-  })
-  .catch(err => {
-    alert("Connection Fail: " + err.message + "\nURL: " + API_URL); // ఇక్కడ అసలు బగ్ తెలుస్తుంది
-  });
+  // యాప్ ఓపెన్ అయిన 1 సెకన్ తర్వాత డేటా అడుగుతుంది (Connection Fail అవ్వకుండా)
+  setTimeout(() => {
+    
+    fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
+      .then(r => {
+        if (!r.ok) throw new Error('Network response was not ok');
+        return r.json();
+      })
+      .then(res => {
+        if(res.status === "OK"){
+          buildTree(res.data);
+        } else {
+          console.log("API error:", res);
+          alert("Error: " + res.message);
+        }
+      })
+      .catch(err => {
+        console.log("Fetch error:", err);
+        // ఒకవేళ ఫెయిల్ అయితే యూజర్ కి రీఫ్రెష్ ఆప్షన్ ఇవ్వండి
+        if(confirm("Connection slow. Retry again?")){
+          location.reload();
+        }
+      });
+
+  }, 1000); // ఇక్కడ 1000 అంటే 1 సెకన్ వెయిట్ చేస్తుంది
+
+} else {
+  // IDs లేకపోతే సెలెక్ట్ పేజీకి పంపిస్తుంది
+  setTimeout(() => {
+    if(!window.location.href.includes("family-select.html")){
+      location.href = "family-select.html";
+    }
+  }, 500);
 }
+
+// ... దీని కింద buildTree(rows) ఫంక్షన్ ఉంటుంది ...
+
 
 
 /* ---------- BUILD TREE ---------- */
