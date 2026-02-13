@@ -48,41 +48,19 @@ console.log("USER_ID =", USER_ID);
 if(FAMILY_ID && USER_ID && FAMILY_ID !== "null" && USER_ID !== "null"){
 
   // ✅ 2. Added Error Handling to catch 500 errors
-  fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
-    .then(r => {
-      if (!r.ok) {
-        // If server returns 500, this will catch it
-        throw new Error("Server returned 500 Error. Please check GAS Deployments.");
-      }
-      return r.json();
-    })
-    .then(res => {
-      if(res.status === "OK"){
-        if(res.data && res.data.length > 0){
-          buildTree(res.data);
-        } else {
-          alert("No family members found. Please add members.");
-        }
-      } else {
-        console.log("API error:", res);
-        alert("Access Denied or Family Not Found: " + res.message);
-      }
-    })
-    .catch(err => {
-      console.log("Fetch error:", err);
-      // ✅ 3. Show exact error in App
-      alert("App Connection Error: " + err.message);
-    });
+  fetch(API_URL + "?action=getTree&familyId=" + FAMILY_ID + "&userId=" + USER_ID)
+  .then(response => {
+    if (!response.ok) throw new Error('HTTP status ' + response.status);
+    return response.json();
+  })
+  .then(res => {
+    alert("Response Received: " + res.status); // ఇది వస్తే కనెక్షన్ సక్సెస్
+    if(res.status === "OK") buildTree(res.data);
+  })
+  .catch(err => {
+    alert("Connection Fail: " + err.message + "\nURL: " + API_URL); // ఇక్కడ అసలు బగ్ తెలుస్తుంది
+  });
 
-} else {
-  // ✅ 4. Redirect if IDs are missing in App
-  console.log("Required IDs missing in localStorage");
-  setTimeout(() => {
-    if(!window.location.href.includes("family-select.html")){
-       window.location.href = "family-select.html";
-    }
-  }, 1000);
-}
 
 
 /* ---------- BUILD TREE ---------- */
