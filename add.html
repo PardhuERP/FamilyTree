@@ -106,11 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
       info.innerText = "Child of Mother: " + pname;
 
       // wait until mothers loaded
-      loadMothers();
-
-      setTimeout(()=>{
-        pmother.value = pid;
-      },300);
+      loadMothers(pid);
     }
   }
 
