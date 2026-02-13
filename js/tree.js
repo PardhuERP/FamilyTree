@@ -40,49 +40,69 @@ svg = d3.select("#tree")
   treeLayout = d3.tree().nodeSize([80,180]);
 
  // ... పైన ఉన్న వేరియబుల్స్ (svg, g, zoom మొదలైనవి) అలాగే ఉంచండి ...
+// ... పైన ఉన్న SVG మరియు Zoom సెట్టింగ్స్ అలాగే ఉంచండి ...
 
 const USER_ID = localStorage.getItem("userId");
 
 console.log("FAMILY_ID =", FAMILY_ID);
 console.log("USER_ID =", USER_ID);
 
-// 100% పక్కాగా పనిచేయడానికి ఈ setTimeout బ్లాక్ వాడండి
-if(FAMILY_ID && USER_ID && FAMILY_ID !== "null"){
-
-  // యాప్ ఓపెన్ అయిన 1 సెకన్ తర్వాత డేటా అడుగుతుంది (Connection Fail అవ్వకుండా)
-  setTimeout(() => {
+// ✅ ఇక్కడ నుండి మార్పు చేయండి
+if (FAMILY_ID && USER_ID && FAMILY_ID !== "null") {
     
-    fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
-      .then(r => {
-        if (!r.ok) throw new Error('Network response was not ok');
-        return r.json();
-      })
-      .then(res => {
-        if(res.status === "OK"){
-          buildTree(res.data);
-        } else {
-          console.log("API error:", res);
-          alert("Error: " + res.message);
-        }
-      })
-      .catch(err => {
-        console.log("Fetch error:", err);
-        // ఒకవేళ ఫెయిల్ అయితే యూజర్ కి రీఫ్రెష్ ఆప్షన్ ఇవ్వండి
-        if(confirm("Connection slow. Retry again?")){
-          location.reload();
-        }
-      });
+    // 1. ముందే లోడింగ్ మెసేజ్ చూపించండి (500 Error రాకుండా ఉండటానికి)
+    if(document.getElementById("tree")){
+       d3.select("#tree").append("text")
+         .attr("id", "loading-text")
+         .attr("x", width / 2)
+         .attr("y", height / 2)
+         .attr("text-anchor", "middle")
+         .text("Loading Family Tree... Please wait.");
+    }
 
-  }, 1000); // ఇక్కడ 1000 అంటే 1 సెకన్ వెయిట్ చేస్తుంది
+    // 2. 1.5 సెకన్ల విరామం తర్వాత డేటా అడగండి
+    setTimeout(() => {
+        fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
+            .then(r => {
+                if (!r.ok) throw new Error('Network response was not ok');
+                return r.json();
+            })
+            .then(res => {
+                // లోడింగ్ మెసేజ్ తీసేయండి
+                d3.select("#loading-text").remove();
+
+                if (res.status === "OK") {
+                    buildTree(res.data);
+                } else {
+                    alert("Server Error: " + res.message);
+                }
+            })
+            .catch(err => {
+                d3.select("#loading-text").remove();
+                console.log("Fetch error:", err);
+                
+                // ఒకవేళ ఫెయిల్ అయితే రీట్రై ఆప్షన్
+                if (confirm("Connection slow. Would you like to try again?")) {
+                    location.reload();
+                }
+            });
+    }, 1500); // 1.5 Seconds timeout
 
 } else {
-  // IDs లేకపోతే సెలెక్ట్ పేజీకి పంపిస్తుంది
-  setTimeout(() => {
-    if(!window.location.href.includes("family-select.html")){
-      location.href = "family-select.html";
-    }
-  }, 500);
+    // ఒకవేళ IDs లేకపోతే సెలెక్ట్ పేజీకి రిడైరెక్ట్
+    setTimeout(() => {
+        if (!window.location.href.includes("family-select.html")) {
+            window.location.href = "family-select.html";
+        }
+    }, 500);
 }
+
+// --- ఇక్కడ నుండి మీ పాత buildTree(rows) ఫంక్షన్ మొదలవుతుంది ---
+function buildTree(rows) {
+   // ... మీ పాత కోడ్ ...
+}
+
+
 
 // ... దీని కింద buildTree(rows) ఫంక్షన్ ఉంటుంది ...
 
