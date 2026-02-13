@@ -86,7 +86,7 @@ if (FAMILY_ID && USER_ID && FAMILY_ID !== "null") {
                     location.reload();
                 }
             });
-    }, 1500); // 1.5 Seconds timeout
+    }, 2500); // 1.5 Seconds timeout
 
 } else {
     // ఒకవేళ IDs లేకపోతే సెలెక్ట్ పేజీకి రిడైరెక్ట్
