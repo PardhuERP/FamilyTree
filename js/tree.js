@@ -294,10 +294,17 @@ function toggle(event,d){
 
   event.stopPropagation();
 
+  // store only real person, not marriage node
+if(!d.data.isMarriageNode){
+
   window.selectedNode = {
     personId: d.data.personId,
     name: d.data.name
   };
+
+  localStorage.setItem("selectedParent", d.data.personId);
+  localStorage.setItem("selectedParentName", d.data.name);
+}
   showProfileCard(d.data);
 
   // ---------- STORE PARENT INFO ----------
