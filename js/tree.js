@@ -42,7 +42,9 @@ svg = d3.select("#tree")
   console.log("FAMILY_ID =", FAMILY_ID);
   console.log("USER_ID =", USER_ID);
 
+  if(FAMILY_ID && USER_ID){
   fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
+}
     .then(r => r.json())
     .then(res => {
       if(res.status === "OK"){
