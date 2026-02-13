@@ -60,8 +60,6 @@ if(FAMILY_ID && USER_ID){
       console.log("Fetch error:", err);
     });
 
-}
-
 /* ---------- BUILD TREE ---------- */
 function buildTree(rows){
 
