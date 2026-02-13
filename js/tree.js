@@ -562,6 +562,7 @@ if(sb){
   }
 
 });
+}
 
 function findPerson(node, text){
 
