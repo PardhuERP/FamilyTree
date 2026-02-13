@@ -38,6 +38,8 @@ svg = d3.select("#tree")
   treeLayout = d3.tree().nodeSize([80,180]);
 
   const USER_ID = localStorage.getItem("userId");
+  console.log("FAMILY_ID =", FAMILY_ID);
+  console.log("USER_ID =", USER_ID);
 
   fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
     .then(r => r.json())
