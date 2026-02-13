@@ -378,6 +378,8 @@ function getPersonGen(personId){
 /* ---------- ADD PERSON ---------- */
 async function addPerson(){
 
+  const btn = document.getElementById("addBtn");
+  if(btn) btn.disabled = true;
   const name = document.getElementById("pname")?.value;
   const gender = document.getElementById("pgender")?.value;
   const dob = document.getElementById("pdob")?.value;
@@ -392,6 +394,7 @@ async function addPerson(){
   document.getElementById("previewPhoto")?.src || "";
   if(!name){
     alert("Enter name");
+    if(btn) btn.disabled = false;
     return;
   }
 
@@ -431,6 +434,7 @@ fetch(API_URL, {
 })
 .catch(()=>{
   alert("Network error");
+  if(btn) btn.disabled = false;
 });
 }
 
