@@ -44,24 +44,46 @@ svg = d3.select("#tree")
 console.log("FAMILY_ID =", FAMILY_ID);
 console.log("USER_ID =", USER_ID);
 
-if(FAMILY_ID && USER_ID){
+// ✅ 1. Check if IDs exist before fetching
+if(FAMILY_ID && USER_ID && FAMILY_ID !== "null" && USER_ID !== "null"){
 
+  // ✅ 2. Added Error Handling to catch 500 errors
   fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
-    .then(r => r.json())
-    .then(res => {
-
-      if(res.status === "OK"){
-        buildTree(res.data);
-      }else{
-        console.log("API error:", res);
+    .then(r => {
+      if (!r.ok) {
+        // If server returns 500, this will catch it
+        throw new Error("Server returned 500 Error. Please check GAS Deployments.");
       }
-
+      return r.json();
     })
-    .catch(err=>{
+    .then(res => {
+      if(res.status === "OK"){
+        if(res.data && res.data.length > 0){
+          buildTree(res.data);
+        } else {
+          alert("No family members found. Please add members.");
+        }
+      } else {
+        console.log("API error:", res);
+        alert("Access Denied or Family Not Found: " + res.message);
+      }
+    })
+    .catch(err => {
       console.log("Fetch error:", err);
+      // ✅ 3. Show exact error in App
+      alert("App Connection Error: " + err.message);
     });
 
-} 
+} else {
+  // ✅ 4. Redirect if IDs are missing in App
+  console.log("Required IDs missing in localStorage");
+  setTimeout(() => {
+    if(!window.location.href.includes("family-select.html")){
+       window.location.href = "family-select.html";
+    }
+  }, 1000);
+}
+
 
 /* ---------- BUILD TREE ---------- */
 function buildTree(rows){
