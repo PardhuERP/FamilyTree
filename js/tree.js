@@ -544,8 +544,10 @@ if(document.getElementById("addBtn")){
     .addEventListener("click", addPerson);
 }
 
-document.getElementById("searchBox")
-.addEventListener("input", function(){
+const sb = document.getElementById("searchBox");
+
+if(sb){
+  sb.addEventListener("input", function(){
 
   const text = this.value.toLowerCase();
 
