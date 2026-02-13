@@ -59,6 +59,7 @@ if(FAMILY_ID && USER_ID){
     .catch(err=>{
       console.log("Fetch error:", err);
     });
+}
 
 }
 
