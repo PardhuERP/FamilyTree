@@ -142,8 +142,13 @@ if(shareToken){
 
         localStorage.setItem("familyId", res.familyId);
 
-        document.getElementById("familyTitle").innerText =
-          "🌳 " + res.familyName;
+       const title = document.getElementById("familyTitle");
+
+if(title){
+  title.innerText = "🌳 " + res.familyName;
+  title.style.color = "#2563eb";
+  title.style.fontWeight = "700";
+} 
 
         // hide edit buttons
         document.getElementById("addPageBtn").style.display = "none";
