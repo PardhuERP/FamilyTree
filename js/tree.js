@@ -60,7 +60,7 @@ if(FAMILY_ID && USER_ID && FAMILY_ID !== "null" && USER_ID !== "null"){
   .catch(err => {
     alert("Connection Fail: " + err.message + "\nURL: " + API_URL); // ఇక్కడ అసలు బగ్ తెలుస్తుంది
   });
-
+}
 
 
 /* ---------- BUILD TREE ---------- */
