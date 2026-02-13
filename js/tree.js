@@ -38,7 +38,7 @@ svg = d3.select("#tree")
 
   treeLayout = d3.tree().nodeSize([80,180]);
 
-  const USER_ID = localStorage.getItem("userId");
+ const USER_ID = localStorage.getItem("userId");
 
 console.log("FAMILY_ID =", FAMILY_ID);
 console.log("USER_ID =", USER_ID);
@@ -59,9 +59,8 @@ if(FAMILY_ID && USER_ID){
     .catch(err=>{
       console.log("Fetch error:", err);
     });
-}
 
-}
+} 
 
 /* ---------- BUILD TREE ---------- */
 function buildTree(rows){
