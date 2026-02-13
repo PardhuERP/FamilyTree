@@ -1,9 +1,10 @@
 // API_URL comes from index.html
 const FAMILY_ID = localStorage.getItem("familyId");
 
-if(!FAMILY_ID){
-  alert("No family selected");
-  location.href = "family-select.html";
+if(!FAMILY_ID || FAMILY_ID === "null"){
+  setTimeout(()=>{
+    location.href = "family-select.html";
+  },500);
 }
 
 const width = window.innerWidth;
@@ -39,13 +40,26 @@ svg = d3.select("#tree")
 
   const USER_ID = localStorage.getItem("userId");
 
+console.log("FAMILY_ID =", FAMILY_ID);
+console.log("USER_ID =", USER_ID);
+
+if(FAMILY_ID && USER_ID){
+
   fetch(`${API_URL}?action=getTree&familyId=${FAMILY_ID}&userId=${USER_ID}`)
     .then(r => r.json())
     .then(res => {
+
       if(res.status === "OK"){
         buildTree(res.data);
+      }else{
+        console.log("API error:", res);
       }
+
+    })
+    .catch(err=>{
+      console.log("Fetch error:", err);
     });
+
 }
 
 /* ---------- BUILD TREE ---------- */
