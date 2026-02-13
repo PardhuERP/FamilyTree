@@ -29,10 +29,10 @@ body{
 }
 
 /* title */
-.rowTop .appTitle{
+..rowTop .appTitle{
   font-weight:700;
   font-size:18px;
-  color:#1f2933;
+  color:#2563eb;
 }
 
 /* search */
