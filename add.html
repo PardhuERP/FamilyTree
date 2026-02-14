@@ -103,15 +103,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
     else if(gender === "Female"){
 
-      info.innerText = "Child of Mother: " + pname;
+  info.innerText = "Child of Mother: " + pname;
 
-      // wait until mothers loaded
-      loadMothers();
+  fetch(API_URL +
+    "?action=getTree" +
+    "&familyId=" + localStorage.getItem("familyId") +
+    "&userId=" + localStorage.getItem("userId"))
+  .then(r=>r.json())
+  .then(res=>{
 
-      setTimeout(()=>{
-        pmother.value = pid;
-      },300);
+    if(res.status !== "OK") return;
+
+    const persons = res.data;
+
+    const mother = persons.find(p => p.personId === pid);
+
+    // ✅ get husband first
+    if(mother && mother.spouseId){
+
+      const fatherId =
+        mother.spouseId.split(",")[0];
+
+      // set father id first
+      pfather.value = fatherId;
+
+      // now load mothers list
+      loadMothers(pid);
     }
+  });
+}
   }
 
   if(pfather){
