@@ -101,9 +101,12 @@ document.addEventListener("DOMContentLoaded", function () {
       loadMothers();
     }
 
-    else if(gender === "Female"){
+else if(gender === "Female"){
 
   info.innerText = "Child of Mother: " + pname;
+
+  // ✅ SET MOTHER ID FIRST
+  pmother.value = pid;
 
   fetch(API_URL +
     "?action=getTree" +
@@ -118,16 +121,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const mother = persons.find(p => p.personId === pid);
 
-    // ✅ get husband first
     if(mother && mother.spouseId){
 
       const fatherId =
         mother.spouseId.split(",")[0];
 
-      // set father id first
       pfather.value = fatherId;
 
-      // now load mothers list
+      // load wives list and keep selected mother
       loadMothers(pid);
     }
   });
