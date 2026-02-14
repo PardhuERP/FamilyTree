@@ -101,20 +101,36 @@ document.addEventListener("DOMContentLoaded", function () {
       loadMothers();
     }
 
-    else if(gender === "Female"){
+else if(gender === "Female"){
 
-      info.innerText = "Child of Mother: " + pname;
+  info.innerText = "Child of Mother: " + pname;
 
-      // wait until mothers loaded
-      loadMothers(pid);
+  // set mother first
+  pmother.value = pid;
+
+  // load husband as father
+  fetch(API_URL +
+    "?action=getTree" +
+    "&familyId=" + localStorage.getItem("familyId") +
+    "&userId=" + localStorage.getItem("userId"))
+  .then(r=>r.json())
+  .then(res=>{
+
+    if(res.status !== "OK") return;
+
+    const persons = res.data;
+
+    const mother = persons.find(p => p.personId === pid);
+
+    if(mother && mother.spouseId){
+      const fatherId = mother.spouseId.split(",")[0];
+
+      pfather.value = fatherId;
+
+      loadMothers(pid); // now works
     }
-  }
-
-  if(pfather){
-    pfather.addEventListener("change", loadMothers);
-  }
-
-});
+  });
+}
 </script>
 
   
