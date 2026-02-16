@@ -101,13 +101,38 @@ document.addEventListener("DOMContentLoaded", function () {
       loadMothers();
     }
 
-    else if(gender === "Female"){
+else if(gender === "Female"){
 
-      info.innerText = "Child of Mother: " + pname;
+  info.innerText = "Child of Mother: " + pname;
 
-      // wait until mothers loaded
+  // ✅ SET MOTHER ID FIRST
+  pmother.value = pid;
+
+  fetch(API_URL +
+    "?action=getTree" +
+    "&familyId=" + localStorage.getItem("familyId") +
+    "&userId=" + localStorage.getItem("userId"))
+  .then(r=>r.json())
+  .then(res=>{
+
+    if(res.status !== "OK") return;
+
+    const persons = res.data;
+
+    const mother = persons.find(p => p.personId === pid);
+
+    if(mother && mother.spouseId){
+
+      const fatherId =
+        mother.spouseId.split(",")[0];
+
+      pfather.value = fatherId;
+
+      // load wives list and keep selected mother
       loadMothers(pid);
     }
+  });
+}
   }
 
   if(pfather){
@@ -174,7 +199,7 @@ document.getElementById("pphoto")
 document.getElementById("pfather")
 .addEventListener("change", loadMothers);
 
-function loadMothers(selectedMotherId){
+function loadMothers(){
 
   const fatherId =
     document.getElementById("pfather").value;
@@ -192,10 +217,9 @@ function loadMothers(selectedMotherId){
 
     const persons = res.data;
 
+    // wives of selected father
     const wives = persons.filter(p =>
-      String(p.spouseId || "")
-        .split(",")
-        .includes(fatherId)
+      p.spouseId === fatherId
     );
 
     const sel = document.getElementById("pmother");
@@ -210,12 +234,9 @@ function loadMothers(selectedMotherId){
          </option>`;
     });
 
-    // ✅ SET AFTER OPTIONS CREATED
-    if(selectedMotherId){
-      sel.value = selectedMotherId;
-    }
-
   });
 }
+  </script>
+
 </body>
 </html>
