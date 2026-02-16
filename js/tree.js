@@ -66,7 +66,7 @@ rows.forEach(p=>{
   // ✅ decide parent (father priority, else mother)
 let parentId = null;
 
-// 1️⃣ if both exist, prefer the one already in tree branch
+// ✅ attach to whichever parent exists in tree
 if(p.fatherId && map[p.fatherId]){
   parentId = p.fatherId;
 }
