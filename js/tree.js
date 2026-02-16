@@ -288,8 +288,14 @@ function toggle(event,d){
   window.selectedNode = {
   personId: d.data.personId,
   name: d.data.name,
-  gender: d.data.gender
+  gender: d.data.gender,
+  spouseId: d.data.spouseId || ""
 };
+
+localStorage.setItem("selectedParent", d.data.personId);
+localStorage.setItem("selectedParentName", d.data.name);
+localStorage.setItem("selectedParentGender", d.data.gender);
+localStorage.setItem("selectedParentSpouse", d.data.spouseId || "");
 
 localStorage.setItem("selectedParentGender", d.data.gender);
   showProfileCard(d.data);
