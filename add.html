@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if(pid && info){
 
-    // ✅ IF CLICKED PERSON IS MALE
+    // ✅ MALE CLICKED
     if(gender === "Male"){
 
       pfather.value = pid;
@@ -102,18 +102,42 @@ document.addEventListener("DOMContentLoaded", function () {
       info.innerText =
         "Child of Father: " + pname + " (" + pid + ")";
 
-      // load mothers list
       loadMothers();
     }
 
-    // ✅ IF CLICKED PERSON IS FEMALE
+    // ✅ FEMALE CLICKED
     else if(gender === "Female"){
 
       info.innerText =
         "Child of Mother: " + pname + " (" + pid + ")";
 
-      // load mothers first, then select mother
-      loadMothers(pid);
+      // get husband first
+      fetch(API_URL +
+        "?action=getTree" +
+        "&familyId=" + localStorage.getItem("familyId") +
+        "&userId=" + localStorage.getItem("userId"))
+      .then(r=>r.json())
+      .then(res=>{
+
+        if(res.status !== "OK") return;
+
+        const persons = res.data;
+
+        const mother =
+          persons.find(p => p.personId === pid);
+
+        if(mother && mother.spouseId){
+
+          // first husband becomes father
+          const fatherId =
+            mother.spouseId.split(",")[0];
+
+          pfather.value = fatherId;
+
+          // now load mothers and select this one
+          loadMothers(pid);
+        }
+      });
     }
 
   }else if(info){
@@ -129,7 +153,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 </script>
-  
   <script>
 document.getElementById("pphoto")
 .addEventListener("change", function(e){
@@ -182,11 +205,11 @@ document.getElementById("pphoto")
 });
   </script>
 
- <script>
+<script>
 document.getElementById("pfather")
 .addEventListener("change", loadMothers);
 
-function loadMothers(){
+function loadMothers(selectedMotherId){
 
   const fatherId =
     document.getElementById("pfather").value;
@@ -213,6 +236,7 @@ function loadMothers(){
 
     const sel = document.getElementById("pmother");
 
+    // reset dropdown
     sel.innerHTML =
       '<option value="">Select Mother</option>';
 
@@ -223,9 +247,14 @@ function loadMothers(){
          </option>`;
     });
 
+    // ✅ SET AFTER OPTIONS CREATED
+    if(selectedMotherId){
+      sel.value = selectedMotherId;
+    }
+
   });
 }
-</script> 
+</script>
 
 </body>
 </html>
