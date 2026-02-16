@@ -69,18 +69,12 @@ let parentId = null;
 const father = map[p.fatherId];
 const mother = map[p.motherId];
 
-// ✅ prefer parent already connected in tree
-if(mother && (mother.fatherId || mother.motherId)){
-  parentId = p.motherId;
-}
-else if(father && (father.fatherId || father.motherId)){
+// ✅ SIMPLE AND CORRECT
+if(father){
   parentId = p.fatherId;
 }
 else if(mother){
   parentId = p.motherId;
-}
-else if(father){
-  parentId = p.fatherId;
 }
 
   if(!parentId) return;
