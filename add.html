@@ -91,6 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const pid = localStorage.getItem("selectedParent");
   const pname = localStorage.getItem("selectedParentName");
   const gender = localStorage.getItem("selectedParentGender");
+  console.log("Selected Gender =", gender);
 
   const pfather = document.getElementById("pfather");
   const pmother = document.getElementById("pmother");
@@ -111,6 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // ✅ FEMALE CLICKED
 else if(gender === "Female"){
+  console.log("✅ Female block running");
 
   info.innerText =
     "Child of Mother: " + pname + " (" + pid + ")";
