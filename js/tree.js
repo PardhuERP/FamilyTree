@@ -66,12 +66,20 @@ rows.forEach(p=>{
   // ✅ decide parent (father priority, else mother)
 let parentId = null;
 
-// ✅ prefer parent already inside tree branch
-if(p.motherId && map[p.motherId]){
+const father = map[p.fatherId];
+const mother = map[p.motherId];
+
+// ✅ prefer parent already connected in tree
+if(mother && (mother.fatherId || mother.motherId)){
   parentId = p.motherId;
 }
-
-if(!parentId && p.fatherId && map[p.fatherId]){
+else if(father && (father.fatherId || father.motherId)){
+  parentId = p.fatherId;
+}
+else if(mother){
+  parentId = p.motherId;
+}
+else if(father){
   parentId = p.fatherId;
 }
 
