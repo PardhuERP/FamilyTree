@@ -98,7 +98,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (pid && pfather && info) {
 
+    if(gender === "Male"){
     pfather.value = pid;
+}
+else if(gender === "Female"){
+    pmother.value = pid;
+}
     info.innerText = "Child of: " + pname + " (" + pid + ")";
 
     loadMothers();
