@@ -296,6 +296,7 @@ localStorage.setItem("selectedParentGender", d.data.gender);
 
   localStorage.setItem("selectedParent", d.data.personId);
   localStorage.setItem("selectedParentName", d.data.name);
+  localStorage.setItem("selectedParentGender", d.data.gender);
 
   g.selectAll(".node").classed("search-match", false);
   d3.select(event.currentTarget).classed("search-match", true);
