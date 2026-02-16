@@ -286,53 +286,49 @@ function toggle(event,d){
   event.stopPropagation();
 
   window.selectedNode = {
-  personId: d.data.personId,
-  name: d.data.name,
-  gender: d.data.gender,
-  spouseId: d.data.spouseId || ""
-};
+    personId: d.data.personId,
+    name: d.data.name,
+    gender: d.data.gender,
+    spouseId: d.data.spouseId || ""
+  };
 
-localStorage.setItem("selectedParent", d.data.personId);
-localStorage.setItem("selectedParentName", d.data.name);
-localStorage.setItem("selectedParentGender", d.data.gender);
-localStorage.setItem("selectedParentSpouse", d.data.spouseId || "");
-
-localStorage.setItem("selectedParentGender", d.data.gender);
-  showProfileCard(d.data);
-
+  // ✅ SAVE SELECTED PERSON DATA
   localStorage.setItem("selectedParent", d.data.personId);
   localStorage.setItem("selectedParentName", d.data.name);
   localStorage.setItem("selectedParentGender", d.data.gender);
+  localStorage.setItem("selectedParentSpouse", d.data.spouseId || "");
+
+  showProfileCard(d.data);
 
   g.selectAll(".node").classed("search-match", false);
   d3.select(event.currentTarget).classed("search-match", true);
 
- setTimeout(()=>{
+  setTimeout(()=>{
 
-  // normal expand / collapse
-  if(d.children){
-    d._children = d.children;
-    d.children = null;
-  }else{
-    d.children = d._children;
-    d._children = null;
-  }
+    // normal expand / collapse
+    if(d.children){
+      d._children = d.children;
+      d.children = null;
+    }else{
+      d.children = d._children;
+      d._children = null;
+    }
 
-  // ✅ AUTO EXPAND marriage nodes
-  if(d.children){
-    d.children.forEach(c=>{
-      if(c.data && c.data.isMarriageNode){
-        if(c._children){
-          c.children = c._children;
-          c._children = null;
+    // ✅ AUTO EXPAND marriage nodes
+    if(d.children){
+      d.children.forEach(c=>{
+        if(c.data && c.data.isMarriageNode){
+          if(c._children){
+            c.children = c._children;
+            c._children = null;
+          }
         }
-      }
-    });
-  }
+      });
+    }
 
-  update(d);
+    update(d);
 
-},50); 
+  },50);
 }
 
 /* ---------- BUTTONS ---------- */
