@@ -83,38 +83,45 @@ window.API_URL =
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+
   const pid = localStorage.getItem("selectedParent");
   const pname = localStorage.getItem("selectedParentName");
+  const gender = localStorage.getItem("selectedParentGender");
 
   const pfather = document.getElementById("pfather");
+  const pmother = document.getElementById("pmother");
   const info = document.getElementById("parentInfo");
 
-  if (pid && pfather && info) {
-    pfather.value = pid;
-    info.innerText = "Child of: " + pname + " (" + pid + ")";
-  } else if(info) {
-    info.innerText = "No parent selected. Go back and tap a person.";
+  if(pid && info){
+
+    // ✅ IF CLICKED PERSON IS MALE
+    if(gender === "Male"){
+      pfather.value = pid;
+      info.innerText =
+        "Child of Father: " + pname + " (" + pid + ")";
+
+      loadMothers();
+    }
+
+    // ✅ IF CLICKED PERSON IS FEMALE
+    else if(gender === "Female"){
+      pmother.value = pid;
+      info.innerText =
+        "Child of Mother: " + pname + " (" + pid + ")";
+    }
+
+  } else if(info){
+    info.innerText =
+      "No parent selected. Go back and tap a person.";
   }
+
+  // mother reload when father changes
+  if(pfather){
+    pfather.addEventListener("change", loadMothers);
+  }
+
 });
 </script>
-
-  <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const pid = localStorage.getItem("selectedParent");
-  const pname = localStorage.getItem("selectedParentName");
-
-  const pfather = document.getElementById("pfather");
-  const info = document.getElementById("parentInfo");
-
-  if (pid && pfather && info) {
-    pfather.value = pid;
-    info.innerText = "Child of: " + pname + " (" + pid + ")";
-    loadMothers();
-  }
-  document.getElementById("pfather")
-    .addEventListener("change", loadMothers);
-});
-  </script>
   
   <script>
 document.getElementById("pphoto")
