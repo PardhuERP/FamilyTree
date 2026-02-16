@@ -138,17 +138,31 @@ else if(gender === "Female"){
 console.log("Mother Object =", mother);
 console.log("Mother spouseId =", mother?.spouseId);
 
-    if(mother && mother.spouseId){
+    let fatherId = "";
 
-      // first husband becomes father
-      const fatherId =
-        mother.spouseId.split(",")[0];
+// CASE 1 — spouseId exists normally
+if(mother && mother.spouseId){
+  fatherId = mother.spouseId.split(",")[0];
+}
 
-      pfather.value = fatherId;
+// CASE 2 — spouseId empty → search reverse
+else{
+  const husband = persons.find(p =>
+    String(p.spouseId || "")
+      .split(",")
+      .includes(pid)
+  );
 
-      // now load mothers and select this one
-      loadMothers(pid);
-    }
+  if(husband){
+    fatherId = husband.personId;
+  }
+}
+
+// set father if found
+if(fatherId){
+  pfather.value = fatherId;
+  loadMothers(pid);
+}
   });
 }
     
