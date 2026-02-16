@@ -31,49 +31,52 @@
   <input type="date" id="pdob">
 
   <label class="fieldLabel">Blood Group</label>
-<select id="pblood">
-  <option value="">Select Blood Group</option>
-  <option>O+</option>
-  <option>O-</option>
-  <option>A+</option>
-  <option>A-</option>
-  <option>B+</option>
-  <option>B-</option>
-  <option>AB+</option>
-  <option>AB-</option>
-</select>
-  
-<label class="fieldLabel">Qualification</label>
-<input id="pedu" placeholder="B.Tech, MBA etc">
+  <select id="pblood">
+    <option value="">Select Blood Group</option>
+    <option>O+</option>
+    <option>O-</option>
+    <option>A+</option>
+    <option>A-</option>
+    <option>B+</option>
+    <option>B-</option>
+    <option>AB+</option>
+    <option>AB-</option>
+  </select>
 
-<label class="fieldLabel">Photo</label> 
-<input type="file" id="pphoto" accept="image/*">
+  <label class="fieldLabel">Qualification</label>
+  <input id="pedu" placeholder="B.Tech, MBA etc">
 
-<img id="previewPhoto"
-     style="width:80px;height:80px;
-            border-radius:10px;
-            margin-top:8px;
-            display:none;">
+  <label class="fieldLabel">Photo</label>
+  <input type="file" id="pphoto" accept="image/*">
+
+  <img id="previewPhoto"
+       style="width:80px;height:80px;
+              border-radius:10px;
+              margin-top:8px;
+              display:none;">
 
   <label class="fieldLabel">Place</label>
   <input id="pplace" placeholder="Village / City">
 
   <label class="fieldLabel">Father ID</label>
-  <small id="parentInfo" style="color:#2563eb; display:block; margin-bottom:6px;"></small>
+  <small id="parentInfo"
+         style="color:#2563eb;display:block;margin-bottom:6px;"></small>
   <input id="pfather">
 
   <label class="fieldLabel">Mother</label>
-<select id="pmother">
-  <option value="">Select Mother</option>
-</select>
-  
+  <select id="pmother">
+    <option value="">Select Mother</option>
+  </select>
 
   <label class="fieldLabel">Spouse ID (optional)</label>
-  <input id="pspouse" placeholder="Cut above👆 Father ID & paste here">
+  <input id="pspouse"
+         placeholder="Cut above👆 Father ID & paste here">
 
   <button id="addBtn">Save Person😊</button>
+
 </div>
 
+<!-- API -->
 <script>
 window.API_URL =
 "https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
@@ -81,8 +84,12 @@ window.API_URL =
 
 <script src="js/tree.js"></script>
 
+<!-- ========================= -->
+<!-- LOAD SELECTED PARENT -->
+<!-- ========================= -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+
   const pid = localStorage.getItem("selectedParent");
   const pname = localStorage.getItem("selectedParentName");
 
@@ -90,33 +97,28 @@ document.addEventListener("DOMContentLoaded", function () {
   const info = document.getElementById("parentInfo");
 
   if (pid && pfather && info) {
+
     pfather.value = pid;
     info.innerText = "Child of: " + pname + " (" + pid + ")";
+
+    loadMothers();
+
   } else if(info) {
-    info.innerText = "No parent selected. Go back and tap a person.";
+
+    info.innerText =
+      "No parent selected. Go back and tap a person.";
+
   }
+
+  pfather.addEventListener("change", loadMothers);
+
 });
 </script>
 
-  <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const pid = localStorage.getItem("selectedParent");
-  const pname = localStorage.getItem("selectedParentName");
-
-  const pfather = document.getElementById("pfather");
-  const info = document.getElementById("parentInfo");
-
-  if (pid && pfather && info) {
-    pfather.value = pid;
-    info.innerText = "Child of: " + pname + " (" + pid + ")";
-    loadMothers();
-  }
-  document.getElementById("pfather")
-    .addEventListener("change", loadMothers);
-});
-  </script>
-  
-  <script>
+<!-- ========================= -->
+<!-- PHOTO PREVIEW -->
+<!-- ========================= -->
+<script>
 document.getElementById("pphoto")
 .addEventListener("change", function(e){
 
@@ -126,16 +128,15 @@ document.getElementById("pphoto")
   const img = new Image();
   const reader = new FileReader();
 
-  reader.onload = function(ev){
-    img.src = ev.target.result;
-  };
+  reader.onload = ev => img.src = ev.target.result;
 
   img.onload = function(){
 
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    const MAX = 200; // thumbnail size
+    const MAX = 200;
+
     let w = img.width;
     let h = img.height;
 
@@ -153,6 +154,7 @@ document.getElementById("pphoto")
 
     canvas.width = w;
     canvas.height = h;
+
     ctx.drawImage(img,0,0,w,h);
 
     const compressed =
@@ -161,17 +163,17 @@ document.getElementById("pphoto")
     document.getElementById("previewPhoto").src = compressed;
     document.getElementById("previewPhoto").style.display="block";
 
-    window.photoBase64 = compressed; // 🔥 store for upload
+    window.photoBase64 = compressed;
   };
 
   reader.readAsDataURL(file);
 });
-  </script>
+</script>
 
-  <script>
-document.getElementById("pfather")
-.addEventListener("change", loadMothers);
-
+<!-- ========================= -->
+<!-- LOAD MOTHERS -->
+<!-- ========================= -->
+<script>
 function loadMothers(){
 
   const fatherId =
@@ -190,9 +192,10 @@ function loadMothers(){
 
     const persons = res.data;
 
-    // wives of selected father
     const wives = persons.filter(p =>
-      p.spouseId === fatherId
+      String(p.spouseId || "")
+        .split(",")
+        .includes(fatherId)
     );
 
     const sel = document.getElementById("pmother");
@@ -209,7 +212,7 @@ function loadMothers(){
 
   });
 }
-  </script>
+</script>
 
 </body>
 </html>
