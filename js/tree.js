@@ -300,9 +300,37 @@ function toggle(event,d){
   };
   showProfileCard(d.data);
 
-localStorage.setItem("selectedParent", d.data.personId);
-localStorage.setItem("selectedParentName", d.data.name);
-localStorage.setItem("selectedParentGender", d.data.gender);
+  // ---------- STORE PARENT INFO ----------
+
+// NORMAL PERSON CLICK
+if(!d.data.isMarriageNode){
+
+  localStorage.setItem("selectedFather", d.data.personId);
+  localStorage.removeItem("selectedMother");
+
+  localStorage.setItem(
+    "selectedParentName",
+    d.data.name
+  );
+}
+
+// MARRIAGE NODE CLICK (Father + Mother)
+if(d.data.isMarriageNode){
+
+  const fatherId = d.parent?.data?.personId || "";
+  const motherId = d.data.personId || "";
+
+  localStorage.setItem("selectedFather", fatherId);
+  localStorage.setItem("selectedMother", motherId);
+
+  const fatherName = map[fatherId]?.name || "";
+  const motherName = map[motherId]?.name || "";
+
+  localStorage.setItem(
+    "selectedParentName",
+    fatherName + " & " + motherName
+  );
+}
 
   g.selectAll(".node").classed("search-match", false);
   d3.select(event.currentTarget).classed("search-match", true);
