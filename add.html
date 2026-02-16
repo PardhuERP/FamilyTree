@@ -16,21 +16,21 @@
 
 <div class="addPage">
 
-  <h2>Add New Family Member</h2>
+<h2>Add New Family Member</h2>
 
-  <label class="fieldLabel">Full Name</label>
-  <input id="pname" placeholder="Enter name">
+<label class="fieldLabel">Full Name</label>
+<input id="pname" placeholder="Enter name">
 
-  <label class="fieldLabel">Gender</label>
-  <select id="pgender">
-    <option>Male</option>
-    <option>Female</option>
-  </select>
+<label class="fieldLabel">Gender</label>
+<select id="pgender">
+  <option>Male</option>
+  <option>Female</option>
+</select>
 
-  <label class="fieldLabel">Date of Birth</label>
-  <input type="date" id="pdob">
+<label class="fieldLabel">Date of Birth</label>
+<input type="date" id="pdob">
 
-  <label class="fieldLabel">Blood Group</label>
+<label class="fieldLabel">Blood Group</label>
 <select id="pblood">
   <option value="">Select Blood Group</option>
   <option>O+</option>
@@ -42,11 +42,11 @@
   <option>AB+</option>
   <option>AB-</option>
 </select>
-  
+
 <label class="fieldLabel">Qualification</label>
 <input id="pedu" placeholder="B.Tech, MBA etc">
 
-<label class="fieldLabel">Photo</label> 
+<label class="fieldLabel">Photo</label>
 <input type="file" id="pphoto" accept="image/*">
 
 <img id="previewPhoto"
@@ -55,29 +55,24 @@
             margin-top:8px;
             display:none;">
 
-  <label class="fieldLabel">Place</label>
-  <input id="pplace" placeholder="Village / City">
+<label class="fieldLabel">Place</label>
+<input id="pplace" placeholder="Village / City">
 
-<label class="fieldLabel">Relationship</label>
-<select id="relationType">
-  <option value="">Select Relationship</option>
-  <option value="child">Child</option>
-  <option value="spouse">Spouse</option>
-  <option value="father">Father</option>
-  <option value="mother">Mother</option>
-</select>
-  <input id="pfather" type="hidden">
 
-<label class="fieldLabel">Mother</label>
-<select id="pmother">
-  <option value="">Select Mother</option>
-</select>
-  
+<!-- INFO TEXT -->
+<small id="parentInfo"
+       style="color:#2563eb; display:block; margin-bottom:6px;">
+</small>
 
-  <label class="fieldLabel">Spouse ID (optional)</label>
-  <input id="pspouse" placeholder="Cut above👆 Father ID & paste here">
+<!-- HIDDEN IDS (OLD LOGIC SAFE) -->
+<input id="pfather" type="hidden">
+<input id="pmother" type="hidden">
 
-  <button id="addBtn">Save Person😊</button>
+<label class="fieldLabel">Spouse ID (optional)</label>
+<input id="pspouse">
+
+<button id="addBtn">Save Person 😊</button>
+
 </div>
 
 <script>
@@ -87,6 +82,9 @@ window.API_URL =
 
 <script src="js/tree.js"></script>
 
+<!-- ===============================
+     PARENT AUTO SET LOGIC
+================================ -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -104,7 +102,9 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
 
-  // ✅ MALE CLICKED
+  // =========================
+  // MALE CLICKED
+  // =========================
   if(gender === "Male"){
 
     pfather.value = pid;
@@ -113,7 +113,9 @@ document.addEventListener("DOMContentLoaded", function () {
       "Child of Father: " + pname + " (" + pid + ")";
   }
 
-  // ✅ FEMALE CLICKED
+  // =========================
+  // FEMALE CLICKED
+  // =========================
   else if(gender === "Female"){
 
     pmother.value = pid;
@@ -165,8 +167,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 </script>
-  
-  <script>
+
+<!-- ===============================
+     PHOTO COMPRESS (OLD LOGIC)
+================================ -->
+<script>
 document.getElementById("pphoto")
 .addEventListener("change", function(e){
 
@@ -176,16 +181,14 @@ document.getElementById("pphoto")
   const img = new Image();
   const reader = new FileReader();
 
-  reader.onload = function(ev){
-    img.src = ev.target.result;
-  };
+  reader.onload = ev => img.src = ev.target.result;
 
   img.onload = function(){
 
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
-    const MAX = 200; // thumbnail size
+    const MAX = 200;
     let w = img.width;
     let h = img.height;
 
@@ -211,12 +214,12 @@ document.getElementById("pphoto")
     document.getElementById("previewPhoto").src = compressed;
     document.getElementById("previewPhoto").style.display="block";
 
-    window.photoBase64 = compressed; // 🔥 store for upload
+    window.photoBase64 = compressed;
   };
 
   reader.readAsDataURL(file);
 });
-  </script>
+</script>
 
 </body>
 </html>
