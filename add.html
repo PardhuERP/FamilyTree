@@ -64,12 +64,19 @@
        style="color:#2563eb; display:block; margin-bottom:6px;">
 </small>
 
-<!-- HIDDEN IDS (OLD LOGIC SAFE) -->
+<label class="fieldLabel">Relationship</label>
+<select id="relationType">
+  <option value="">Select Relationship</option>
+  <option value="child">Child</option>
+  <option value="spouse">Spouse</option>
+  <option value="father">Father</option>
+  <option value="mother">Mother</option>
+</select>
+
+<!-- hidden values (system use only) -->
 <input id="pfather" type="hidden">
 <input id="pmother" type="hidden">
-
-<label class="fieldLabel">Spouse ID (optional)</label>
-<input id="pspouse">
+<input id="pspouse" type="hidden">
 
 <button id="addBtn">Save Person 😊</button>
 
