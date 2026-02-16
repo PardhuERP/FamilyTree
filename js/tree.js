@@ -453,34 +453,54 @@ fetch(API_URL, {
 
 /* ---------- SEARCH ---------- */
 if(searchBox){
+
   searchBox.addEventListener("input", function(){
 
-    const q=this.value.toLowerCase().trim();
+    const q = this.value.toLowerCase().trim();
+
     if(!root || !q) return;
 
-    let found=null;
+    let found = null;
 
-    root.each(d=>{
-      if(d.data.name.toLowerCase().includes(q)){
-        found=d;
+    root.each(d => {
+
+      // ✅ skip marriage helper nodes
+      if(d.data.isMarriageNode) return;
+
+      const name = String(d.data.name || "").toLowerCase();
+
+      if(name.includes(q)){
+        found = d;
       }
+
     });
 
     if(found){
+
       expandPath(found);
       update(found);
 
       setTimeout(()=>{
-        g.selectAll(".node").classed("search-match",false);
+
+        g.selectAll(".node")
+          .classed("search-match", false);
+
         g.selectAll(".node").each(function(d){
-          if(d===found){
-            d3.select(this).classed("search-match",true);
+
+          if(d === found){
+            d3.select(this)
+              .classed("search-match", true);
+
             centerNode(d);
           }
+
         });
+
       },300);
     }
+
   });
+
 }
 
 function centerNode(d){
