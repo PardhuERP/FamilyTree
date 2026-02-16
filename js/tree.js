@@ -14,23 +14,18 @@ const height = window.innerHeight - 120;
 // GLOBAL selected node
 window.selectedNode = null;
 
-let svg, g, zoom, treeLayout, root, i = 0;
+let svg, g, treeLayout, root, i = 0;
 let map = {};
 const searchBox = document.getElementById("searchBox");
 
 if(document.getElementById("tree")){
 
-  // ✅ create zoom globally
-zoom = d3.zoom()
-  .scaleExtent([0.3,3])
-  .on("zoom", (event) => {
-    g.attr("transform", event.transform);
-  });
-
-svg = d3.select("#tree")
-  .attr("width", width)
-  .attr("height", height)
-  .call(zoom);
+  svg = d3.select("#tree")
+    .attr("width", width)
+    .attr("height", height)
+    .call(d3.zoom().scaleExtent([0.3,3]).on("zoom", e=>{
+      g.attr("transform", e.transform);
+    }));
 
   g = svg.append("g")
     .attr("transform", `translate(${width/2}, 80)`);
@@ -183,7 +178,7 @@ function update(source){
 
   const nodeEnter = node.enter().append("g")
     .attr("class","node")
-    .attr("transform", `translate(${source.y0 || 0},${source.x0 || 0})`)
+    .attr("transform", `translate(${source.y0},${source.x0})`)
     .style("cursor","pointer")
     .on("click", toggle);
 
@@ -255,11 +250,7 @@ nodeEnter.append("rect")
 
   nodeEnter.merge(node)
     .transition().duration(400)
-    .attr("transform", d=>{
-  const x = (d.x !== undefined) ? d.x : 0;
-  const y = (d.y !== undefined) ? d.y : 0;
-  return `translate(${y},${x})`;
-});
+    .attr("transform", d=>`translate(${d.y},${d.x})`);
 
   const link = g.selectAll(".link")
   .data(
@@ -295,12 +286,9 @@ function toggle(event,d){
   event.stopPropagation();
 
   window.selectedNode = {
-  personId: d.data.personId,
-  name: d.data.name,
-  gender: d.data.gender
-};
-
-localStorage.setItem("selectedParentGender", d.data.gender);
+    personId: d.data.personId,
+    name: d.data.name
+  };
   showProfileCard(d.data);
 
   localStorage.setItem("selectedParent", d.data.personId);
@@ -381,8 +369,6 @@ function getPersonGen(personId){
 /* ---------- ADD PERSON ---------- */
 async function addPerson(){
 
-  const btn = document.getElementById("addBtn");
-  if(btn) btn.disabled = true;
   const name = document.getElementById("pname")?.value;
   const gender = document.getElementById("pgender")?.value;
   const dob = document.getElementById("pdob")?.value;
@@ -397,7 +383,6 @@ async function addPerson(){
   document.getElementById("previewPhoto")?.src || "";
   if(!name){
     alert("Enter name");
-    if(btn) btn.disabled = false;
     return;
   }
 
@@ -437,7 +422,6 @@ fetch(API_URL, {
 })
 .catch(()=>{
   alert("Network error");
-  if(btn) btn.disabled = false;
 });
 }
 
@@ -473,6 +457,19 @@ if(searchBox){
   });
 }
 
+function centerNode(d){
+  if(!svg || !g) return;
+
+  const scale=1;
+  const x=width/2 - d.y*scale;
+  const y=120 - d.x*scale;
+
+  svg.transition().duration(400)
+    .call(
+      d3.zoom().transform,
+      d3.zoomIdentity.translate(x,y).scale(scale)
+    );
+}
 
 function showProfileCard(p){
   window.currentPerson = p;
@@ -549,85 +546,4 @@ function closeHDPhotoUpload(){
 if(document.getElementById("addBtn")){
   document.getElementById("addBtn")
     .addEventListener("click", addPerson);
-}
-
-const sb = document.getElementById("searchBox");
-
-if(sb){
-  sb.addEventListener("input", function(){
-
-  const text = this.value.toLowerCase();
-
-  if(!text) return;
-
-  const match = findPerson(root, text);
-
-  if(match){
-    expandParents(match);
-    update(match);
-    centerNode(match);
-  }
-
-});
-}
-
-function findPerson(node, text){
-
-  if(node.data.name &&
-     node.data.name.toLowerCase().includes(text)){
-    return node;
-  }
-
-  let found = null;
-
-  if(node.children){
-    node.children.forEach(c=>{
-      if(!found){
-        found = findPerson(c, text);
-      }
-    });
-  }
-
-  if(node._children){
-    node._children.forEach(c=>{
-      if(!found){
-        found = findPerson(c, text);
-      }
-    });
-  }
-
-  return found;
-}
-
-function expandParents(node){
-
-  let parent = node.parent;
-
-  while(parent){
-    if(parent._children){
-      parent.children = parent._children;
-      parent._children = null;
-    }
-    parent = parent.parent;
-  }
-}
-
-function centerNode(source){
-
-  if(!source || source.x == null || source.y == null)
-    return;
-
-  const scale = 1;
-
-  const x = width/2 - source.y;
-  const y = height/2 - source.x;
-
-  svg.transition()
-    .duration(400)
-    .call(
-      zoom.transform,
-      d3.zoomIdentity
-        .translate(x, y)
-        .scale(scale)
-    );
 }
