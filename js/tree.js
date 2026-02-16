@@ -452,7 +452,11 @@ fetch(API_URL, {
 }
 
 /* ---------- SEARCH ---------- */
-if(searchBox){
+document.addEventListener("DOMContentLoaded", function(){
+
+  const searchBox = document.getElementById("searchBox");
+
+  if(!searchBox) return;
 
   searchBox.addEventListener("input", function(){
 
@@ -464,7 +468,7 @@ if(searchBox){
 
     root.each(d => {
 
-      // ✅ skip marriage helper nodes
+      // skip marriage helper nodes
       if(d.data.isMarriageNode) return;
 
       const name = String(d.data.name || "").toLowerCase();
@@ -501,7 +505,7 @@ if(searchBox){
 
   });
 
-}
+});
 
 function centerNode(d){
   if(!svg || !g) return;
