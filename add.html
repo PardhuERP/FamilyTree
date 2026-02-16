@@ -134,6 +134,9 @@ else if(gender === "Female"){
 
     const mother =
       persons.find(p => p.personId === pid);
+    console.log("Selected Mother ID =", pid);
+console.log("Mother Object =", mother);
+console.log("Mother spouseId =", mother?.spouseId);
 
     if(mother && mother.spouseId){
 
