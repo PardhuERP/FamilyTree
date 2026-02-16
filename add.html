@@ -89,6 +89,66 @@ window.API_URL =
 
 <script src="js/tree.js"></script>
 
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const relation = document.getElementById("relationType");
+
+  const pfather = document.getElementById("pfather");
+  const pmother = document.getElementById("pmother");
+  const pspouse = document.getElementById("pspouse");
+
+  const pid = localStorage.getItem("selectedParent");
+  const gender = localStorage.getItem("selectedParentGender");
+
+  relation.addEventListener("change", function(){
+
+    // reset all first
+    pfather.value = "";
+    pmother.value = "";
+    pspouse.value = "";
+
+    if(!pid) return;
+
+    // ===================
+    // CHILD
+    // ===================
+    if(this.value === "child"){
+
+      if(gender === "Male"){
+        pfather.value = pid;
+      }else{
+        pmother.value = pid;
+      }
+    }
+
+    // ===================
+    // SPOUSE
+    // ===================
+    else if(this.value === "spouse"){
+      pspouse.value = pid;
+    }
+
+    // ===================
+    // FATHER
+    // ===================
+    else if(this.value === "father"){
+      // new person becomes father
+      pmother.value = pid;
+    }
+
+    // ===================
+    // MOTHER
+    // ===================
+    else if(this.value === "mother"){
+      pfather.value = pid;
+    }
+
+  });
+
+});
+  </script>
+
 <!-- ===============================
      PARENT AUTO SET LOGIC
 ================================ -->
