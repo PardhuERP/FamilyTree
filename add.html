@@ -109,40 +109,44 @@ document.addEventListener("DOMContentLoaded", function () {
       loadMothers();
     }
 
-    // ✅ FEMALE CLICKED
-    else if(gender === "Female"){
+  // ✅ FEMALE CLICKED
+else if(gender === "Female"){
 
-      info.innerText =
-        "Child of Mother: " + pname + " (" + pid + ")";
+  info.innerText =
+    "Child of Mother: " + pname + " (" + pid + ")";
 
-      // get husband first
-      fetch(API_URL +
-        "?action=getTree" +
-        "&familyId=" + localStorage.getItem("familyId") +
-        "&userId=" + localStorage.getItem("userId"))
-      .then(r=>r.json())
-      .then(res=>{
+  // ✅ IMPORTANT — SET MOTHER ID
+  pmother.value = pid;
 
-        if(res.status !== "OK") return;
+  // get husband first
+  fetch(API_URL +
+    "?action=getTree" +
+    "&familyId=" + localStorage.getItem("familyId") +
+    "&userId=" + localStorage.getItem("userId"))
+  .then(r=>r.json())
+  .then(res=>{
 
-        const persons = res.data;
+    if(res.status !== "OK") return;
 
-        const mother =
-          persons.find(p => p.personId === pid);
+    const persons = res.data;
 
-        if(mother && mother.spouseId){
+    const mother =
+      persons.find(p => p.personId === pid);
 
-          // first husband becomes father
-          const fatherId =
-            mother.spouseId.split(",")[0];
+    if(mother && mother.spouseId){
 
-          pfather.value = fatherId;
+      // first husband becomes father
+      const fatherId =
+        mother.spouseId.split(",")[0];
 
-          // now load mothers and select this one
-          loadMothers(pid);
-        }
-      });
+      pfather.value = fatherId;
+
+      // now load mothers and select this one
+      loadMothers(pid);
     }
+  });
+}
+    
 
   }else if(info){
 
