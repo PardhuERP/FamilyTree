@@ -233,11 +233,10 @@ function loadMothers(selectedMotherId){
 
     // wives of selected father
     const wives = persons.filter(p =>
-      String(p.spouseId || "")
-        .split(",")
-        .includes(fatherId)
-    );
-
+  String(p.spouseId || "")
+    .split(",")
+    .includes(fatherId)
+);
     const sel = document.getElementById("pmother");
 
     // reset dropdown
