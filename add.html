@@ -106,9 +106,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     else if(gender === "Female"){
-      pmother.value = pid;
-      info.innerText = "Child of Mother: " + pname;
-    }
+
+  info.innerText = "Child of Mother: " + pname;
+
+  loadMothers(pid);   // send mother id here
+}
   }
 
 });
@@ -173,7 +175,7 @@ document.getElementById("pphoto")
 <!-- LOAD MOTHERS -->
 <!-- ========================= -->
 <script>
-function loadMothers(){
+function loadMothers(selectedMotherId){
 
   const fatherId =
     document.getElementById("pfather").value;
@@ -208,7 +210,10 @@ function loadMothers(){
            ${w.name}
          </option>`;
     });
-
+// ✅ ADD HERE
+    if(selectedMotherId){
+      sel.value = selectedMotherId;
+    }
   });
 }
 </script>
