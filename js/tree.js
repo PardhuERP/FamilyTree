@@ -64,14 +64,16 @@ rows.forEach(p=>{
   const child = map[p.personId];
 
   // ✅ decide parent (father priority, else mother)
-  let parentId = null;
+let parentId = null;
 
-  if(p.fatherId && map[p.fatherId]){
-    parentId = p.fatherId;
-  }
-  else if(p.motherId && map[p.motherId]){
-    parentId = p.motherId;
-  }
+// 1️⃣ if both exist, prefer the one already in tree branch
+if(p.fatherId && map[p.fatherId]){
+  parentId = p.fatherId;
+}
+
+if(!parentId && p.motherId && map[p.motherId]){
+  parentId = p.motherId;
+}
 
   if(!parentId) return;
 
