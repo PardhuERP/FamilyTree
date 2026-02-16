@@ -130,6 +130,10 @@ else if(gender === "Female"){
       // load wives list and keep selected mother
       loadMothers(pid);
     }
+    // ✅ CASE 2 — single female (NO husband)
+    else{
+      pmother.innerHTML =
+        `<option value="${pid}" selected>${pname}</option>`;
   });
 }
   }
