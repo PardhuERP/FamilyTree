@@ -83,38 +83,40 @@ window.API_URL =
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+
   const pid = localStorage.getItem("selectedParent");
   const pname = localStorage.getItem("selectedParentName");
+  const gender = localStorage.getItem("selectedParentGender");
 
   const pfather = document.getElementById("pfather");
+  const pmother = document.getElementById("pmother");
   const info = document.getElementById("parentInfo");
 
-  if (pid && pfather && info) {
-    pfather.value = pid;
-    info.innerText = "Child of: " + pname + " (" + pid + ")";
-  } else if(info) {
-    info.innerText = "No parent selected. Go back and tap a person.";
+  if(pid && info){
+
+    if(gender === "Male"){
+      pfather.value = pid;
+      info.innerText = "Child of Father: " + pname;
+
+      loadMothers();
+    }
+
+    else if(gender === "Female"){
+
+      info.innerText = "Child of Mother: " + pname;
+
+      // wait until mothers loaded
+      loadMothers(pid);
+    }
   }
+
+  if(pfather){
+    pfather.addEventListener("change", loadMothers);
+  }
+
 });
 </script>
 
-  <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const pid = localStorage.getItem("selectedParent");
-  const pname = localStorage.getItem("selectedParentName");
-
-  const pfather = document.getElementById("pfather");
-  const info = document.getElementById("parentInfo");
-
-  if (pid && pfather && info) {
-    pfather.value = pid;
-    info.innerText = "Child of: " + pname + " (" + pid + ")";
-    loadMothers();
-  }
-  document.getElementById("pfather")
-    .addEventListener("change", loadMothers);
-});
-  </script>
   
   <script>
 document.getElementById("pphoto")
@@ -172,7 +174,7 @@ document.getElementById("pphoto")
 document.getElementById("pfather")
 .addEventListener("change", loadMothers);
 
-function loadMothers(){
+function loadMothers(selectedMotherId){
 
   const fatherId =
     document.getElementById("pfather").value;
@@ -190,9 +192,10 @@ function loadMothers(){
 
     const persons = res.data;
 
-    // wives of selected father
     const wives = persons.filter(p =>
-      p.spouseId === fatherId
+      String(p.spouseId || "")
+        .split(",")
+        .includes(fatherId)
     );
 
     const sel = document.getElementById("pmother");
@@ -207,9 +210,12 @@ function loadMothers(){
          </option>`;
     });
 
+    // ✅ SET AFTER OPTIONS CREATED
+    if(selectedMotherId){
+      sel.value = selectedMotherId;
+    }
+
   });
 }
-  </script>
-
 </body>
 </html>
