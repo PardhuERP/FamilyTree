@@ -466,7 +466,9 @@ document.addEventListener("DOMContentLoaded", function(){
 
     let found = null;
 
-    root.each(d => {
+    root.eachBefore(d => {
+
+      if(found) return;
 
       // skip marriage helper nodes
       if(d.data.isMarriageNode) return;
