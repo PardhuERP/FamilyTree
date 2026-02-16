@@ -286,9 +286,12 @@ function toggle(event,d){
   event.stopPropagation();
 
   window.selectedNode = {
-    personId: d.data.personId,
-    name: d.data.name
-  };
+  personId: d.data.personId,
+  name: d.data.name,
+  gender: d.data.gender
+};
+
+localStorage.setItem("selectedParentGender", d.data.gender);
   showProfileCard(d.data);
 
   localStorage.setItem("selectedParent", d.data.personId);
