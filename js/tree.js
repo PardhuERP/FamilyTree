@@ -53,90 +53,105 @@ function buildTree(rows){
 
   map = {};
 
-  // create nodes
+  /* ---------- CREATE NODE MAP ---------- */
   rows.forEach(p=>{
     map[p.personId] = {...p, children:[]};
   });
 
-// link parents (father + mother grouping)
-rows.forEach(p=>{
 
-  const child = map[p.personId];
+  /* ---------- LINK PARENTS (FATHER + MOTHER) ---------- */
+  rows.forEach(p=>{
 
-  // ✅ decide parent (father priority, else mother)
-let parentId = null;
+    const child = map[p.personId];
 
-const father = map[p.fatherId];
-const mother = map[p.motherId];
+    const father = map[p.fatherId];
+    const mother = map[p.motherId];
 
-// ✅ SIMPLE AND CORRECT
-if(father){
-  parentId = p.fatherId;
-}
-else if(mother){
-  parentId = p.motherId;
-}
+    // no parents → skip
+    if(!father && !mother) return;
 
-  if(!parentId) return;
+    const key =
+      (p.fatherId || "single") + "_" +
+      (p.motherId || "single");
 
-  const parent = map[parentId];
 
-  // marriage group key
-  const key =
-    (p.fatherId || "single") + "_" +
-    (p.motherId || "single");
+    /* ===== ATTACH UNDER FATHER ===== */
+    if(father){
 
-  // create marriage container if not exists
-  if(!parent._marriages){
-    parent._marriages = {};
-  }
-
-  // create marriage node
-  if(!parent._marriages[key]){
-
-    parent._marriages[key] = {
-      name: map[p.motherId]?.name || "",
-      isMarriageNode: true,
-      children: []
-    };
-
-    // attach marriage node to parent
-    parent.children.push(parent._marriages[key]);
-  }
-
-  // add child under that marriage
-  parent._marriages[key].children.push(child);
-
-});
-  // connect spouses (MULTIPLE SUPPORT)
-rows.forEach(p => {
-
-  if(!p.spouseId) return;
-
-  const spouseIds = String(p.spouseId).split(",");
-
-  map[p.personId].spouses = [];
-
-  spouseIds.forEach(id => {
-
-    if(map[id]){
-      map[p.personId].spouses.push(map[id]);
-
-      // reverse link also
-      if(!map[id].spouses){
-        map[id].spouses = [];
+      if(!father._marriages){
+        father._marriages = {};
       }
 
-      if(!map[id].spouses.includes(map[p.personId])){
-        map[id].spouses.push(map[p.personId]);
+      if(!father._marriages[key]){
+
+        father._marriages[key] = {
+          name: map[p.motherId]?.name || "",
+          isMarriageNode: true,
+          children: []
+        };
+
+        father.children.push(father._marriages[key]);
       }
+
+      father._marriages[key].children.push(child);
+    }
+
+
+    /* ===== ATTACH UNDER MOTHER ===== */
+    if(mother && mother !== father){
+
+      if(!mother._marriages){
+        mother._marriages = {};
+      }
+
+      if(!mother._marriages[key]){
+
+        mother._marriages[key] = {
+          name: map[p.fatherId]?.name || "",
+          isMarriageNode: true,
+          children: []
+        };
+
+        mother.children.push(mother._marriages[key]);
+      }
+
+      mother._marriages[key].children.push(child);
     }
 
   });
 
-});
 
-  // safer founder detection
+  /* ---------- CONNECT SPOUSES (MULTIPLE SUPPORT) ---------- */
+  rows.forEach(p => {
+
+    if(!p.spouseId) return;
+
+    const spouseIds = String(p.spouseId).split(",");
+
+    map[p.personId].spouses = [];
+
+    spouseIds.forEach(id => {
+
+      if(map[id]){
+
+        map[p.personId].spouses.push(map[id]);
+
+        // reverse link
+        if(!map[id].spouses){
+          map[id].spouses = [];
+        }
+
+        if(!map[id].spouses.includes(map[p.personId])){
+          map[id].spouses.push(map[p.personId]);
+        }
+      }
+
+    });
+
+  });
+
+
+  /* ---------- FIND FOUNDER ---------- */
   const founder = rows.find(r => !r.fatherId && !r.motherId);
 
   root = d3.hierarchy(map[founder.personId]);
@@ -145,6 +160,7 @@ rows.forEach(p => {
   root.y0 = 0;
 
   root.children && root.children.forEach(collapse);
+
   update(root);
   centerNode(root);
 }
