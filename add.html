@@ -99,54 +99,69 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const pid = localStorage.getItem("selectedParent");
   const gender = localStorage.getItem("selectedParentGender");
+  const spouseId = localStorage.getItem("selectedParentSpouse");
 
   relation.addEventListener("change", function(){
 
-    // reset all first
+    // reset all
     pfather.value = "";
     pmother.value = "";
     pspouse.value = "";
 
     if(!pid) return;
 
-    // ===================
+    // =====================
     // CHILD
-    // ===================
+    // =====================
     if(this.value === "child"){
 
       if(gender === "Male"){
         pfather.value = pid;
-      }else{
+        pmother.value = spouseId || "";
+      }
+      else{
         pmother.value = pid;
+        pfather.value = spouseId || "";
       }
     }
 
-    // ===================
+    // =====================
     // SPOUSE
-    // ===================
+    // =====================
     else if(this.value === "spouse"){
       pspouse.value = pid;
     }
 
-    // ===================
+    // =====================
     // FATHER
-    // ===================
+    // =====================
     else if(this.value === "father"){
+
       // new person becomes father
       pmother.value = pid;
+
+      // auto fill other parent if exists
+      if(spouseId){
+        pfather.value = spouseId;
+      }
     }
 
-    // ===================
+    // =====================
     // MOTHER
-    // ===================
+    // =====================
     else if(this.value === "mother"){
+
       pfather.value = pid;
+
+      if(spouseId){
+        pmother.value = spouseId;
+      }
     }
 
   });
 
 });
-  </script>
+</script>
 
 <!-- ===============================
      PARENT AUTO SET LOGIC
