@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Edit Spouse | MyFamilyTree</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+}
+
+.searchBox{
+  width:100%;
+  padding:10px;
+  font-size:16px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  margin-bottom:10px;
+}
+
+.personItem{
+  padding:12px;
+  border-bottom:1px solid #eee;
+  cursor:pointer;
+}
+
+.personItem:hover{
+  background:#f3f6ff;
+}
+
+.emptyText{
+  text-align:center;
+  color:#777;
+  margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="toolbar addBar">
+  <button class="backBtn" onclick="history.back()">←</button>
+  <span class="appTitle">Edit Spouse</span>
+</div>
+
+<div class="addPage">
+
+  <h2>Select Person to Edit</h2>
+
+  <input id="searchPerson"
+         class="searchBox"
+         placeholder="Search name...">
+
+  <div id="personList"></div>
+
+  <div id="emptyMsg" class="emptyText" style="display:none;">
+    No matching person found
+  </div>
+
+</div>
+
+<script>
+window.API_URL =
+"https://script.google.com/macros/s/AKfycbytM7snXYUkPLqdkIb9z-CQkUyDVRoUx1ef7-r02duWq139BWq1xWgg8m11BMgEOgVB/exec";
+
+let persons = [];
+
+/* ---------- LOAD FAMILY MEMBERS ---------- */
+document.addEventListener("DOMContentLoaded", function(){
+
+  const familyId = localStorage.getItem("familyId");
+  const userId = localStorage.getItem("userId");
+
+  if(!familyId || !userId){
+    alert("Session expired");
+    location.href = "index.html";
+    return;
+  }
+
+  fetch(API_URL +
+    "?action=getTree" +
+    "&familyId=" + familyId +
+    "&userId=" + userId)
+  .then(r=>r.json())
+  .then(res=>{
+
+    if(res.status !== "OK"){
+      alert("Unable to load family");
+      return;
+    }
+
+    persons = res.data || [];
+    renderList(persons);
+
+  });
+
+});
+
+/* ---------- RENDER LIST ---------- */
+function renderList(list){
+
+  const box = document.getElementById("personList");
+  const empty = document.getElementById("emptyMsg");
+
+  box.innerHTML = "";
+
+  if(!list.length){
+    empty.style.display = "block";
+    return;
+  }
+
+  empty.style.display = "none";
+
+  list.forEach(p=>{
+
+    box.innerHTML +=
+      `<div class="personItem"
+            onclick="editPerson('${p.personId}')">
+        ${p.name}
+       </div>`;
+  });
+}
+
+/* ---------- SEARCH ---------- */
+document.getElementById("searchPerson")
+.addEventListener("input", function(){
+
+  const q = this.value.toLowerCase().trim();
+
+  if(!q){
+    renderList(persons);
+    return;
+  }
+
+  const filtered = persons.filter(p =>
+    String(p.name || "")
+      .toLowerCase()
+      .includes(q)
+  );
+
+  renderList(filtered);
+});
+
+/* ---------- OPEN EDIT PAGE ---------- */
+function editPerson(personId){
+
+  localStorage.setItem("editPersonId", personId);
+
+  // open existing edit page
+  window.location.href = "edit.html";
+}
+</script>
+
+</body>
+</html>
