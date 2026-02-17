@@ -597,62 +597,6 @@ function closeHDPhotoUpload(){
   document.getElementById("hdPhotoOverlay").style.display = "none";
 }
 
-function editCurrentPerson(){
-
-  if(!window.currentPerson) return;
-
-  localStorage.setItem(
-    "editPersonId",
-    window.currentPerson.personId
-  );
-
-  location.href = "edit.html";
-}
-
-function editMenu(){
-
-  if(!window.currentPerson) return;
-
-  const hasSpouse =
-    window.currentPerson.spouseId &&
-    window.currentPerson.spouseId !== "";
-
-  // if no spouse → edit directly
-  if(!hasSpouse){
-    localStorage.setItem(
-      "editPersonId",
-      window.currentPerson.personId
-    );
-
-    location.href = "edit.html";
-    return;
-  }
-
-  // if spouse exists → ask selection
-  const choice = confirm(
-    "OK = Edit Selected Person\n\nCancel = Edit Spouse"
-  );
-
-  if(choice){
-    // edit current person
-    localStorage.setItem(
-      "editPersonId",
-      window.currentPerson.personId
-    );
-  }else{
-    // edit spouse
-    const spouseId =
-      window.currentPerson.spouseId.split(",")[0];
-
-    localStorage.setItem(
-      "editPersonId",
-      spouseId
-    );
-  }
-
-  location.href = "edit.html";
-}
-
 /* ---------- ADD BUTTON ---------- */
 if(document.getElementById("addBtn")){
   document.getElementById("addBtn")
