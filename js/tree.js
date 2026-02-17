@@ -159,7 +159,15 @@ function buildTree(rows){
   root.x0 = height/2;
   root.y0 = 0;
 
-  root.children && root.children.forEach(collapse);
+  // collapse only first level
+if(root.children){
+  root.children.forEach(d=>{
+    if(d.children){
+      d._children = d.children;
+      d.children = null;
+    }
+  });
+}
 
   update(root);
   centerNode(root);
