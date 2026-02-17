@@ -460,52 +460,56 @@ document.addEventListener("DOMContentLoaded", function(){
 
   searchBox.addEventListener("input", function(){
 
-    const q = this.value.toLowerCase().trim();
+  const q = this.value.toLowerCase().trim();
 
-    if(!root || !q) return;
+  if(!root || !q) return;
 
-    let found = null;
+  let found = null;
 
-    root.eachBefore(d => {
+  root.eachBefore(d => {
 
-      if(found) return;
+    if(found) return;
 
-      // skip marriage helper nodes
-      if(d.data.isMarriageNode) return;
+    // ✅ skip marriage helper nodes
+    if(d.data.isMarriageNode) return;
 
-      const name = String(d.data.name || "").toLowerCase();
+    const name = String(d.data.name || "").toLowerCase();
 
-      if(name.includes(q)){
-        found = d;
-      }
-
-    });
-
-    if(found){
-
-      expandPath(found);
-      update(found);
-
-      setTimeout(()=>{
-
-        g.selectAll(".node")
-          .classed("search-match", false);
-
-        g.selectAll(".node").each(function(d){
-
-          if(d === found){
-            d3.select(this)
-              .classed("search-match", true);
-
-            centerNode(d);
-          }
-
-        });
-
-      },300);
+    if(name && name.includes(q)){
+      found = d;
     }
 
   });
+
+  if(found){
+
+    expandPath(found);
+    update(found);
+
+    setTimeout(()=>{
+
+      g.selectAll(".node")
+        .classed("search-match", false);
+
+      g.selectAll(".node").each(function(d){
+
+        if(d === found){
+
+          d3.select(this)
+            .classed("search-match", true);
+
+          // ✅ SAFE CENTER CALL
+          if(d.x !== undefined && d.y !== undefined){
+            centerNode(d);
+          }
+        }
+
+      });
+
+    },300);
+  }
+
+});
 
 });
 
