@@ -98,7 +98,7 @@ function buildTree(rows){
 
 
     /* ===== ATTACH UNDER MOTHER ===== */
-    if(false && mother && mother !== father){
+    if(mother && mother !== father){
 
       if(!mother._marriages){
         mother._marriages = {};
@@ -159,15 +159,7 @@ function buildTree(rows){
   root.x0 = height/2;
   root.y0 = 0;
 
-  // collapse only first level
-if(root.children){
-  root.children.forEach(d=>{
-    if(d.children){
-      d._children = d.children;
-      d.children = null;
-    }
-  });
-}
+  root.children && root.children.forEach(collapse);
 
   update(root);
   centerNode(root);
