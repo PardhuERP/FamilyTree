@@ -609,20 +609,46 @@ function editCurrentPerson(){
   location.href = "edit.html";
 }
 
-function editSpousePerson(){
+function editMenu(){
 
   if(!window.currentPerson) return;
 
-  const spouseId = window.currentPerson.spouseId;
+  const hasSpouse =
+    window.currentPerson.spouseId &&
+    window.currentPerson.spouseId !== "";
 
-  if(!spouseId){
-    alert("No spouse available");
+  // if no spouse → edit directly
+  if(!hasSpouse){
+    localStorage.setItem(
+      "editPersonId",
+      window.currentPerson.personId
+    );
+
+    location.href = "edit.html";
     return;
   }
 
-  const id = spouseId.split(",")[0];
+  // if spouse exists → ask selection
+  const choice = confirm(
+    "OK = Edit Selected Person\n\nCancel = Edit Spouse"
+  );
 
-  localStorage.setItem("editPersonId", id);
+  if(choice){
+    // edit current person
+    localStorage.setItem(
+      "editPersonId",
+      window.currentPerson.personId
+    );
+  }else{
+    // edit spouse
+    const spouseId =
+      window.currentPerson.spouseId.split(",")[0];
+
+    localStorage.setItem(
+      "editPersonId",
+      spouseId
+    );
+  }
 
   location.href = "edit.html";
 }
