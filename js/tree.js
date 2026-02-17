@@ -597,6 +597,22 @@ function closeHDPhotoUpload(){
   document.getElementById("hdPhotoOverlay").style.display = "none";
 }
 
+function openEditSpouse(){
+
+  if(!window.selectedNode){
+    alert("Tap a member first");
+    return;
+  }
+
+  // store family for search page
+  localStorage.setItem(
+    "editFamilyId",
+    localStorage.getItem("familyId")
+  );
+
+  window.location.href = "edit-spouse.html";
+}
+
 /* ---------- ADD BUTTON ---------- */
 if(document.getElementById("addBtn")){
   document.getElementById("addBtn")
