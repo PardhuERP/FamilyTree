@@ -98,7 +98,7 @@ function buildTree(rows){
 
 
     /* ===== ATTACH UNDER MOTHER ===== */
-    if(mother && mother !== father){
+    if(false && mother && mother !== father){
 
       if(!mother._marriages){
         mother._marriages = {};
