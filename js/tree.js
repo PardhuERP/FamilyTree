@@ -597,6 +597,36 @@ function closeHDPhotoUpload(){
   document.getElementById("hdPhotoOverlay").style.display = "none";
 }
 
+function editCurrentPerson(){
+
+  if(!window.currentPerson) return;
+
+  localStorage.setItem(
+    "editPersonId",
+    window.currentPerson.personId
+  );
+
+  location.href = "edit.html";
+}
+
+function editSpousePerson(){
+
+  if(!window.currentPerson) return;
+
+  const spouseId = window.currentPerson.spouseId;
+
+  if(!spouseId){
+    alert("No spouse available");
+    return;
+  }
+
+  const id = spouseId.split(",")[0];
+
+  localStorage.setItem("editPersonId", id);
+
+  location.href = "edit.html";
+}
+
 /* ---------- ADD BUTTON ---------- */
 if(document.getElementById("addBtn")){
   document.getElementById("addBtn")
