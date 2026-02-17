@@ -461,7 +461,6 @@ document.addEventListener("DOMContentLoaded", function(){
   searchBox.addEventListener("input", function(){
 
   const q = this.value.toLowerCase().trim();
-
   if(!root || !q) return;
 
   let found = null;
@@ -470,22 +469,24 @@ document.addEventListener("DOMContentLoaded", function(){
 
     if(found) return;
 
-    // ✅ skip marriage helper nodes
     if(d.data.isMarriageNode) return;
 
     const name = String(d.data.name || "").toLowerCase();
 
-    if(name && name.includes(q)){
+    if(name.includes(q)){
       found = d;
     }
-
   });
 
   if(found){
 
+    // ✅ expand all parents first
     expandPath(found);
+
+    // ✅ rebuild tree
     update(found);
 
+    // ✅ wait for D3 transition to finish
     setTimeout(()=>{
 
       g.selectAll(".node")
@@ -498,15 +499,13 @@ document.addEventListener("DOMContentLoaded", function(){
           d3.select(this)
             .classed("search-match", true);
 
-          // ✅ SAFE CENTER CALL
-          if(d.x !== undefined && d.y !== undefined){
-            centerNode(d);
-          }
+          // ✅ CENTER AFTER UPDATE
+          centerNode(d);
         }
 
       });
 
-    },300);
+    },500); // important (increase from 300 → 500)
   }
 
 });
